@@ -19,7 +19,7 @@ TeloPon単体ではYouTube以外のコメントを直接取得することはで
    👉 [マルチコメントビューア 公式サイト](https://ryu-s.github.io/app/multicommentviewer) から「安定版」をダウンロードして解凍します。
 2. **HTML5コメントジェネレーター**  
    受信したコメントをファイル（XML）として出力するためのツールです。  
-   👉 [KILINBOX (公式サイト)](http://www.kilinbox.net/) などから最新版（例：`hcg_0_0_8b.zip`）をダウンロードし、解凍します。
+   👉 [KILINBOX (公式サイト)](https://lib.kilinbox.net/comegene/index.cgi) などから最新版（例：`hcg_0_0_8b.zip`）をダウンロードし、解凍します。
 
 ### ステップ2：2つのソフトを連携させる
 
