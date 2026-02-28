@@ -81,7 +81,7 @@ TeloPonを動かすには、Googleが提供しているAIの鍵（APIキー）�
 ## 🛠️ ダウンロードと起動方法（Windows専用）
 
 ### ステップ1：ファイルのダウンロード
-GitHubの **[Releases](https://github.com/miyumiyu/TeloPon/releases)** ページから最新の `TeloPon-100b.zip` をダウンロードします。
+GitHubの **[Releases](https://github.com/miyumiyu/TeloPon/releases)** ページから最新の `TeloPon-xxx.zip` をダウンロードします。
 
 ### ステップ2：展開（解凍）
 ダウンロードしたZIPファイルを右クリックし、**「すべて展開」** を選んで解凍してください。
