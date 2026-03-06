@@ -292,7 +292,6 @@ class AutoTimerPlugin(BasePlugin):
             logger.info(f"[{self.PLUGIN_NAME}] 有効にしました")
 
     def _save_from_ui(self):
-        s = self.get_settings()
         s["enabled"]      = self.is_connected
         s["interval_sec"] = int(self.ent_interval.get())
         self.save_settings(s)
