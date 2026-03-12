@@ -73,4 +73,4 @@ In addition to auto-send, you can also **manually send the screen to the AI** at
   The "source name" must **exactly match** (including capitalization and spaces) the name shown in OBS's source list. If you get an error, double-check the source name in OBS.
 
 ---
-[⬅️ Back to Plugin List](../../README.md)
+[⬅️ Back to Plugin List](../../../README.md)
