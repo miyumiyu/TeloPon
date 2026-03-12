@@ -103,9 +103,14 @@ After extracting the ZIP file, the structure looks like this. You can freely ext
 ```text
 TeloPon_Release/
  ├── TeloPon.exe         # Main application
+ ├── base.html           # HTML for OBS Browser Source
  ├── icon/               # App icon images
+ ├── locales/            # 🌐 UI language files
  ├── plugins/            # 📦 Standard bundled plugins
  ├── prompts/            # 🧠 AI personality / scripts (text files)
+ │    ├── ja/            #   Japanese prompts
+ │    ├── en/            #   English prompts
+ │    └── ...            #   Other languages
  ├── sounds/             # 🎵 Sound effects for telop appearances
  └── themes/             # 🎨 Telop appearance / design (CSS)
 ```
