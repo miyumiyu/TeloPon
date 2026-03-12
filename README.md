@@ -197,6 +197,10 @@ TeloPon has two types of plugins: "Standard Bundled Plugins" that come pre-insta
   Simply specify a YouTube Live stream URL to have the AI pick up and react to viewer comments. The stream's "title", "description", and "thumbnail image" are also automatically sent to the AI, so it can deeply understand the stream content and co-host the show with you.
   👉 [Detailed usage guide](docs/en/plugins/YoutubeLivePlugin.md)
 
+* 🎮 **Twitch Live Plugin** (`TwitchPlugin.py`)
+  Simply enter a Twitch channel name or URL to have the AI pick up and react to viewer chat comments in real time. Setting a Client ID and Client Secret also sends the stream's "title", "category", and "thumbnail image" to the AI automatically. **Chat reading works even without a Client ID.**
+  👉 [Detailed usage guide](docs/en/plugins/TwitchPlugin.md)
+
 ### 🌟 Official Extension Plugins (Individual Download)
 
 To keep the main app light and simple, the following integrations are available as separate downloads for those who need them.
