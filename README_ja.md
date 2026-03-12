@@ -105,7 +105,6 @@ TeloPon_Release/
  ├── TeloPon.exe         # アプリケーション本体
  ├── icon/               # アプリ起動時のアイコン画像
  ├── plugins/            # 📦 標準同梱プラグイン
- ├── extended_plugin/    # 🔌 追加の拡張プラグインを入れる場所
  ├── prompts/            # 🧠 AIの性格・台本（テキストファイル）
  ├── sounds/             # 🎵 テロップ出現時の効果音
  └── themes/             # 🎨 テロップの見た目・デザイン（CSS）

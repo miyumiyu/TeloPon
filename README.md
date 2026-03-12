@@ -105,7 +105,6 @@ TeloPon_Release/
  ├── TeloPon.exe         # Main application
  ├── icon/               # App icon images
  ├── plugins/            # 📦 Standard bundled plugins
- ├── extended_plugin/    # 🔌 Place for additional extension plugins
  ├── prompts/            # 🧠 AI personality / scripts (text files)
  ├── sounds/             # 🎵 Sound effects for telop appearances
  └── themes/             # 🎨 Telop appearance / design (CSS)
