@@ -24,9 +24,25 @@ TeloPon 메인 화면 오른쪽 "확장 기능 (플러그인)" 패널에서 **"T
 
 **Client ID / Client Secret 취득 방법:**
 
-1. [https://dev.twitch.tv/console](https://dev.twitch.tv/console) 에 Twitch 계정으로 로그인합니다.
-2. "애플리케이션 등록"에서 새 앱을 만듭니다 (이름·카테고리는 임의).
-3. 표시되는 "Client ID"를 복사하고 "새 시크릿"을 생성하여 입력란에 붙여넣습니다.
+1. Twitch 계정에서 **2단계 인증 (2FA) 을 활성화합니다** (필수).
+   2FA 미설정 시 Twitch가 애플리케이션 등록 화면으로 진행을 거부합니다.
+   👉 설정 위치: [https://www.twitch.tv/settings/security](https://www.twitch.tv/settings/security) → "2단계 인증 설정"
+
+2. [https://dev.twitch.tv/console](https://dev.twitch.tv/console) 에 Twitch 계정으로 로그인합니다.
+3. **"애플리케이션 등록"** 을 클릭하고 다음 내용을 입력합니다.
+
+   | 항목 | 입력 예시 | 설명 |
+   |---|---|---|
+   | 이름 | `TeloPon` | 임의의 이름 |
+   | OAuth 리다이렉트 URL | `http://localhost` | **더미 URL로 OK** (이유는 아래 참조) |
+   | 카테고리 | `Other` | 임의 |
+   | 클라이언트 타입 | **Confidential** | 서버 간 인증이므로 반드시 선택 |
+
+   > **💡 `http://localhost` 를 입력하는 이유**
+   > TeloPon은 "Client Credentials Grant (클라이언트 자격 증명 플로우)"라는 방식으로 Twitch API에 접근합니다. 이 방식은 사용자가 로그인 화면을 거치지 않는 **서버 간 통신**이기 때문에 리다이렉트 URL이 실제로는 전혀 사용되지 않습니다. 그러나 Twitch 등록 폼에서 필수 입력 항목이므로, `http://localhost` 라는 더미 URL을 입력하는 것이 공식적으로도 권장되는 일반적인 방법입니다.
+
+4. 등록 완료 후 앱 상세 화면에서 **"새 시크릿"** 버튼을 눌러 Client Secret을 생성합니다.
+5. 표시된 "Client ID"와 "Client Secret"을 복사하여 TeloPon 설정 화면에 붙여넣습니다.
 
 ### 4. "연결" 버튼 누르기
 

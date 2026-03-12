@@ -24,9 +24,25 @@ If you also want to share the stream title, category, and thumbnail with the AI,
 
 **How to get your Client ID / Client Secret:**
 
-1. Log in to [https://dev.twitch.tv/console](https://dev.twitch.tv/console) with your Twitch account.
-2. Register a new application under "Register Your Application" (name and category are your choice).
-3. Copy the "Client ID" and generate a "New Secret", then paste them into the fields.
+1. **Enable Two-Factor Authentication (2FA)** on your Twitch account (required).
+   Without 2FA, Twitch will not allow you to proceed to the application registration screen.
+   👉 Setting location: [https://www.twitch.tv/settings/security](https://www.twitch.tv/settings/security) → "Set Up Two-Factor Authentication"
+
+2. Log in to [https://dev.twitch.tv/console](https://dev.twitch.tv/console) with your Twitch account.
+3. Click **"Register Your Application"** and fill in the following:
+
+   | Field | Example | Notes |
+   |---|---|---|
+   | Name | `TeloPon` | Any name you like |
+   | OAuth Redirect URL | `http://localhost` | **A dummy URL is fine** (see reason below) |
+   | Category | `Other` | Any category |
+   | Client Type | **Confidential** | Required for server-to-server auth |
+
+   > **💡 Why enter `http://localhost`?**
+   > TeloPon accesses the Twitch API using the "Client Credentials Grant" flow — a **server-to-server** method that does not involve any user login screen or redirect. The redirect URL is never actually used. However, Twitch's registration form requires the field to be filled in, so entering `http://localhost` as a dummy value is the standard and officially accepted approach.
+
+4. After registration, click **"New Secret"** on the app details page to generate a Client Secret.
+5. Copy the "Client ID" and "Client Secret" and paste them into TeloPon's settings panel.
 
 ### 4. Press the "Connect" Button
 
