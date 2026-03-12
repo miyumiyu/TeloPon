@@ -19,7 +19,7 @@ This is not just "transcription software". It summons a talented, unique **AI co
 
 ## 🌟 What Makes TeloPon Amazing!
 
-![TeloPon Features](images/telopon1.png)
+![TeloPon Features](images/telopon1_en.png)
 
 ### 1. Overwhelming "Ultra-Low Latency" and "Context Understanding"
 By directly calling Gemini's native audio API, TeloPon completely eliminates the time-consuming steps of "speech recognition → text conversion → sending to AI". It instantly reads the nuances of the streamer's words, sighs, and even laughter, returning **snappy responses that never break the flow of conversation**.
@@ -50,7 +50,7 @@ TeloPon uses an architecture where the central system called **"CORE (TeloPon Co
 
 The following diagram illustrates the data flow and the role of each component.
 
-![TeloPon Architecture Diagram](images/architecture.png)
+![TeloPon Architecture Diagram](images/architecture_en.png)
 
 ### 🔄 Data Flow and Component Roles
 
@@ -121,7 +121,7 @@ TeloPon_Release/
 
 When you launch the app, the main settings window appears.
 
-![UI Screen](images/ui.png)
+![UI Screen](images/ui_en.png)
 
 ### ⚙️ 1. AI Settings (Basic Settings)
 * **🔑 API Key**: Paste the key starting with `AIza...` and press the "Authenticate" button. When you see "✅ Authentication successful", you're ready to go.
