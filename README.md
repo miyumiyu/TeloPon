@@ -1,307 +1,317 @@
-# TeloPon (てろぽん) 🎙️✨ - 早期アクセス版
+**English** | [日本語](README_ja.md) | [한국어](README_ko.md) | [Русский](README_ru.md)
 
-> **⚠️ ダウンロードされる方へ重要なお知らせ** > このリポジトリは「TeloPon 早期アクセス版（実行ファイル）」の**配布専用ページ**です。ソースコードの公開・開発用リポジトリではありません。
-> 
-> **ダウンロードは、必ず以下の [Releases (最新版)] から行ってください。** > 👉 **[TeloPon 最新版をダウンロードする](https://github.com/miyumiyu/TeloPon/releases/latest)**
-> （※緑色の「Code」ボタンから Download ZIP を選んでも起動できませんのでご注意ください！）
+# TeloPon 🎙️✨ - Early Access
 
-**超低遅延・高機能 AI配信支援システム**
+> **⚠️ Important Notice for Downloaders** > This repository is the **distribution-only page** for "TeloPon Early Access (executable)". It is not a source code release or development repository.
+>
+> **Always download from the [Releases (Latest)] link below.** > 👉 **[Download TeloPon Latest Version](https://github.com/miyumiyu/TeloPon/releases/latest)**
+> （※ Note: Downloading via the green "Code" button → "Download ZIP" will NOT work correctly!）
 
-TeloPonは、Googleの最新AI「Gemini Live API」を活用し、配信者の声や視聴者のコメントを聞き取って**リアルタイムに相槌・ツッコミ・要約をテロップとして表示する**、次世代の配信アシスタントツールです。
+**Ultra-low-latency, feature-rich AI Streaming Assistant**
 
-単なる「文字起こしソフト」ではありません。あなたの配信に、優秀で個性豊かな「AIの相方」を召喚します！
+TeloPon leverages Google's latest AI "Gemini Live API" to listen to the streamer's voice and viewer comments, then **display real-time reactions, quips, and summaries as on-screen captions (telops)** — the next-generation streaming assistant tool.
 
-![TeloPon実行画面](docs/images/demo.gif)
+This is not just "transcription software". It summons a talented, unique **AI co-host** for your stream!
 
----
-
-## 🌟 TeloPonのすごいところ！
-
-![TeloPon特徴](docs/images/telopon1.png)
-
-### 1. 圧倒的な「超低遅延」と「文脈理解」
-GeminiのネイティブオーディオAPIを直接叩くことで、従来の「音声認識→テキスト化→AIへ送信」という時間のかかるステップを完全に排除。配信者の言葉のニュアンス、ため息、笑い声すらも瞬時に読み取り、**会話のテンポを崩さない小気味よいレスポンス**を画面に返します。
-
-### 2. 自分だけのAIを作れる「プロンプト設定」
-「プロンプト（AIの台本・性格設定書）」をテキストファイルで自由に作成可能！
-「あなたは関西弁の元気なアシスタントです」「私が言葉に詰まったら容赦なく毒舌でツッコミを入れてください」など、日本語で指示を書くだけで、**どんなキャラクターのAIでも簡単に生み出す**ことができます。
-
-### 3. 画像にも対応！無限の拡張性「プラグイン機能」
-配信者のマイク音声だけでなく、外部の情報をリアルタイムにAIへ「コッソリ耳打ち」できる拡張機能を搭載。
-* **YouTube連携**: 配信のコメントをAIに読ませて一緒に番組を回す！
-* **手動データ注入パネル**: 配信中にボタン1つで「カンペ」を出したり、**「画像」を見せて感想を言わせる**ことも可能！
-Pythonの簡単なスクリプトを書くだけで、独自の連携機能（ゲーム連動など）を追加できます。
-
-### 4. CSSで完全自由な「テロップデザイン」
-OBS上に表示されるテロップは、すべてHTML/CSSで描画されています。
-ニュース番組風、バラエティ番組風、サイバー風など、CSSを少し書くだけで自分好みのデザイン（テーマ）を無限に追加できます。**テロップ出現時の効果音（SE）も自由に設定可能**です。
-
-### 5. OBSへの超簡単組み込み ＆ 沈黙回避システム
-TeloPonを起動するだけで内蔵サーバーが立ち上がるため、OBSの「ブラウザソース」としてURLを追加するだけで準備完了。
-さらに、配信者が無言になってしまった際に、AIが空気を読んで自発的に話題を振り、放送事故を防いでくれる **「Auto Talk（沈黙回避）」機能** も標準搭載しています。
+![TeloPon Demo](images/demo.gif)
 
 ---
 
-## 🗺️ TeloPon アーキテクチャ
+## 🌟 What Makes TeloPon Amazing!
 
-TeloPonは、 **「CORE（TeloPon コア）」** と呼ばれる中央システムが、マイク、AI（Google Gemini API）、OBS、そしてユーザー設定ファイルを繋ぐハブとして機能するアーキテクチャを採用しています。
+![TeloPon Features](images/telopon1_en.png)
 
-以下は、そのデータの流れと各コンポーネントの役割を図解したものです。
+### 1. Overwhelming "Ultra-Low Latency" and "Context Understanding"
+By directly calling Gemini's native audio API, TeloPon completely eliminates the time-consuming steps of "speech recognition → text conversion → sending to AI". It instantly reads the nuances of the streamer's words, sighs, and even laughter, returning **snappy responses that never break the flow of conversation**.
 
-![TeloPon アーキテクチャ図](docs/images/architecture.png)
+### 2. "Prompt Settings" to Create Your Own AI
+Freely create "prompts (AI scripts / personality sheets)" as text files!
+Simply write instructions like "You are an energetic assistant who speaks in Osaka dialect" or "When I'm at a loss for words, roast me without mercy" — you can **easily create any character AI** you can imagine.
 
-### 🔄 データの流れと各部の役割
+### 3. Image Support! Infinite Extensibility with "Plugin Features"
+Beyond the streamer's microphone audio, TeloPon can "secretly whisper" external information to the AI in real time.
+* **YouTube Integration**: Have the AI read stream comments and co-host the show!
+* **Manual Data Injection Panel**: During a stream, send "cue cards" with one button, or even **show the AI "images" and have it react**!
+Simply write a simple Python script to add your own custom integrations (game linking, etc.).
 
-1. **🎤 マイク音声 & 指示 (Voice & Instruction)**
-   * 配信者のマイクから入力された音声は、**CORE**を経由してリアルタイムに**Google Gemini API**へと送信されます。
-   * 同時に、ユーザー設定領域にある **プロンプト(.txt)** ファイルの内容もAIへの指示として送られ、AIのキャラクターや振る舞いが決定されます。
+### 4. Completely Free "Telop Design" with CSS
+All telops displayed in OBS are rendered in HTML/CSS.
+Add unlimited custom designs (themes) with just a bit of CSS — news broadcast style, variety show style, cyberpunk style, and more. **Sound effects (SE) for telop appearances are also freely configurable**.
 
-2. **🤖 テロップ情報 (Telop Information)**
-   * AIは音声と指示を基に思考し、その結果（発言内容、感情、表示スタイルなど）を**テロップ情報**としてCOREに返します。
-
-3. **📺 描画データ & CSS読み込み (Drawing Data & CSS Loading)**
-   * COREは受け取ったテロップ情報を、ブラウザで表示可能な**描画データ**（HTML）に変換します。
-   * **OBS Studio（ブラウザソース）** はCOREにアクセスし、この描画データを表示します。
-   * この際、ユーザー設定領域にある **テーマ(.css)** ファイルが読み込まれ、テロップのデザインやアニメーションが適用されます。
-
----
-
-## 🔑 準備編：無料のAPIキーを取得しよう！
-
-TeloPonを動かすには、Googleが提供しているAIの鍵（APIキー）が必要です。
-**クレジットカード登録不要・完全無料の枠**が用意されており、個人の配信や趣味で遊ぶ分には無料枠で十分すぎるほど楽しめます！
-
-👉 **[画像付きの詳しい取得手順はこちら（初心者向け）](04_get_apikey.md)**
-
-1. **[Google AI Studio](https://aistudio.google.com/)** にアクセスし、Googleアカウントでログインします。
-2. 左下の **「Get API key」** をクリックします。
-3. 右上の **「APIキーの作成」** ボタンを押し、キーの作成を行います。  
-4. 表示された「AIza...」から始まる文字列をコピーして大切に保管してください（絶対に他人に教えないでください）。
+### 5. Super-Easy OBS Integration & Silence Prevention System
+Just launching TeloPon starts the built-in server — simply add the URL as an OBS "Browser Source" and you're ready to go.
+Additionally, the **"Auto Talk (silence prevention)" feature** is built in, so when the streamer goes silent, the AI reads the atmosphere and proactively introduces a topic to prevent dead air.
 
 ---
 
-## 🛠️ ダウンロードと起動方法（Windows専用）
+## 🗺️ TeloPon Architecture
 
-### ステップ1：ファイルのダウンロード
-GitHubの **[Releases (最新版)](https://github.com/miyumiyu/TeloPon/releases/latest)** ページから最新の `TeloPon-xxx.zip` をダウンロードします。
+TeloPon uses an architecture where the central system called **"CORE (TeloPon Core)"** acts as a hub connecting the microphone, AI (Google Gemini API), OBS, and user configuration files.
 
-### ステップ2：展開（解凍）
-ダウンロードしたZIPファイルを右クリックし、**「すべて展開」** を選んで解凍してください。
-> ⚠️ **重要：** 展開せずにZIPの中身を直接ダブルクリックすると、設定が保存されず正常に動作しません。必ずフォルダとして取り出してください。
+The following diagram illustrates the data flow and the role of each component.
 
-### ステップ3：起動
-解凍したフォルダの中にある **`TeloPon.exe`** をダブルクリックして起動します。
+![TeloPon Architecture Diagram](images/architecture_en.png)
+
+### 🔄 Data Flow and Component Roles
+
+1. **🎤 Microphone Audio & Instructions (Voice & Instruction)**
+   * Audio input from the streamer's microphone is sent through **CORE** to the **Google Gemini API** in real time.
+   * Simultaneously, the contents of **prompt (.txt)** files in the user settings area are sent as instructions to the AI, determining the AI's character and behavior.
+
+2. **🤖 Telop Information**
+   * The AI thinks based on the audio and instructions, then returns the results (content, emotion, display style, etc.) to CORE as **telop information**.
+
+3. **📺 Drawing Data & CSS Loading**
+   * CORE converts the received telop information into **drawing data** (HTML) that can be displayed in a browser.
+   * **OBS Studio (Browser Source)** accesses CORE and displays this drawing data.
+   * At this point, the **theme (.css)** files in the user settings area are loaded, applying telop designs and animations.
 
 ---
 
-## 📁 フォルダ構成とカスタマイズ
+## 🔑 Setup: Get Your Free API Key!
 
-ZIPファイルを展開すると、以下のような構成になっています。各フォルダの中身を書き換えることで、自由に機能を拡張できます。
+To run TeloPon, you need an AI key (API key) provided by Google.
+A **completely free tier is available with no credit card required**, and it's more than enough for personal streaming and hobby use!
+
+👉 **[Detailed instructions with images (beginner-friendly)](docs/en/04_get_apikey.md)**
+
+1. Visit **[Google AI Studio](https://aistudio.google.com/)** and sign in with your Google account.
+2. Click **"Get API key"** in the lower left.
+3. Click the **"Create API key"** button in the upper right to create your key.
+4. Copy the string starting with "AIza..." that appears and store it safely (never share it with others).
+
+---
+
+## 🛠️ Download and Launch (Windows Only)
+
+### Step 1: Download the File
+Download the latest `TeloPon-xxx.zip` from the **[Releases (Latest)](https://github.com/miyumiyu/TeloPon/releases/latest)** page on GitHub.
+
+### Step 2: Extract
+Right-click the downloaded ZIP file and select **"Extract All"** to unzip it.
+> ⚠️ **Important:** If you double-click the contents directly inside the ZIP without extracting, settings will not be saved and it will not work properly. Always extract to a folder first.
+
+### Step 3: Launch
+Double-click **`TeloPon.exe`** inside the extracted folder to start.
+
+---
+
+## 📁 Folder Structure and Customization
+
+After extracting the ZIP file, the structure looks like this. You can freely extend functionality by modifying the contents of each folder.
 
 ```text
 TeloPon_Release/
- ├── TeloPon.exe         # アプリケーション本体
- ├── icon/               # アプリ起動時のアイコン画像
- ├── plugins/            # 📦 標準同梱プラグイン
- ├── extended_plugin/    # 🔌 追加の拡張プラグインを入れる場所
- ├── prompts/            # 🧠 AIの性格・台本（テキストファイル）
- ├── sounds/             # 🎵 テロップ出現時の効果音
- └── themes/             # 🎨 テロップの見た目・デザイン（CSS）
+ ├── TeloPon.exe         # Main application
+ ├── base.html           # HTML for OBS Browser Source
+ ├── icon/               # App icon images
+ ├── locales/            # 🌐 UI language files
+ ├── plugins/            # 📦 Standard bundled plugins
+ ├── prompts/            # 🧠 AI personality / scripts (text files)
+ │    ├── en/            #   English prompts ← your language
+ │    ├── ja/            #   Japanese prompts
+ │    └── ...            #   Other languages
+ ├── sounds/             # 🎵 Sound effects for telop appearances
+ └── themes/             # 🎨 Telop appearance / design (CSS)
 ```
 
 ---
 
-## 🎛️ TeloPon画面（UI）の詳しい使いかた
+## 🎛️ TeloPon UI — Detailed Usage Guide
 
-アプリを起動すると、設定用のメイン画面が表示されます。
+When you launch the app, the main settings window appears.
 
-![UI画面](docs/images/ui.png)
+![UI Screen](images/ui_en.png)
 
-### ⚙️ 1. AI設定（基本設定）
-* **🔑 API Key**: 取得した `AIza...` から始まるキーを貼り付け、「認証」ボタンを押します。「✅ 認証成功」と出れば準備完了です。
-* **🧠 使用モデル**: 基本は `Auto` のままで大丈夫です。
-* **🧠 AIの性格 (Prompt)**: `prompts/` フォルダに入っているAIの台本を選びます。
-* **🎥 配信者名 (※必須項目)**: あなたのお名前を入力してください。AIがあなたを呼ぶときに使います。
+### ⚙️ 1. AI Settings (Basic Settings)
+* **🔑 API Key**: Paste the key starting with `AIza...` and press the "Authenticate" button. When you see "✅ Authentication successful", you're ready to go.
+* **🧠 Model**: Leave it as `Auto` by default.
+* **🧠 AI Personality (Prompt)**: Select the AI script from the `prompts/` folder.
+* **🎥 Streamer Name (※ Required)**: Enter your name. The AI uses this to address you.
 
-### 🎤 2. マイク選択と音声レベル（★超重要！）
-あなたが喋るマイクを選びます。その下にある黒いバーが **「レベルメーター」** になっており、マイクが音を拾うとバーが動いて色が変わります。
+### 🎤 2. Microphone Selection and Audio Level (★ Super Important!)
+Select the microphone you speak into. The black bar below it is the **"Level Meter"** — when the microphone picks up sound, the bar moves and changes color.
 
-**【メーターの色の意味】**
-* **無色（黒）**: 音を拾っていません。
-* **薄い黄色**: AIが「声が入ってきた」と認識し、聞き取りを始めている状態です。
-* **黄色**: **ベストな音量です！** 普通に喋った時に黄色を保つようにマイク（PC側）の音量を調整してください。
-* **赤色**: 音が大きすぎます（音割れ）。AIが言葉を正確に聞き取れなくなってしまうため、赤色にならないように音量を下げてください。
+**【Meter Color Meanings】**
+* **No color (black)**: Not picking up sound.
+* **Light yellow**: The AI has recognized "a voice is coming in" and has started listening.
+* **Yellow**: **Best volume!** Adjust your microphone volume (on the PC side) so it stays yellow when you speak normally.
+* **Red**: The sound is too loud (clipping). The AI won't be able to hear your words clearly, so lower the volume to avoid red.
 
-**【✂️ 閾値（しきいち）の調整】**
-メーターの下にある **「閾値スライダー」** は、「どの音量から上の音を『あなたの声』としてAIに聞かせるか」の境界線です。
-* **設定のコツ**: もし配信のBGMやゲーム音がマイクに入ってしまっている場合、このスライダーを右に動かして数値を上げてください。 **「BGMが鳴っているだけではメーターが反応せず、自分が喋った時だけ薄い黄色〜黄色になる」** ポイントを見つけるのが、AIを賢く動かす最大のコツです！
+**【✂️ Threshold Adjustment】**
+The **"Threshold Slider"** below the meter is the boundary for "from what volume level up to treat sound as your voice and send to the AI".
+* **Tip**: If your stream's BGM or game audio is coming into the microphone, move this slider to the right to increase the value. The key to making the AI work smartly is finding the point where **"just BGM playing doesn't trigger the meter, but it goes light yellow to yellow only when you speak"**!
 
-### ⏱️ 3. タイム設定（秒）
-* **普通枠 / 特別枠**: 画面右上に出る「通常テロップ」や、画面下に出る「解説テロップ」がOBS上で表示され続ける時間（秒数）です。
-* **自動介入 (Auto Talk) 有効**: ここにチェックを入れ、「介入時間（秒）」を設定すると、**その秒数間あなたが無言になった時に、AIが空気を読んで自発的に話題を振り、放送事故を防いでくれます。**
+### ⏱️ 3. Time Settings (Seconds)
+* **Normal / Special**: The number of seconds that "normal telops" (upper right) and "explanation telops" (bottom) remain visible on OBS.
+* **Auto Talk Enabled**: Check this box and set the "intervention time (seconds)" — **when you're silent for that many seconds, the AI reads the atmosphere and proactively introduces a topic to prevent dead air**.
 
-### 🔌 4. 拡張機能（プラグイン）
-右側のパネルには、標準搭載されている便利なツールが並んでいます。
-* **設定ボタン**: 連携先URLなどの詳細設定を行います。
-* **操作パネルボタン**: 手動データ注入ツールなど、配信中に手元で操作するための専用ウィンドウを開きます。
+### 🔌 4. Extensions (Plugins)
+Useful tools are lined up in the right panel.
+* **Settings Button**: Configure detailed settings such as integration URLs.
+* **Control Panel Button**: Opens a dedicated window for tools you operate by hand during the stream, such as the manual data injection tool.
 
-### 🎨 5. テーマ (CSS)
-OBSに表示されるテロップのデザイン（スキン）を選びます。
+### 🎨 5. Theme (CSS)
+Select the design (skin) of the telops displayed in OBS.
 
-### 🎵 6. テロップ効果音 (SE)
-テロップ出現時の効果音のON/OFFと、音量の調整（0〜100%）ができます。
-配信環境（BGMの大きさなど）に合わせて、最適なボリュームにスライダーで調整してください。
-※「効果音を鳴らす」のチェックを外すと、スライダーがグレーアウトして無効化されます。
+### 🎵 6. Telop Sound Effects (SE)
+Toggle sound effects on/off for telop appearances and adjust volume (0–100%).
+Adjust the slider to the optimal volume for your streaming environment (BGM volume, etc.).
+※ Unchecking "Play sound effects" grays out and disables the slider.
 
-### 🔗 7. OBS用URLコピー
-OBSのブラウザで使用するURLをクリップボードにコピーします。
-#### 📺 OBSへの組み込み方
+### 🔗 7. Copy OBS URL
+Copies the URL for use in OBS Browser Source to the clipboard.
+#### 📺 How to Add to OBS
 
-1. 画面右側の **「🔗 OBS用URLコピー」** を押します（点線の枠内をクリック）。
-2. OBS Studioのソース追加で **「ブラウザ」** を選び、コピーしたURLを貼り付けます。
-3. サイズを16:9の比率で **(推奨 幅 1664 / 高さ 936)** に設定すれば準備完了です！
+1. Press **"🔗 Copy OBS URL"** on the right side of the screen (click inside the dotted box).
+2. In OBS Studio, add a source and select **"Browser"**, then paste the copied URL.
+3. Set the size to a 16:9 ratio **(recommended: width 1664 / height 936)** and you're done!
 
-**👉 すべての設定が終わったら「🔴 ライブ接続開始」ボタンを押すと、AIとのリアルタイム会話がスタートします！**
-
----
-
-## 🔌 プラグイン（拡張機能）の詳細
-
-TeloPonには、初めから入っている「標準同梱プラグイン」と、必要な人だけが個別に追加して使う「公式拡張プラグイン」の2種類があります。
-
-### 📦 標準同梱プラグイン（初めから入っています）
-
-* 💬 **コメジェネファイル読み込み** (`CommentGenerator_read.py`)  
-  外部のコメントジェネレーター等が出力するテキストファイルを定期的に読み込み、新しいコメントをAIに伝えます。   
-  👉 [詳細な使い方はこちら](docs/plugins/CommentGenerator_read.md)
-
-* 📝 **カスタム指示追加ツール** (`custom_prompt.py`)  
-  配信開始時に、基本のプロンプト（AIの性格）に対して追加の指示（例：「今日は〇〇のゲームをプレイします」など）を付与できるツールです。   
-  👉 [詳細な使い方はこちら](docs/plugins/custom_prompt.md)
-
-* 💉 **手動データ注入ツール** (`ManualInjector.py`)   
-  配信中に専用の操作パネルから、ボタン1つで任意のテキスト（カンペ）や画像をAIの脳内に直接送り込みます。  
-  👉 [詳細な使い方はこちら](docs/plugins/ManualInjector.md)
-
-* 🎮 **OBS画面AI実況** (`obs_capture.py`)    
-  OBS-WebSocketを利用してOBSのプレビュー画面を定期的にキャプチャし、AIに見せることで、ゲーム画面や配信画面について実況・反応させます。     
-  👉 [詳細な使い方はこちら](docs/plugins/obs_capture.md)
-
-* ▶️ **YouTube連携ツール** (`YoutubeLivePlugin.py`)  
-  YouTube Liveの配信URLを指定するだけで、リスナーのコメントを拾ってAIに反応させることができます。さらに、配信の「タイトル」「説明文」「サムネイル画像」も自動でAIに送り込まれるため、AIが配信内容を深く理解した上で一緒に番組を回してくれます。   
-  👉 [詳細な使い方はこちら](docs/plugins/YoutubeLivePlugin.md)
-
-### 🌟 公式拡張プラグイン（個別ダウンロード）
-
-本体を軽くシンプルに保つため、以下の連携機能は必要な方だけが個別にダウンロードして追加する形式になっています。  
-🔗[ TeloPon 公式拡張プラグインパック v1.0 (Discord & Slack)](https://github.com/miyumiyu/TeloPon/releases/tag/plugins-v1.0)
-
-* 💬 **Discordリアルタイム連携** (`discord_integration.py`)  
-  Discordサーバーの指定チャンネルのコメントをリアルタイムに取得し、AIに読み上げさせます。招待URLの全自動生成機能付きで、面倒なBot設定がボタン1つで完結します。   
-  📥 [プラグインをダウンロード](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/discord_integration.py)    
-  👉 [詳細な使い方はこちら](docs/plugins/discord_integration.md)
-
-* 🏢 **Slackコメント連携** (`slack_integration.py`) 
-  Slackワークスペースの指定チャンネルのコメントを遅延ゼロの「Socket Mode」で完全リアルタイムに取得します。Slack特有の英数字のユーザーIDも、自動で名前に変換してAIに届けます。  
-  📥 [プラグインをダウンロード](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/slack_integration.py)    
- 👉 [詳細な使い方はこちら](docs/plugins/slack_integration.md)
-
-*(💡 導入方法: リリース一覧からダウンロードした `.py` ファイルを、TeloPon本体の `plugins` フォルダに入れるだけで追加完了です！)*
+**👉 Once all settings are complete, press the "🔴 Start Live Connection" button to begin real-time conversation with the AI!**
 
 ---
 
-## 🚥 ステータス表示の見方（AIの心理可視化）
+## 🔌 Plugin (Extension) Details
 
-マイク設定の下にある「状態」表示は、AIの現在の脳内やシステムの通信状態をリアルタイムにお知らせするものです。
+TeloPon has two types of plugins: "Standard Bundled Plugins" that come pre-installed, and "Official Extension Plugins" that individual users download and add as needed.
 
-### 🟢 基本ステータス
-* **⬛ 待機中**: ライブ接続前。AIはまだ起きていません。
-* **⏳ 挨拶準備中...**: 接続直後。AIが「最初の挨拶」を考えています。
-* **🟢 放送中!**: スタンバイOK。いつでも声を拾えます。
-* **🎧 聞き取り中...** (水色): あなたの声を検知し、耳を傾けている状態です。
-* **🧠 思考中...** (オレンジ色): あなたが話し終わったのを検知し、返答を考えている状態です。
-* **🗣️ 出力中...** (緑色): 考えをまとめ、テロップとして画面に出力している状態です。
-* **✨ 応答完了** (緑色): AIのターンが正常に終了したサインです。
+### 📦 Standard Bundled Plugins (Pre-installed)
 
-### 👻 「空ターン（無反応）」ステータス
-AIが何も喋らずにターンを終了した理由を表示します。
-* **👻 発話をスルー**: あなたの言葉は聞こえましたが、AIが「ここは相槌だけだから黙っておこう」と空気を読んでスルーした状態です（正常な挙動です）。
-* **👻 ノイズスルー**: 咳払い、物音、またはAIの処理落ちにより、言葉として認識できなかった状態です。
-* **👻 コメントスルー / 画像をスルー**: プラグインから送られた情報を確認しましたが、特にコメントする必要はないと判断した状態です。
+* 💬 **Comment Generator File Reader** (`CommentGenerator_read.py`)
+  Periodically reads text files output by external comment generators, and relays new comments to the AI.
+  👉 [Detailed usage guide](docs/en/plugins/CommentGenerator_read.md)
 
-### ⚠️ 注意・エラーステータス
-* **⚠️ 割り込み検出 (Barge-in)**: AIが喋っている最中にあなたが話し始めたため、AIが空気を読んで自分の発言を途中でキャンセルした状態です。
-* **🚫 セーフティ制限**: AIの安全フィルター（暴力的・性的な内容のブロック）に引っかかり、発言が強制停止された状態です。
-* **⚠️ AIの処理パンク**: Googleのサーバー側でエラーや処理タイムアウトが発生した状態です。
+* 📝 **Custom Instruction Addon Tool** (`custom_prompt.py`)
+  At stream start, appends additional instructions to the base prompt (AI personality) — e.g., "Today I'll be playing ○○ game".
+  👉 [Detailed usage guide](docs/en/plugins/custom_prompt.md)
+
+* 💉 **Manual Data Injection Tool** (`ManualInjector.py`)
+  During the stream, directly sends arbitrary text (cue cards) or images into the AI's brain from the dedicated control panel with one button.
+  👉 [Detailed usage guide](docs/en/plugins/ManualInjector.md)
+
+* 🎮 **OBS Screen AI Commentary** (`obs_capture.py`)
+  Uses OBS-WebSocket to periodically capture the OBS preview screen and show it to the AI, enabling it to comment on and react to game screens or stream content.
+  👉 [Detailed usage guide](docs/en/plugins/obs_capture.md)
+
+* ▶️ **YouTube Integration Tool** (`YoutubeLivePlugin.py`)
+  Simply specify a YouTube Live stream URL to have the AI pick up and react to viewer comments. The stream's "title", "description", and "thumbnail image" are also automatically sent to the AI, so it can deeply understand the stream content and co-host the show with you.
+  👉 [Detailed usage guide](docs/en/plugins/YoutubeLivePlugin.md)
+
+* 🎮 **Twitch Live Plugin** (`TwitchPlugin.py`)
+  Simply enter a Twitch channel name or URL to have the AI pick up and react to viewer chat comments in real time. Setting a Client ID and Client Secret also sends the stream's "title", "category", and "thumbnail image" to the AI automatically. **Chat reading works even without a Client ID.**
+  👉 [Detailed usage guide](docs/en/plugins/TwitchPlugin.md)
+
+### 🌟 Official Extension Plugins (Individual Download)
+
+To keep the main app light and simple, the following integrations are available as separate downloads for those who need them.
+🔗 [TeloPon Official Extension Plugin Pack v1.0 (Discord & Slack)](https://github.com/miyumiyu/TeloPon/releases/tag/plugins-v1.0)
+
+* 💬 **Discord Real-time Integration** (`discord_integration.py`)
+  Fetches comments from a specified Discord server channel in real time and has the AI read them aloud. Features fully automatic invite URL generation, so complex Bot setup is completed with just one button.
+  📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/discord_integration.py)
+  👉 [Detailed usage guide](docs/en/plugins/discord_integration.md)
+
+* 🏢 **Slack Comment Integration** (`slack_integration.py`)
+  Fetches comments from a specified Slack workspace channel with zero delay via "Socket Mode". Alphanumeric Slack user IDs are automatically converted to names before being delivered to the AI.
+  📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/slack_integration.py)
+  👉 [Detailed usage guide](docs/en/plugins/slack_integration.md)
+
+*(💡 Installation: Just place the downloaded `.py` file into TeloPon's `plugins` folder — that's all it takes!)*
 
 ---
 
-## 💡 配信を安定させるワンポイントアドバイス
+## 🚥 Status Display Guide (AI State Visualization)
 
-### 🔄 長時間配信時の「手動リフレッシュ」
-配信開始から30分程度経過すると、AIの脳内（記憶）がパンパンになり、処理が重くなって  **「👻 ノイズスルー」や「⚠️ AIの処理パンク」が頻発する** ようになります。
-その際は、配信の区切りのタイミング（話題が変わる時など）で、**一度「⬛ 切断する」ボタンを押し、すぐに「🔴 ライブ接続開始」ボタンを押し直してください。**
-AIの脳内が完全にクリアされ、一瞬で耳のいい元気な状態に戻ります！
+The "Status" display below the microphone settings shows the AI's current internal state and system communication status in real time.
+
+### 🟢 Basic Statuses
+* **⬛ Standby**: Before live connection. The AI is not active yet.
+* **⏳ Preparing greeting...**: Immediately after connection. The AI is thinking of the "opening greeting".
+* **🟢 On Air!**: Standby OK. Ready to pick up your voice at any time.
+* **🎧 Listening...** (cyan): Detected your voice and is paying attention.
+* **🧠 Thinking...** (orange): Detected that you finished speaking and is formulating a response.
+* **🗣️ Outputting...** (green): Compiling thoughts and outputting as a telop on screen.
+* **✨ Response complete** (green): Sign that the AI's turn ended normally.
+
+### 👻 "Empty Turn (No Response)" Statuses
+Displays why the AI finished a turn without saying anything.
+* **👻 Speech skipped**: Your words were heard, but the AI read the atmosphere and decided "this is a moment to just listen quietly" (this is normal behavior).
+* **👻 Noise skipped**: A cough, ambient noise, or AI processing lag prevented it from being recognized as speech.
+* **👻 Comment skipped / Image skipped**: Information sent from a plugin was acknowledged, but the AI determined there was nothing particular to comment on.
+
+### ⚠️ Warning / Error Statuses
+* **⚠️ Interruption detected (Barge-in)**: You started speaking while the AI was talking, so the AI read the atmosphere and canceled its own speech midway.
+* **🚫 Safety restriction**: The AI's safety filter (blocking violent/sexual content) triggered and the output was forcibly stopped.
+* **⚠️ AI processing overload**: An error or processing timeout occurred on Google's servers.
 
 ---
 
-## 🚀 起動オプション（引数）の使いかた
+## 💡 One-Point Tips for Stable Streaming
 
-ショートカットのプロパティの「リンク先」の末尾に、半角スペースを開けて以下の文字を付けることで、高度な起動が可能です。
+### 🔄 "Manual Refresh" for Long Streaming Sessions
+After about 30 minutes from stream start, the AI's memory fills up, processing becomes heavy, and **"👻 Noise skipped" and "⚠️ AI processing overload" start occurring frequently**.
+In that case, at a natural break in the stream (when topics change, etc.), **press the "⬛ Disconnect" button once, then immediately press "🔴 Start Live Connection" again**.
+The AI's memory is completely cleared and it instantly returns to a sharp, responsive state!
 
-| オプション | 例 | 説明 |
+---
+
+## 🚀 Launch Options (Arguments)
+
+You can enable advanced launch modes by adding a space and the following flags to the end of the "Target" field in your shortcut's properties.
+
+| Option | Example | Description |
 | :--- | :--- | :--- |
-| `-d`<br>`--debug` | `TeloPon.exe -d` | **デバッグモード**。詳細な通信ログやAIの内部処理が黒いコンソール画面に表示され、手動操作パネルがUIに追加されます。 |
-| `-p`<br>`--port` | `TeloPon.exe -p 8080` | **ポート番号変更** (デフォルト: `8000`)。他のソフトとローカルサーバーのポートが競合して画面が出ない場合に変更します。 |
-| `-t`<br>`--temperature` | `TeloPon.exe -t 1.0` | **AIの創造性 (Temperature)** (デフォルト: `0.7`)。AIの回答のランダム性を指定します。高いほど突飛になり、低いほど真面目になります。 |
-| `-tp`<br>`--top_p` | `TeloPon.exe -tp 0.8` | **AIの多様性 (Top-P)** (デフォルト: `0.8`)。AIの回答の候補選択範囲を指定します。値を下げるほど安定した回答になります。 |
-| `-th`<br>`--thought` | `TeloPon.exe -th` | **思考モード**。AIが「今何を考えて、なぜその返事をしたのか」という脳内の思考プロセス（Thoughts）を黒い画面に出力します。 |
-| `-tb`<br>`--thinking_budget`| `TeloPon.exe -tb 1024` | **思考予算（トークン指定）** (デフォルト: `2048`)。思考モード時のトークン予算を指定します。`0`で思考オフになります。 |
-| `-gs`<br>`--google_search` | `TeloPon.exe -gs` | **Google Search 連携**。AIがGoogle検索を使って最新情報を参照しながら回答できるようになります。 |
-| `-at`<br>`--auto_turn` | `TeloPon.exe -at 10` | **自動ターン制**。発話終了を検知したらマイクをロックし、AIの応答後に解除します。タイムアウト秒数を指定可（デフォルト10秒）。`0`で無限待ちになります。 |
-| `-seg`<br>`--segment` | `TeloPon.exe -seg` | **定期セグメントモード**。UIの自動介入タイマーを周期として、AIへ要約・トピック要求を定期的に送ります。 |
-| `-as`<br>`--audio_save` | `TeloPon.exe -as` | **発話WAV自動保存**。発話を `debug_audio/` フォルダに自動保存します（デバッグモード不要）。 |
+| `-d`<br>`--debug` | `TeloPon.exe -d` | **Debug mode**. Detailed communication logs and AI internal processing are displayed in the console window, and a manual control panel is added to the UI. |
+| `-p`<br>`--port` | `TeloPon.exe -p 8080` | **Change port number** (default: `8000`). Change this if the local server port conflicts with another application and the display doesn't appear. |
+| `-t`<br>`--temperature` | `TeloPon.exe -t 1.0` | **AI creativity (Temperature)** (default: `0.7`). Sets the randomness of AI responses. Higher = more unpredictable; lower = more straightforward. |
+| `-tp`<br>`--top_p` | `TeloPon.exe -tp 0.8` | **AI diversity (Top-P)** (default: `0.8`). Sets the candidate selection range for AI responses. Lower values produce more stable responses. |
+| `-th`<br>`--thought` | `TeloPon.exe -th` | **Thinking mode**. Outputs the AI's internal thought process (Thoughts) — "what it's thinking and why it gave that response" — to the console. |
+| `-tb`<br>`--thinking_budget`| `TeloPon.exe -tb 1024` | **Thinking budget (token specification)** (default: `2048`). Specifies the token budget for thinking mode. `0` disables thinking. |
+| `-gs`<br>`--google_search` | `TeloPon.exe -gs` | **Google Search integration**. Enables the AI to reference up-to-date information using Google Search when responding. |
+| `-at`<br>`--auto_turn` | `TeloPon.exe -at 10` | **Auto-turn mode**. Locks the microphone when speech ends and unlocks it after the AI responds. Specify the timeout in seconds (default: 10). `0` = wait indefinitely. |
+| `-seg`<br>`--segment` | `TeloPon.exe -seg` | **Periodic segment mode**. Uses the UI's Auto Talk timer as a cycle to periodically send summary/topic requests to the AI. |
+| `-as`<br>`--audio_save` | `TeloPon.exe -as` | **Auto-save speech WAV**. Automatically saves speech to the `debug_audio/` folder (debug mode not required). |
 
 ---
 
-## 📖 開発・カスタマイズドキュメント
+## 📖 Development & Customization Documentation
 
-もっとTeloPonを自分好みに魔改造したい！という方向けのガイドです。
+Guides for those who want to hack TeloPon to their heart's content!
 
-* 🧠 **[AIプロンプト作成ガイド](docs/01_prompt_guide.md)**: 自分専用のAIの作り方や絶対ルールについて。
-* 🎨 **[テーマ・CSS カスタマイズガイド](docs/02_theme_css.md)**: 自作デザインの作り方や効果音の鳴らし方。
-* 🧩 **[プラグイン開発ガイド](docs/03_plugin_dev.md)**: exe版に内蔵されたライブラリ（`requests`, `pytchat`, `obsws_python`, `Pillow` 等）を使った自作拡張機能の作り方。
-
----
-
-## ❓ トラブルシューティング
-
-### Q. 認証ボタンを押しても「🔴 認証失敗」エラーが出る
-- APIキーをコピーした際、前後に余計な「空白（スペース）」が入っていないか確認してください。
-- エラーポップアップに表示されたメッセージを確認してください。「API key not valid」等の場合はキーが間違っています。
-
-### Q. ずっと喋っているのにAIが「スキップ」や「無言ですか？」と返してくる
-- **マイクの設定ミス**: TeloPonの「マイク選択」でゲーム音やBGMを拾うデバイスが選ばれている可能性があります。ご自身のヘッドセット等を選択し直してください。
-- **ノイズ閾値の調整**: 「閾値」スライダーが高すぎる可能性があります。ご自身の声に合わせて緑色のバーが反応するようスライダーを左に下げてください。
-
-### Q. OBSに何も表示されない
-- OBSのブラウザソースのプロパティで「ローカルファイル」のチェックが外れているか確認してください。
-- アプリの「🔗 OBS用URLコピー」ボタンでもう一度URLをコピーし直して貼り付けてみてください。
-
-### Q. テロップが出現する音（SE）が出ない
-- OBSのブラウザソースのプロパティで **「OBSで音声を制御する」のチェックが「外れている」** ことを確認してください。チェックが入っていると、配信には音が乗っても自分（配信者）には音が聞こえなくなります。
-- アプリ画面の「テロップ効果音 (SE)」のチェックがONになっているか、音量スライダーが0になっていないかも確認してください。
+* 🧠 **[AI Prompt Creation Guide](docs/en/01_prompt_guide.md)**: How to create your own AI and the absolute rules to follow.
+* 🎨 **[Theme / CSS Customization Guide](docs/en/02_theme_css.md)**: How to create custom designs and configure sound effects.
+* 🧩 **[Plugin Development Guide](docs/en/03_plugin_dev.md)**: How to create custom extensions using the libraries bundled in the exe version (`requests`, `pytchat`, `obsws_python`, `Pillow`, etc.).
 
 ---
 
-## ⚠️ 早期アクセス版に関するご注意 (利用規約)
+## ❓ Troubleshooting
 
-本バージョンは **開発中のベータ版（早期アクセス版）** です。以下の点にご了承の上、ご利用ください。
+### Q. Pressing the authenticate button shows "🔴 Authentication failed"
+- Check that no extra spaces are included before or after the copied API key.
+- Check the message displayed in the error popup. If it says "API key not valid" or similar, the key is incorrect.
 
-1. **起動制限について**: 本ソフトウェアは起動時にオンラインでバージョン構成チェックを行います。ベータテスト期間の終了や重大なアップデートに伴い、予告なく旧バージョンの利用を停止し、最新版へのアップデートを促すメッセージが表示される場合があります。
-2. **無保証**: 本ツールは「現状のまま（AS IS）」で提供されます。本ツールの使用によって生じたあらゆる損害（API利用料の発生、配信トラブル、PCの不具合等）について、開発者は一切の責任を負いません。ご利用は自己責任でお願いいたします。
-3. **解析および再配布の禁止**: ソフトウェアの安定性と安全性を守るため、実行ファイル（exe）本体のリバースエンジニアリング、改変、および無断での再配布を固く禁止します。（※`plugins`フォルダ内のファイルやプロンプトの自作・改変・共有は自由に行っていただけます）
-4. **AI生成コードの性質**: 本ツールはAIがすべて開発、コード生成を行いましたので、予期せぬ挙動が発生する可能性があります。
+### Q. The AI keeps responding with "skip" or "Are you silent?" even though I'm speaking
+- **Microphone setting error**: The "Microphone Selection" in TeloPon may have selected a device that picks up game audio or BGM. Please reselect your headset or microphone.
+- **Noise threshold adjustment**: The "Threshold" slider may be set too high. Lower the slider to the left so the green bar responds to your voice.
+
+### Q. Nothing is displayed in OBS
+- Check that the "Local File" checkbox is unchecked in the OBS browser source properties.
+- Try copying the URL again using the "🔗 Copy OBS URL" button and re-pasting it.
+
+### Q. No sound effect (SE) plays when telops appear
+- Check in the OBS browser source properties that **"Control audio via OBS" is UNCHECKED**. If checked, the sound plays in the stream but you (the streamer) won't hear it.
+- Also check that "Play sound effects" is ON in the app and that the volume slider is not at 0.
+
+---
+
+## ⚠️ Notes on Early Access Version (Terms of Use)
+
+This version is a **beta version under development (early access)**. Please acknowledge the following before using.
+
+1. **Launch restrictions**: This software performs an online version/configuration check at startup. Older versions may be discontinued without notice at the end of the beta test period or with major updates, and a message prompting an update to the latest version may be displayed.
+2. **No warranty**: This tool is provided "AS IS". The developer assumes no responsibility for any damages arising from the use of this tool (API usage charges, streaming issues, PC problems, etc.). Use at your own risk.
+3. **Prohibition of analysis and redistribution**: To protect the stability and security of the software, reverse engineering, modification, and unauthorized redistribution of the executable (exe) are strictly prohibited. (※ Self-made / modified plugins in the `plugins` folder and custom prompts may be freely created, modified, and shared.)
+4. **Nature of AI-generated code**: This tool was entirely developed and code-generated by AI, so unexpected behavior may occur.
 
 ## 🤝 Special Thanks & Credits
 - **Development Partner:** Google Gemini (Code Generation & Thought Partner)
