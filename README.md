@@ -73,7 +73,7 @@ The following diagram illustrates the data flow and the role of each component.
 To run TeloPon, you need an AI key (API key) provided by Google.
 A **completely free tier is available with no credit card required**, and it's more than enough for personal streaming and hobby use!
 
-👉 **[Detailed instructions with images (beginner-friendly)](ja/docs/04_get_apikey.md)**
+👉 **[Detailed instructions with images (beginner-friendly)](docs/en/04_get_apikey.md)**
 
 1. Visit **[Google AI Studio](https://aistudio.google.com/)** and sign in with your Google account.
 2. Click **"Get API key"** in the lower left.
@@ -175,23 +175,23 @@ TeloPon has two types of plugins: "Standard Bundled Plugins" that come pre-insta
 
 * 💬 **Comment Generator File Reader** (`CommentGenerator_read.py`)
   Periodically reads text files output by external comment generators, and relays new comments to the AI.
-  👉 [Detailed usage guide](ja/docs/plugins/CommentGenerator_read.md)
+  👉 [Detailed usage guide](docs/en/plugins/CommentGenerator_read.md)
 
 * 📝 **Custom Instruction Addon Tool** (`custom_prompt.py`)
   At stream start, appends additional instructions to the base prompt (AI personality) — e.g., "Today I'll be playing ○○ game".
-  👉 [Detailed usage guide](ja/docs/plugins/custom_prompt.md)
+  👉 [Detailed usage guide](docs/en/plugins/custom_prompt.md)
 
 * 💉 **Manual Data Injection Tool** (`ManualInjector.py`)
   During the stream, directly sends arbitrary text (cue cards) or images into the AI's brain from the dedicated control panel with one button.
-  👉 [Detailed usage guide](ja/docs/plugins/ManualInjector.md)
+  👉 [Detailed usage guide](docs/en/plugins/ManualInjector.md)
 
 * 🎮 **OBS Screen AI Commentary** (`obs_capture.py`)
   Uses OBS-WebSocket to periodically capture the OBS preview screen and show it to the AI, enabling it to comment on and react to game screens or stream content.
-  👉 [Detailed usage guide](ja/docs/plugins/obs_capture.md)
+  👉 [Detailed usage guide](docs/en/plugins/obs_capture.md)
 
 * ▶️ **YouTube Integration Tool** (`YoutubeLivePlugin.py`)
   Simply specify a YouTube Live stream URL to have the AI pick up and react to viewer comments. The stream's "title", "description", and "thumbnail image" are also automatically sent to the AI, so it can deeply understand the stream content and co-host the show with you.
-  👉 [Detailed usage guide](ja/docs/plugins/YoutubeLivePlugin.md)
+  👉 [Detailed usage guide](docs/en/plugins/YoutubeLivePlugin.md)
 
 ### 🌟 Official Extension Plugins (Individual Download)
 
@@ -201,12 +201,12 @@ To keep the main app light and simple, the following integrations are available 
 * 💬 **Discord Real-time Integration** (`discord_integration.py`)
   Fetches comments from a specified Discord server channel in real time and has the AI read them aloud. Features fully automatic invite URL generation, so complex Bot setup is completed with just one button.
   📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/discord_integration.py)
-  👉 [Detailed usage guide](ja/docs/plugins/discord_integration.md)
+  👉 [Detailed usage guide](docs/en/plugins/discord_integration.md)
 
 * 🏢 **Slack Comment Integration** (`slack_integration.py`)
   Fetches comments from a specified Slack workspace channel with zero delay via "Socket Mode". Alphanumeric Slack user IDs are automatically converted to names before being delivered to the AI.
   📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/slack_integration.py)
-  👉 [Detailed usage guide](ja/docs/plugins/slack_integration.md)
+  👉 [Detailed usage guide](docs/en/plugins/slack_integration.md)
 
 *(💡 Installation: Just place the downloaded `.py` file into TeloPon's `plugins` folder — that's all it takes!)*
 
@@ -270,9 +270,9 @@ You can enable advanced launch modes by adding a space and the following flags t
 
 Guides for those who want to hack TeloPon to their heart's content!
 
-* 🧠 **[AI Prompt Creation Guide](ja/docs/01_prompt_guide.md)**: How to create your own AI and the absolute rules to follow.
-* 🎨 **[Theme / CSS Customization Guide](ja/docs/02_theme_css.md)**: How to create custom designs and configure sound effects.
-* 🧩 **[Plugin Development Guide](ja/docs/03_plugin_dev.md)**: How to create custom extensions using the libraries bundled in the exe version (`requests`, `pytchat`, `obsws_python`, `Pillow`, etc.).
+* 🧠 **[AI Prompt Creation Guide](docs/en/01_prompt_guide.md)**: How to create your own AI and the absolute rules to follow.
+* 🎨 **[Theme / CSS Customization Guide](docs/en/02_theme_css.md)**: How to create custom designs and configure sound effects.
+* 🧩 **[Plugin Development Guide](docs/en/03_plugin_dev.md)**: How to create custom extensions using the libraries bundled in the exe version (`requests`, `pytchat`, `obsws_python`, `Pillow`, etc.).
 
 ---
 

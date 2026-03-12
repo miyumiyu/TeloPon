@@ -47,7 +47,7 @@ PCのブラウザで [Discord Developer Portal](https://discord.com/developers/a
 
 TeloPonのメイン画面から「🔌 拡張機能」を開き、**「💬 Discordリアルタイム連携」** の設定（⚙️）ボタンを押してパネルを開きます。
 
-![slack連携設定画面](../images/slack_integration.png)
+![slack連携設定画面](../../../images/slack_integration.png)
 
 ### 1. トークンの入力
 * 「Botトークン」の入力欄に、ステップ2でコピーした長い文字列（トークン）を貼り付けます。

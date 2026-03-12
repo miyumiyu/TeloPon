@@ -11,7 +11,7 @@
 ### 1. 設定画面を開く
 TeloPonのメイン画面右側、「拡張機能（プラグイン）」パネルにある **「YouTube連携ツール」** の **「⚙️ 設定」** ボタンをクリックします。
 
-![YouTube連携設定画面](../images/YoutubeLivePlugin.png)
+![YouTube連携設定画面](../../../images/YoutubeLivePlugin.png)
 
 ### 2. URLを入力して「接続」する
 上部の入力欄に、現在行っている（またはこれから行う）**YouTube LiveのURL**を貼り付け、右側の **「接続」** ボタンを押します。  

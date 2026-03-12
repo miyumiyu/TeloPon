@@ -12,7 +12,7 @@ TeloPonからOBSの画面を取得するために、まずはOBS側の「WebSock
 
 1. **OBS Studio** を起動します。
 2. 上部メニューの **「ツール」** から **「WebSocket サーバー設定」** をクリックします。
-![OBS画面キャプチャ設定画面](../images/obs_capture02.png)
+![OBS画面キャプチャ設定画面](../../../images/obs_capture02.png)
 
 3. **「WebSocketサーバーを有効にする」** にチェックを入れます。
 4. **サーバーポート** はデフォルトの `4455` のままでOKです。
@@ -26,7 +26,7 @@ TeloPonからOBSの画面を取得するために、まずはOBS側の「WebSock
 ### 1. 操作パネルを開く
 TeloPonのメイン画面右側、「拡張機能（プラグイン）」パネルにある **「OBS画面AI実況」** の **「🖥️ 操作パネル」** ボタンをクリックします。
 
-![OBS画面キャプチャ設定画面](../images/obs_capture01.png)
+![OBS画面キャプチャ設定画面](../../../images/obs_capture01.png)
 
 ### 2. OBS WebSocket 接続設定
 先ほどOBSで設定した情報を入力します。
