@@ -1,75 +1,73 @@
-# 💬 コメジェネファイル読み込み (CommentGenerator_read.py)
+# 💬 Comment Generator File Reader (CommentGenerator_read.py)
 
-このプラグインは、ローカルPC上に出力された**コメントデータ（`comment.xml`）を監視して、AIにリスナーのコメントを読み込ませる**ための拡張機能です。
+This plugin monitors **comment data (`comment.xml`) output on the local PC and feeds viewer comments to the AI** in real time.
 
-この機能の最大の強みは、YouTubeだけでなく、**Twitch、ニコニコ生放送、ツイキャス、ミラティブなど、あらゆる配信サイトのコメントをAIに拾わせることができる**点です！
-
-
+The greatest strength of this feature is that it works not just with YouTube, but **with any streaming platform — Twitch, Niconico Live, TwitCasting, Mirrativ, and more** — allowing the AI to pick up comments from anywhere!
 
 ---
 
-## 🛠️ 準備：コメントファイル（comment.xml）を出力する仕組みを作る
+## 🛠️ Setup: Creating a System to Output comment.xml
 
-TeloPon単体ではYouTube以外のコメントを直接取得することはできません。外部の無料ツールを2つ組み合わせて、PC内に `comment.xml` というファイルを出力させる必要があります。
+TeloPon alone cannot directly fetch comments from platforms other than YouTube. You need to combine two free external tools to output a `comment.xml` file on your PC.
 
-### ステップ1：必要なソフトを2つダウンロードする
+### Step 1: Download Two Required Applications
 
-1. **マルチコメントビューア (Multi Comment Viewer)**  
-   各配信サイトのコメントをひとまとめに受信するソフトです。  
-   👉 [マルチコメントビューア 公式サイト](https://ryu-s.github.io/app/multicommentviewer) から「安定版」をダウンロードして解凍します。
-2. **HTML5コメントジェネレーター**  
-   受信したコメントをファイル（XML）として出力するためのツールです。  
-   👉 [KILINBOX (公式サイト)](https://lib.kilinbox.net/comegene/index.cgi) などから最新版（例：`hcg_0_0_8b.zip`）をダウンロードし、解凍します。
+1. **Multi Comment Viewer**
+   Software that collects comments from multiple streaming platforms in one place.
+   👉 Download the "stable version" from the [Multi Comment Viewer official site](https://ryu-s.github.io/app/multicommentviewer) and extract it.
+2. **HTML5 Comment Generator**
+   A tool for outputting received comments as a file (XML).
+   👉 Download the latest version (e.g., `hcg_0_0_8b.zip`) from [KILINBOX (official site)](https://lib.kilinbox.net/comegene/index.cgi) and extract it.
 
-### ステップ2：2つのソフトを連携させる
+### Step 2: Link the Two Applications
 
-1. 解凍した「マルチコメントビューア」のフォルダ内にある `MultiCommentViewer.exe` をダブルクリックして起動します。
-2. 上部メニューの **「プラグイン」** から **「コメジェネ連携」** をクリックします。
-3. 開いた設定画面で **「コメジェネ連携」** にチェックを入れます。
-4. 「設定ファイルの場所」の **「選択」** ボタンをクリックし、ステップ1で解凍した「HTML5コメントジェネレーター（CommentGenerator0.0.8b等）」のフォルダの中にある **`setting.xml`** を指定します。
+1. Double-click `MultiCommentViewer.exe` inside the extracted "Multi Comment Viewer" folder to launch it.
+2. From the top menu, click **"Plugins"** then **"CommentGenerator Integration"**.
+3. In the settings window that opens, check **"Enable CommentGenerator Integration"**.
+4. Click the **"Browse"** button next to "Settings file location" and select the **`setting.xml`** file inside the "HTML5 Comment Generator" folder you extracted in Step 1.
 
-### ステップ3：comment.xml の出力確認
+### Step 3: Confirm comment.xml Output
 
-1. マルチコメントビューアの「接続を追加」から、ご自身の配信URLを入力してコメントの取得を開始します。
-2. コメントが取得されると、指定した「HTML5コメントジェネレーター」のフォルダ内に **`comment.xml`** というファイルが自動的に生成（または更新）されます。
+1. Add your stream URL via "Add Connection" in Multi Comment Viewer and start fetching comments.
+2. When comments are received, a **`comment.xml`** file will be automatically created (or updated) inside the specified HTML5 Comment Generator folder.
 
-これで準備は完了です！この `comment.xml` をTeloPonに監視させます。
-
----
-
-## ⚙️ TeloPon側の設定と使い方
-
-### 1. 設定画面を開く
-TeloPonのメイン画面右側、「拡張機能（プラグイン）」パネルにある **「コメジェネファイル読み込み」** の **「⚙️ 設定」** ボタンをクリックします。
-
-![コメジェネファイル読み込みの設定画面](../../../images/CommentGenerator_read.png)
-
-### 2. ファイルパスの指定
-**「監視するコメントファイル (XML/TXT)」** の横にある **「参照...」** ボタンをクリックします。
-ステップ3で確認した、HTML5コメントジェネレーターのフォルダ内にある **`comment.xml`** を選択してください。
-
-### 3. 送信間隔（クールダウン）の設定
-**「AIへの送信間隔 (秒)」** を設定します（デフォルトは `5.0` 秒推奨）。
-* コメントが来るたびにAIに送信すると、AIが処理しきれずにパニック（動作不良）になるため、ここで設定した秒数分だけコメントを「貯金」し、一括でAIに送信する仕組みになっています。
-* コメントの流れが速い配信の場合は、`10` など少し長めに設定することをおすすめします。
-
-### 4. 有効化して保存する
-* 画面上部の **「コメント連携機能を有効にする」** のチェックボックスにチェックを入れます。
-* **「保存」** ボタンを押してウィンドウを閉じます。
-* メイン画面のプラグインのバッジがグレーの `OFF` から緑色の `ON` に変わります。
-
-### 5. ライブ接続を開始する
-TeloPonのメイン画面で **「🔴 ライブ接続開始」** ボタンを押してAIと通話を開始します。
-以降、リスナーがコメントをして `comment.xml` が更新されるたびに、設定した間隔でAIにコメントが転送され、AIが反応してくれるようになります！
+Setup is complete! Now have TeloPon monitor this `comment.xml`.
 
 ---
 
-## ⚠️ ご利用上の注意点
+## ⚙️ TeloPon Settings and Usage
 
-* **ファイル書き込みの競合について**
-  ごく稀に、コメントジェネレーターがファイルに書き込んでいる最中にTeloPonが読み込もうとして、一時的に読み込みエラーになることがありますが、システムが自動でリトライするため配信への影響はありません。
-* **YouTube連携ツールとの併用について**
-  「YouTube連携ツール」とこの「コメジェネファイル読み込み」を**同時にONにすると、AIに同じコメントが2重に送信されてしまいます。** YouTubeの配信を行う場合は、どちらか片方のみをONにするようにしてください。
+### 1. Open the Settings Panel
+Click the **"⚙️ Settings"** button for **"Comment Generator File Reader"** in the "Extensions (Plugins)" panel on the right side of the TeloPon main screen.
+
+![Comment Generator File Reader settings](../../../images/CommentGenerator_read.png)
+
+### 2. Specify the File Path
+Click the **"Browse..."** button next to **"Comment file to monitor (XML/TXT)"**.
+Select the **`comment.xml`** file inside the HTML5 Comment Generator folder that you confirmed in Step 3.
+
+### 3. Set the Send Interval (Cooldown)
+Set the **"Send interval to AI (seconds)"** (default: `5.0` seconds recommended).
+* Sending to the AI on every single comment would overwhelm it and cause malfunctions, so the plugin "banks" comments for the configured number of seconds before sending them all at once.
+* For high-traffic streams, it's recommended to set a slightly longer value like `10`.
+
+### 4. Enable and Save
+* Check the **"Enable comment integration"** checkbox at the top of the screen.
+* Press **"Save"** to close the window.
+* The plugin badge in the main screen will change from grey `OFF` to green `ON`.
+
+### 5. Start the Live Connection
+Press the **"🔴 Start Live Connection"** button on the TeloPon main screen to begin the AI session.
+After that, whenever a viewer comments and `comment.xml` is updated, comments will be forwarded to the AI at the configured interval, and the AI will react!
 
 ---
-[⬅️ プラグイン一覧に戻る](../../README.md#🔌-標準プラグイン同梱拡張機能)
+
+## ⚠️ Notes
+
+* **File write conflicts**
+  Very rarely, TeloPon may attempt to read the file while the comment generator is writing to it, causing a temporary read error. The system automatically retries, so there is no impact on streaming.
+* **Using alongside the YouTube Integration Plugin**
+  If you enable both the "YouTube Integration Tool" and this "Comment Generator File Reader" **at the same time, the same comments will be sent to the AI twice.** When streaming on YouTube, please enable only one of them.
+
+---
+[⬅️ Back to Plugin List](../../README.md)

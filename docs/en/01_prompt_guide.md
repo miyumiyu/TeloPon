@@ -1,163 +1,163 @@
-# TeloPon: AIプロンプト作成ガイド 🧠
+# TeloPon: AI Prompt Creation Guide 🧠
 
-TeloPonでは、AIの「性格」や「振る舞い」を **プロンプトファイル（テキストファイル）** で簡単にカスタマイズできます。
+In TeloPon, you can easily customize the AI's "personality" and "behavior" using **prompt files (text files)**.
 
-このガイドでは、オリジナルのAIアシスタントを作るためのプロンプトファイルの書き方と、システムをエラーなく爆速で動かすための「絶対のルール」を解説します。
-
----
-
-## 📂 1. ファイルの作成と保存場所
-
-プロンプトファイルは、TeloPon本体があるフォルダ内の **`prompts`** フォルダに保存します。保存したファイルは、TeloPon起動時のメイン画面（AIの性格）から自由に選べるようになります。
-
-* **保存場所**: `TeloPon/prompts/`
-* **ファイル名**: 自由につけて構いません（例: `miyumiyu_assistant.txt`、`dokuzetsu.txt`など）。先頭に特定の文字を付ける必要もありません。
-* **文字コード**: 必ず **UTF-8** で保存してください。
-
-> **💡 ヒント**
-> Windowsの「メモ帳」で作成する場合は、「名前を付けて保存」する際に、右下の文字コード欄が「UTF-8」になっていることを確認してください。
+This guide explains how to write prompt files to create your own original AI assistant, and the "absolute rules" you must follow to keep the system running at top speed without errors.
 
 ---
 
-## 🏗️ 2. ファイルの基本構造
+## 📂 1. Creating and Saving Prompt Files
 
-プロンプトファイルは、大きく分けて**「ヘッダー（設定）」**と**「本文（AIへの指示）」**の2つのブロックで構成されます。
-この2つのブロックは、必ず **`---` (ハイフン3つ)** の行で区切る必要があります。
+Prompt files are saved in the **`prompts`** folder inside the TeloPon application folder. Once saved, any file in that folder will be selectable from the main TeloPon screen (AI Personality) at startup.
+
+* **Save location**: `TeloPon/prompts/`
+* **File name**: Any name is fine (e.g., `my_assistant.txt`, `snarky_ai.txt`). No special prefix is required.
+* **Encoding**: Always save as **UTF-8**.
+
+> **💡 Tip**
+> If creating with Windows Notepad, make sure the encoding dropdown in the "Save As" dialog is set to "UTF-8".
+
+---
+
+## 🏗️ 2. Basic File Structure
+
+A prompt file consists of two main blocks: a **"Header (settings)"** and a **"Body (instructions for the AI)"**.
+These two blocks must always be separated by a line containing exactly **`---` (three hyphens)**.
 
 ```text
-NAME: AIの名前
-START_MSG: 起動時のシステムメッセージ
-CMT_MSG: コメント受信時の指示文
+NAME: AI's name
+START_MSG: System message sent at startup
+CMT_MSG: Instructions sent when a comment is received
 ---
-ここから下に、AIへの詳しい指示（システムプロンプト）を書きます。
-あなたは優秀なアシスタントです...
+Write your detailed instructions (system prompt) for the AI below this line.
+You are an excellent assistant...
 ```
 
 ---
 
-## ⚙️ 3. ヘッダーの書き方と、便利な「差し込み文字」
+## ⚙️ 3. Writing the Header and Using Placeholder Variables
 
-ファイルの一番上（`---` より上）に、以下の3つの項目を1行ずつ記述します。
+At the top of the file (above `---`), write the following three items, one per line.
 
-* **`NAME:`**  
-  AIの名前です。UIのスタンバイ画面や、デフォルトのトピックとして表示されます。
-* **`START_MSG:`**  
-  ライブ接続を開始した直後に、システムからAIにコッソリ送られる最初のメッセージ（カンペ）です。これをキッカケにAIが最初の挨拶を始めます。
-* **`CMT_MSG:`**  
-  YouTubeのコメントなどが届いた際に、コメントデータの末尾に自動で付与される指示です。
+* **`NAME:`**
+  The AI's name. Displayed on the UI standby screen and used as the default topic.
+* **`START_MSG:`**
+  The first message secretly sent from the system to the AI immediately after a live connection starts. This triggers the AI to begin its opening greeting.
+* **`CMT_MSG:`**
+  Instructions automatically appended to comment data when a YouTube comment or similar arrives.
 
-### 🪄 魔法の「差し込み文字（変数）」について
-プロンプトのヘッダーや本文の中で以下の文字を使うと、TeloPonが実行時に**実際の名前**へと自動的に置き換えてAIに伝えます。
-これにより、「配信者が変わるたびにプロンプトを書き換える」という手間が省け、汎用性の高いプロンプトを作ることができます。
+### 🪄 Magic "Placeholder Variables"
+Using the following placeholders in the header or body will cause TeloPon to automatically replace them with the **actual names** at runtime.
+This lets you create reusable prompts that work for any streamer without editing the file each time.
 
-* **`{streamer}`**  
-  TeloPonのメイン画面（UI）の「🎥 配信者名」欄に入力された名前に置き換わります。
-  *(例)* `[MAIN]今日の{streamer}はちょっと変ですね。` → UIで「みゅみゅ」と設定していれば `[MAIN]今日のみゅみゅはちょっと変ですね。` と発話します。
-* **`{ai_name}`**  
-  ヘッダーの `NAME:` で設定したAIの名前に置き換わります。
-  *(例)* `あなたの名前は「{ai_name}」です。` → `あなたの名前は「てろぽん」です。` とAIが認識します。
-
----
-
-## 🎨 4. テロップを彩る「強調タグ」の使い方
-
-AIのセリフ（`[MAIN]`タグの中身）をただ表示するだけでなく、特定の言葉に色を付けて強調することで、よりテレビ番組らしいリッチなテロップになります。
-プロンプトの中でAIに「重要な言葉はタグで囲んで」と指示することで、自動で色付けをしてくれます。
-
-* **`<b1>文字</b1>` （赤色・強調）**  
-  一番目立たせたい言葉、ツッコミのオチ、重要なキーワードに使います。
-  デフォルトテーマでは**赤色**（またはアクセントカラー）で表示されます。
-* **`<b2>文字</b2>` （青色・補足）**  
-  二番目に目立たせたい言葉、補足情報などに使います。
-  デフォルトテーマでは**青色**（またはサブカラー）で表示されます。
-
-**【AIへの指示例】**
-> セリフ内の重要な言葉は `<b1>...</b1>` (赤) や `<b2>...</b2>` (青) で囲んで強調してください。
-
-**【出力と表示のイメージ】**
-`[MAIN] 今日の配信は<b1>重大発表</b1>があります！<b2>絶対見てね</b2>！`  
-👉 「重大発表」が赤く、「絶対見てね」が青く装飾されて画面に表示されます。
+* **`{streamer}`**
+  Replaced with the name entered in the "🎥 Streamer Name" field on the TeloPon main screen.
+  *(Example)* `[MAIN] {streamer} is acting a little weird today.` → if "Miyumiyu" is set in the UI, it becomes `[MAIN] Miyumiyu is acting a little weird today.`
+* **`{ai_name}`**
+  Replaced with the AI name set in the header's `NAME:` field.
+  *(Example)* `Your name is "{ai_name}".` → the AI recognizes itself as `Your name is "TeloPon".`
 
 ---
 
-## 🚨 5. 【超重要】絶対に守らせるべき「出力フォーマット（タグ方式）」
+## 🎨 4. Using "Emphasis Tags" to Decorate Telops
 
-TeloPonのシステムをエラーなく超高速に動かすために、絶対にAIに守らせなければならない「出力ルール（タグ方式）」があります。AIがこのルールを破ると、OBSにテロップが表示されなかったり、フリーズしたりします。
-**以下のルール文は、必ずプロンプトの末尾などにそのまま貼り付けて（コピペして）ください。**
+Instead of just displaying the AI's lines (the content inside `[MAIN]` tags) as plain text, you can highlight specific words with color to create richer, more TV-like telops.
+By instructing the AI in your prompt to "wrap important words in tags", it will automatically apply color formatting.
+
+* **`<b1>text</b1>` (red · emphasis)**
+  Use for the most eye-catching word, the punchline of a quip, or an important keyword.
+  Displayed in **red** (or the accent color) in the default theme.
+* **`<b2>text</b2>` (blue · supplementary)**
+  Use for a secondary highlight, supplementary information, etc.
+  Displayed in **blue** (or the sub-color) in the default theme.
+
+**[Example instruction for the AI]**
+> Wrap important words in your lines with `<b1>...</b1>` (red) or `<b2>...</b2>` (blue) for emphasis.
+
+**[Example output and display]**
+`[MAIN] There's a <b1>major announcement</b1> in today's stream! <b2>Don't miss it</b2>!`
+👉 "major announcement" appears in red and "Don't miss it" appears in blue on screen.
+
+---
+
+## 🚨 5. [CRITICAL] The "Output Format (Tag System)" the AI Must Always Follow
+
+There is an "output rule (tag system)" that the AI must absolutely follow for TeloPon's system to run at maximum speed without errors. If the AI breaks this rule, telops won't appear in OBS, or the system may freeze.
+**Copy and paste the rule text below directly into your prompt (e.g., at the end).**
 
 ```text
-【絶対ルール：テロップ出力フォーマット】
-あなたは回答を、必ず以下の「専用タグ」を用いた書式で出力しなければなりません。
-1回の発言につき、出力するテロップは「必ず1つ」としてください。複数パターンの出力や、タグの繰り返しは厳禁です。
-装飾（Markdownの太字や箇条書きなど）や、タグ以外の前置き・返事は一切使用してはいけません。即座にタグから出力してください。
+[ABSOLUTE RULE: Telop Output Format]
+You must output all responses using the following "dedicated tag" format.
+Each response must contain exactly ONE telop. Multiple patterns or repeated tags are strictly forbidden.
+Do not use decorations (Markdown bold, bullet points, etc.) or any preamble/acknowledgment outside the tags. Output starting directly from the tags.
 
-[TOPIC] トピック名 [MAIN] メインテキスト [WND] ウィンドウID [LAY] レイアウトID [BDG] バッジ [MEMO] AIの脳内メモ
+[TOPIC] topic name [MAIN] main text [WND] window ID [LAY] layout ID [BDG] badge [MEMO] AI's internal note
 ```
 
-### 各タグの意味と役割
-1. **`[TOPIC]`**: テロップの左上に出る小さな見出し（例: `AIアシスタント`、`速報`）
-2. **`[MAIN]`**: 画面に表示されるセリフ本体。ここで強調タグ（`<b1>`など）を使います。
-3. **`[WND]`**: テロップの枠デザイン。（例: `window-simple`, `window-explain`, `window-news`など）
-4. **`[LAY]`**: テロップの表示スタイル。基本は `layout-flat` で固定。
-5. **`[BDG]`**: テロップの隅に付く小さなアイコンや文字。（不要な場合は `NONE`）
-6. **`[MEMO]`**: 次の会話に繋げるための内部メモ。**システムはこの[MEMO]タグを検知した瞬間に画面表示を開始するため、必ず最後に書いてください。**
+### Meaning and Role of Each Tag
+1. **`[TOPIC]`**: Small heading shown in the upper-left of the telop (e.g., `AI Assistant`, `Breaking`)
+2. **`[MAIN]`**: The main text displayed on screen. Use emphasis tags (`<b1>`, etc.) here.
+3. **`[WND]`**: Telop frame design. (e.g., `window-simple`, `window-explain`, `window-news`)
+4. **`[LAY]`**: Telop display style. Generally fixed to `layout-flat`.
+5. **`[BDG]`**: A small icon or text in the corner of the telop. (Use `NONE` if not needed)
+6. **`[MEMO]`**: An internal note for continuing to the next turn. **The system begins displaying on screen the instant it detects the `[MEMO]` tag, so always write it last.**
 
 ---
 
-## 🚑 6. うまく動かないときは？（思考モードの活用）
+## 🚑 6. When Things Aren't Working (Using Thinking Mode)
 
-「AIがずっと黙り込んでいる」「たまにしか喋らない」「なぜか変な返事をする」といった場合、プロンプトの指示がAIを混乱させている可能性があります。
-そんな時は、TeloPonを起動する際に **`-th`（思考モード）オプション** を付けてみてください。
+If "the AI keeps going silent", "it only speaks occasionally", or "it gives strange responses", the AI may be confused by the prompt instructions.
+In that case, try launching TeloPon with the **`-th` (thinking mode) option**.
 
-**【起動方法の例】**
+**[Example launch command]**
 ```bash
 python telopon_live.py -d -th
 ```
 
-思考モードをオンにすると、コマンドプロンプト（黒い画面）のログに **`[THOUGHT] 🧠`** という項目が表示されるようになります。
-これは、AIが「今マイクからどんな音を聞き取ったか」「なぜその回答を選んだのか（あるいはなぜスキップしたのか）」という**脳内の思考プロセス**です。
+With thinking mode on, a **`[THOUGHT] 🧠`** entry will appear in the console (black window) logs.
+This shows the AI's **internal thought process** — "what it heard from the microphone" and "why it chose that response (or why it skipped)".
 
-* **「雑音を宇宙語と勘違いしているな…」**
-* **「プロンプトの制限が厳しすぎて、AIが『今は喋ってはいけない』と委縮しているな…」**
-* **「マイクの音が途切れて、思考を何度もやり直しているな…」**
+* **"It's interpreting background noise as speech…"**
+* **"My prompt restrictions are too strict — the AI is hesitating because it thinks it shouldn't speak now…"**
+* **"The microphone audio is cutting out and the AI keeps restarting its thinking…"**
 
-このように、AIが何に詰まっているのか（ボトルネック）が丸わかりになるため、プロンプトの修正やマイク環境の改善に非常に役立ちます。
-※確認が終わったら、リアルタイムのテンポを良くするために `-th` オプションは外して通常起動に戻すことをお勧めします。
+This makes it clear exactly where the AI is getting stuck (the bottleneck), which is extremely useful for fixing prompts and improving your microphone setup.
+※ Once you've finished diagnosing, it's recommended to remove the `-th` option and restart normally for better real-time performance.
 
 ---
 
-## 🎁 7. コピペで使える！基本のプロンプトサンプル
+## 🎁 7. Ready-to-Use Basic Prompt Sample
 
-初めて作成する場合は、以下のテキストをコピーして `TeloPon/prompts/sample_assistant.txt` として保存し、TeloPonで読み込んでみてください。すぐに優秀なキャラクターアシスタントが誕生します。
+If this is your first time, copy the text below, save it as `TeloPon/prompts/sample_assistant.txt`, and load it in TeloPon. You'll have a capable character AI assistant ready to go immediately.
 
 ```text
-NAME: みゆみゆ
-START_MSG: システム起動完了。{streamer}さん、今日の配信も頑張りましょう！まずは視聴者へご挨拶をお願いします。
-CMT_MSG: ※視聴者から新着コメントが届きました。これを話題のキッカケにして番組を回してください。
+NAME: TeloPon
+START_MSG: System startup complete. {streamer}, let's make today's stream great! Please say hello to the viewers first.
+CMT_MSG: A new viewer comment has arrived. Use this as a conversation starter to keep the show going.
 ---
-あなたは配信者「{streamer}」のアシスタントを務めるバーチャルキャラクター「{ai_name}」です。
-視聴者からのコメントを拾ったり、マイクの音声に反応してライブ配信を盛り上げてください。
+You are "{ai_name}", a virtual character who serves as an assistant to streamer "{streamer}".
+React to viewer comments and microphone audio to liven up the live stream.
 
-【行動指針】
-- 常に明るく、親しみやすいトーンで話します。
-- 沈黙を嫌います。{streamer}が言葉に詰まったら、すかさずツッコミやガヤを入れて助けてください。
-- 視聴者からのコメントは神様からの言葉として、最優先で大袈裟に喜んで拾ってください。
+[Guidelines]
+- Always speak in a bright, friendly tone.
+- You dislike silence. If {streamer} is at a loss for words, immediately jump in with a quip or ad-lib to help them out.
+- Treat viewer comments like words from the heavens — pick them up with top priority and exaggerated enthusiasm.
 
-【絶対ルール：テロップ出力フォーマット（最重要）】
-システムがあなたの発言を画面に超高速で表示するために、回答は**必ず**以下の「タグ方式」で1行だけで出力してください。
-前置き、返事、Markdown装飾、およびタグセットの複数回出力（キメラ化）は一切禁止です。
-セリフ内の重要な言葉は <b1>...</b1>(赤) や <b2>...</b2>(青) で囲んで強調してください。
+[ABSOLUTE RULE: Telop Output Format (MOST IMPORTANT)]
+To display your responses on screen at maximum speed, output your answer as exactly one line in the following "tag format".
+Preambles, acknowledgments, Markdown decorations, and multiple tag outputs are strictly forbidden.
+Wrap important words in your lines with <b1>...</b1> (red) or <b2>...</b2> (blue) for emphasis.
 
-[TOPIC] トピック [MAIN] あなたの発言内容 [WND] ウィンドウID [LAY] レイアウトID [BDG] バッジ [MEMO] あなたの内部メモ
+[TOPIC] topic [MAIN] your response [WND] window ID [LAY] layout ID [BDG] badge [MEMO] your internal note
 
-[項目の詳細]
-- [TOPIC]: {ai_name} または 現在の話題の短いタイトル
-- [MAIN]: あなたの発言内容（これがテロップとして表示されます）
-- [WND]: 「window-simple」を必ず使用してください。
-- [LAY]: 「layout-flat」を必ず使用してください。
-- [BDG]: 感情などの絵文字1文字（例: 💡, 🧪）。不要な場合は NONE。
-- [MEMO]: 今後の展開に向けた備忘録（※このタグを検知してシステムが動作するため、必ず最後に書いてください）。
+[Field details]
+- [TOPIC]: {ai_name} or a short title of the current topic
+- [MAIN]: Your response content (this is displayed as the telop)
+- [WND]: Always use "window-simple".
+- [LAY]: Always use "layout-flat".
+- [BDG]: A single emoji for emotion (e.g., a light bulb or test tube). Use NONE if not needed.
+- [MEMO]: A reminder for future developments (the system triggers on detecting this tag, so always write it last).
 
-[出力例]
-[TOPIC] {ai_name} [MAIN] 配信スタートですね！今日も<b1>元気いっぱい</b1>頑張りましょう！ [WND] window-simple [LAY] layout-flat [BDG] ✨ [MEMO] 最初の挨拶を完了。コメント待ち。
+[Output example]
+[TOPIC] {ai_name} [MAIN] Stream is starting! Let's have a <b1>great time</b1> today! [WND] window-simple [LAY] layout-flat [BDG] sparkles [MEMO] Opening greeting complete. Waiting for comments.
 ```

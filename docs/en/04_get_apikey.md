@@ -1,41 +1,41 @@
-# 🔑 初心者向け：無料のAPIキーを取得しよう！
+# 🔑 Beginner's Guide: Get Your Free API Key!
 
-TeloPonを動かすには、Googleが提供しているAIの鍵（APIキー）が必要です。
-**クレジットカード登録不要・完全無料の枠**が用意されており、個人の配信や趣味で遊ぶ分には無料枠で十分すぎるほど楽しめます！
+To run TeloPon, you need an AI key (API key) provided by Google.
+A **completely free tier is available with no credit card required**, and it's more than enough for personal streaming and hobby use!
 
-初心者の方でもパソコンやスマホから簡単に取得できるので、以下の手順を順番に進めてみましょう。
+Even if you're new to this, you can get it easily from a PC or smartphone — just follow the steps below in order.
 
 ---
 
-### ステップ1：APIキー作成画面を開く
-まずは、Google AI Studioにアクセスしてログインし、画面にある **「API キーを作成」** ボタンをクリックします。
+### Step 1: Open the API Key Creation Page
+First, go to Google AI Studio, log in, and click the **"Create API key"** button on the screen.
 
-👉 **[Google AI Studio (APIキー取得ページ)](https://aistudio.google.com/api-keys)**
+👉 **[Google AI Studio (API Key page)](https://aistudio.google.com/api-keys)**
 
 <img src="../../images/api-key1.png" width="300">
 
-### ステップ2：新しいプロジェクトを作成する
-「インポートしたプロジェクトを選択」という項目をクリックし、メニューから **「＋ プロジェクトを作成」** を選択します。
+### Step 2: Create a New Project
+Click on "Select an imported project", then choose **"+ Create project"** from the menu.
 
 <img src="../../images/api-key2.png" width="300">
 
-### ステップ3：プロジェクトに名前を付ける
-「新しいプロジェクトを作成」という画面が出るので、「プロジェクトに名前を付ける」の欄にわかりやすい名前（例：**`TeloPon`**）を入力して、「プロジェクトを作成」ボタンを押します。
+### Step 3: Name Your Project
+A "Create new project" screen will appear. Enter a descriptive name in the "Name your project" field (e.g., **`TeloPon`**), then press "Create project".
 
 <img src="../../images/api-key3.png" width="300">
 
-### ステップ4：APIキーに名前を付ける
-続いて「新しいキーを作成する」画面が出るので、「キー名の設定」に（例：**`TeloPon API Key`**）と入力し、「キーを作成」ボタンを押します。
+### Step 4: Name Your API Key
+Next, a "Create a new key" screen will appear. Enter a name in the "Key name" field (e.g., **`TeloPon API Key`**), then press "Create key".
 
 <img src="../../images/api-key4.png" width="300">
 
-### ステップ5：作成したAPIキーをコピーする
-作成が完了すると、APIキーの一覧画面に戻ります。今作成したキー（画像では`...3eb8`等）が表示されているので、クリックして長い文字列（`AIza...`で始まるもの）をコピーします。
+### Step 5: Copy Your API Key
+Once created, you'll be returned to the API key list. Your new key will be shown (e.g., `...3eb8`). Click it to copy the full string (starting with `AIza...`).
 
 <img src="../../images/api-key5.png" width="300">
 
 ---
 
-> ⚠️ **超重要なお願い（取り扱い注意！）**
-> このAPIキーは、**絶対に他人に教えたり、配信画面に映したりしないでください**。
-> 家の鍵やパスワードと同じくらい大切なものなので、メモ帳などに貼り付けて大切に保管しておきましょう。この後のアプリ設定で使います！
+> ⚠️ **Critical Reminder (Handle with Care!)**
+> **Never share this API key with anyone or let it appear on your stream.**
+> Treat it like a house key or password — paste it somewhere safe like a notepad. You'll need it for the app setup coming up next!

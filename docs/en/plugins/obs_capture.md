@@ -1,76 +1,76 @@
-# 🎮 OBS画面AI実況 (obs_capture.py)
+# 🎮 OBS Screen AI Commentary (obs_capture.py)
 
-このプラグインは、**OBS Studioの特定の画面（ゲーム画面やカメラ映像など）を定期的にキャプチャし、自動または手動でAIに見せる**ことができる超強力なツールです。
+This plugin is an incredibly powerful tool that **periodically captures a specific OBS Studio screen (game capture, camera feed, etc.) and shows it to the AI automatically or manually**.
 
-「配信者の容姿について」「いまどんなゲームをやっているのか」といった、**視覚情報に基づいたAIのリアルタイム実況やツッコミ**が可能になります。
-
----
-
-## 🛠️ 準備：OBS側の設定 (OBS WebSocket)
-
-TeloPonからOBSの画面を取得するために、まずはOBS側の「WebSocket」機能を有効にする必要があります。
-
-1. **OBS Studio** を起動します。
-2. 上部メニューの **「ツール」** から **「WebSocket サーバー設定」** をクリックします。
-![OBS画面キャプチャ設定画面](../../../images/obs_capture02.png)
-
-3. **「WebSocketサーバーを有効にする」** にチェックを入れます。
-4. **サーバーポート** はデフォルトの `4455` のままでOKです。
-5. **認証を有効にする** にチェックを入れ、お好みの **パスワード** を設定します（TeloPon側で入力するので覚えておいてください）。
-6. 「適用」→「OK」を押して閉じます。
+It enables **real-time AI commentary and reactions based on visual information** — things like commenting on the streamer's appearance or what game is currently being played.
 
 ---
 
-## ⚙️ TeloPon側の設定と使い方
+## 🛠️ Setup: Configuring OBS (OBS WebSocket)
 
-### 1. 操作パネルを開く
-TeloPonのメイン画面右側、「拡張機能（プラグイン）」パネルにある **「OBS画面AI実況」** の **「🖥️ 操作パネル」** ボタンをクリックします。
+To allow TeloPon to capture the OBS screen, you first need to enable the "WebSocket" feature in OBS.
 
-![OBS画面キャプチャ設定画面](../../../images/obs_capture01.png)
+1. Launch **OBS Studio**.
+2. From the top menu, click **"Tools"** then **"WebSocket Server Settings"**.
+![OBS capture settings](../../../images/obs_capture02.png)
 
-### 2. OBS WebSocket 接続設定
-先ほどOBSで設定した情報を入力します。
-* **ホスト / ポート**: 基本は `127.0.0.1` と `4455` のままでOKです。  
-  （OBSとTeloPonが同じPCで動いている場合）
-* **パスワード**: OBS側で設定したパスワードを入力します。
-
-### 3. キャプチャ対象の指定とテスト
-* **対象ソース名**: AIに見せたいOBS内の **「ソースの名前」** を正確に入力します。  
-  *(例：OBSのソース一覧にある「ゲームキャプチャ」や「画面キャプチャ」という名前をそのまま入力)*
-* **「キャプチャ画面」ボタンを押す**: 設定が正しければ、指定したソースの現在の画面がプレビュー枠に表示されます。これで接続テストは完了です！
-
-### 4. AIへの送信設定
-AIに画面を送るタイミングと、画像と一緒に送る「カンペ」を設定します。
-
-* **自動送信の間隔 (秒)**  
-  配信中、AIに画面を送る頻度を設定します。短すぎるとAIが喋りっぱなしになるため、基本は `30` 〜 `60` 秒程度がおすすめです。
-* **画像と一緒に送る指示テキスト**  
-  AIに画像が届いた時、どう反応してほしいかを指示します。  
-  *(デフォルト: 「【配信画面の更新】今の画面の状況です！これを見て実況やツッコミを入れてください！」)*
-* **配信中、一定間隔で自動キャプチャしてAIに送る**  
-  画面左上のこのチェックボックスをONにすると、ライブ接続中に指定した間隔で自動的に画面が送られ続けます。
-
-設定が終わったら **「保存」** ボタンを押してパネルを閉じます。
+3. Check **"Enable WebSocket server"**.
+4. Leave the **server port** at the default `4455`.
+5. Check **"Enable Authentication"** and set a **password** of your choice (you'll enter it in TeloPon, so remember it).
+6. Press "Apply" → "OK" to close.
 
 ---
 
-## ⚡ 配信中の活用方法（手動送信）
+## ⚙️ TeloPon Settings and Usage
 
-自動送信だけでなく、「今ここを見てほしい！」という決定的な瞬間（ガチャの結果画面、ボスを倒した瞬間など）に、**手動で画面をAIに送る**ことも可能です。
+### 1. Open the Control Panel
+Click the **"🖥️ Control Panel"** button for **"OBS Screen AI Commentary"** in the "Extensions (Plugins)" panel on the right side of the TeloPon main screen.
 
-1. TeloPonで **「🔴 ライブ接続開始」** を押してAIと通話状態にします。
-2. 「OBS画面AI実況」の **「🖥️ 操作パネル」** を開いておきます。
-3. 注目してほしい画面になったら、パネル下部のオレンジ色の **「⚡ 今すぐ画面をAIに送る (強制送信)」** ボタンをクリックします！
-4. AIが瞬時に画面を読み取り、リアクションを返してくれるかもしれません。
+![OBS Screen AI Commentary control panel](../../../images/obs_capture01.png)
+
+### 2. OBS WebSocket Connection Settings
+Enter the information you configured in OBS.
+* **Host / Port**: Normally leave as `127.0.0.1` and `4455`.
+  (When OBS and TeloPon are running on the same PC)
+* **Password**: Enter the password you set on the OBS side.
+
+### 3. Specify the Capture Target and Test
+* **Target source name**: Enter the exact **"source name"** from OBS that you want to show the AI.
+  *(e.g., type the exact name shown in the OBS sources list, like "Game Capture" or "Screen Capture")*
+* **Press the "Capture Screen" button**: If the settings are correct, the current view of the specified source will appear in the preview area. Connection test complete!
+
+### 4. Configure AI Send Settings
+Set when to send the screen to the AI and the "cue card" text to send along with the image.
+
+* **Auto-send interval (seconds)**
+  How often to send the screen to the AI during the stream. Setting it too short causes the AI to talk non-stop — a value of `30` to `60` seconds is generally recommended.
+* **Instruction text to send with image**
+  Tells the AI how to react when it receives an image.
+  *(Default: "[Stream screen update] Here's the current screen! Please provide commentary or reactions!")*
+* **Auto-capture and send to AI at intervals during stream**
+  When this checkbox in the upper-left is checked, the screen is automatically sent to the AI continuously at the specified interval while live connected.
+
+When done, press **"Save"** to close the panel.
 
 ---
 
-## ⚠️ ご利用上の注意点
+## ⚡ How to Use During Streaming (Manual Send)
 
-* **画面の解像度について**
-  AIへ送る画像は、通信を爆速にするために自動的に縮小されて送信されます。そのため、画面の隅にある非常に小さな文字（RPGのステータス数値など）はAIが読めない場合があります。
-* **ソースが見つからないエラー**
-  「ソース名」はOBSのソース一覧に表示されている名前と**一言一句（大文字小文字・スペース含め）完全に一致**している必要があります。エラーが出る場合はOBSのソース名を確認してください。
+In addition to auto-send, you can also **manually send the screen to the AI** at decisive moments when you want the AI to focus — like a gacha result screen or the moment you defeat a boss.
+
+1. Press **"🔴 Start Live Connection"** in TeloPon to start the AI session.
+2. Keep the **"🖥️ Control Panel"** for "OBS Screen AI Commentary" open.
+3. When the screen you want the AI to notice appears, click the orange **"⚡ Send Screen to AI Now (Force Send)"** button at the bottom of the panel!
+4. The AI may instantly read the screen and respond.
 
 ---
-[⬅️ プラグイン一覧に戻る](../../README.md#-標準プラグイン同梱拡張機能の詳細)
+
+## ⚠️ Notes
+
+* **Screen resolution**
+  Images sent to the AI are automatically scaled down for faster transmission. As a result, very small text at the edges of the screen (like RPG status numbers) may not be readable by the AI.
+* **Source not found error**
+  The "source name" must **exactly match** (including capitalization and spaces) the name shown in OBS's source list. If you get an error, double-check the source name in OBS.
+
+---
+[⬅️ Back to Plugin List](../../README.md)

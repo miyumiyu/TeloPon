@@ -1,63 +1,62 @@
-# 💉 手動データ注入ツール (ManualInjector.py)
+# 💉 Manual Data Injection Tool (ManualInjector.py)
 
-このプラグインは、配信中にボタン1つで**AIの脳内に直接「カンペ（テキスト）」や「画像（視覚情報）」を送り込むことができる**、非常に強力なディレクター用ツールです。
+This plugin is an extremely powerful director's tool that lets you **directly inject "cue cards (text)" or "images (visual information)" into the AI's brain with a single button press during a stream**.
 
-「今のガチャ結果を見て！」「そろそろ配信の終わりの挨拶に誘導して！」など、配信の展開をリアルタイムにコントロールしたい時に大活躍します。
-
----
-
-## ⚙️ 基本的な使い方
-
-このツールは「TOOL型」のプラグインであるため、ON/OFFのスイッチはありません。使いたい時にいつでも操作パネルを呼び出して使えます。
-
-### 1. ライブ接続を開始する
-このツールを使ってAIにデータを送るには、**TeloPonがAIと通話中（🔴 ライブ接続中）である必要があります。**
-まずはメイン画面からライブ接続を開始してください。
-
-### 2. 操作パネルを開く
-メイン画面の右側、「拡張機能（プラグイン）」パネルにある **「手動データ注入ツール」** の **「🖥️ 操作パネル」** ボタンをクリックします。
-（※パネルはOBSなどの裏に隠れないよう、常に最前面に表示されます）
-
-![手動データ注入ツールの設定画面](../../../images/ManualInjector.png)
-
-
-### 3. 送るデータをセットする
-操作パネルが開いたら、AIに送りたい情報を入力します。（※テキストのみ、画像のみ、両方同時のいずれでも送信可能です）
-
-* 👤 **差出人 / タイトル (上段)**  
-  AIに「誰からの、何の指示なのか」を伝えるためのタイトルです。デフォルトでは「【番組ディレクターからの強制カンペ】」となっていますが、「神からの啓示」や「システムメッセージ」などに変更しても面白い反応が得られます。
-* 📝 **AIへのカンペ・指示 (下段)**  
-  AIに直接伝えたいメッセージや指示を書きます。  
-  （例：「今見せている画像について、面白おかしくツッコミを入れて！」「そろそろ配信開始から1時間だから、お茶を飲むように促して」など）
-* 📸 **AIに見せる画像 (視覚情報)**  
-  「📁 画像ファイルを選択」ボタンを押して、PC内の画像（PNG, JPG等）を選びます。選んだ画像はパネル内にプレビュー表示されます。  
-  （※AIに送りやすいよう、内部で自動的にリサイズ・軽量化されるため安心です）
-
-### 4. AIに送信（注入）する！
-一番下の青い **「🚀 AIにデータを注入する (SEND)！」** ボタンを押します。  
-成功すると「✅ AIにデータを注入しました！」と表示され、AIがその情報を受け取って即座に喋り出します！（テキストや画像は送信後に自動でクリアされます）
+It's invaluable when you want to control the flow of your stream in real time — "Look at this gacha result!", "Guide the stream toward the closing greeting!" and so on.
 
 ---
 
-## 💡 配信での活用アイデア（おすすめ！）
+## ⚙️ Basic Usage
 
-このツールを使うことで、単なる「音声対話」を超えた、AIとのインタラクティブな配信が可能になります。
+This tool is a "TOOL type" plugin, so there is no ON/OFF switch. You can open the control panel whenever you want to use it.
 
-* 🎮 **ガチャ結果やスクショの共有**  
-  ゲームで珍しいアイテムが出た時や、ガチャを引いた直後のスクリーンショットを選択し、「この結果どう思う？」とテキストを添えて送信！AIが画像を見て一緒に喜んだり、慰めたりしてくれます。
-* 🤫 **写真を共有**  
-  今日あった出来事など、写真を共有することで、AIがその写真を見て感想を述べたりします。
-* 🧭 **話題の軌道修正**  
-  配信がグダグダしてきたり、別の話題に移りたい時に、「次は〇〇について話して」とカンペを送ることで、AIをごく自然なMCとして活用できます。
+### 1. Start the Live Connection
+To send data to the AI with this tool, **TeloPon must be in an active AI session (🔴 Live Connected).**
+First, start the live connection from the main screen.
+
+### 2. Open the Control Panel
+Click the **"🖥️ Control Panel"** button for **"Manual Data Injection Tool"** in the "Extensions (Plugins)" panel on the right side of the main screen.
+(※ The panel stays on top of other windows so it doesn't get hidden behind OBS etc.)
+
+![Manual Data Injection Tool control panel](../../../images/ManualInjector.png)
+
+### 3. Set the Data to Send
+Once the panel opens, enter the information you want to send to the AI. (※ You can send text only, image only, or both at the same time.)
+
+* 👤 **Sender / Title (top field)**
+  A title that tells the AI "who this instruction is from and what it's about". The default is "[Forced Cue Card from Program Director]", but changing it to something like "Revelation from the Gods" or "System Message" can produce interesting reactions.
+* 📝 **Cue Card / Instructions for AI (bottom field)**
+  Write the message or instruction you want to deliver directly to the AI.
+  (e.g., "Comment on this image in a funny way!", "Remind me it's been an hour since the stream started and suggest taking a break.")
+* 📸 **Image to Show the AI (visual information)**
+  Press the "📁 Select Image File" button and choose an image (PNG, JPG, etc.) from your PC. The selected image is shown in a preview inside the panel.
+  (※ Images are automatically resized and compressed internally for easy transmission — no need to worry.)
+
+### 4. Send (Inject) to the AI!
+Press the large blue **"🚀 Inject Data to AI (SEND)!"** button at the bottom.
+If successful, "✅ Data injected to AI!" will appear, the AI receives the information, and starts responding immediately! (Text and images are automatically cleared after sending.)
 
 ---
 
-## ⚠️ ご利用上の注意点
+## 💡 Creative Ideas for Streaming
 
-* **送信タイミングについて**
-  AIがすでに別の長文を喋っている最中にデータを注入すると、AIが情報を処理しきれずに発言が混ざったり、一時的にスキップされたりすることがあります。AIが喋り終わったタイミングや、少し間が空いたタイミングで送信するとスムーズです。
-* **画像のサイズについて**
-  PCの画面全体のような文字が細かすぎる画像を送信すると、AIが文字を正確に読み取れない場合があります。見せたいものがハッキリ写っている画像を選ぶのがコツです。
+Using this tool makes truly interactive AI-powered streaming possible — far beyond simple voice conversation.
+
+* 🎮 **Share gacha results or screenshots**
+  When you get a rare item in a game or right after pulling a gacha, select a screenshot, add text like "What do you think of this result?" and send it! The AI will see the image and celebrate or commiserate with you.
+* 🤫 **Share photos**
+  Share photos of things that happened today — the AI will see the photo and comment on it.
+* 🧭 **Redirect the conversation**
+  When the stream is getting off track or you want to change topics, send a cue card like "Let's talk about X next" to use the AI as a natural MC.
 
 ---
-[⬅️ プラグイン一覧に戻る](../../README.md#-標準プラグイン同梱拡張機能の詳細)
+
+## ⚠️ Notes
+
+* **Timing of sends**
+  If you inject data while the AI is already in the middle of delivering a long response, the AI may not be able to process both and the messages may mix or be temporarily skipped. Send when the AI has finished speaking or during a brief pause for the smoothest results.
+* **Image size**
+  If you send an image with very small text (like a full PC screen), the AI may not be able to read the text accurately. The key is to select an image where the thing you want to show is clearly visible.
+
+---
+[⬅️ Back to Plugin List](../../README.md)

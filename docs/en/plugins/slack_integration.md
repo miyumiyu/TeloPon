@@ -1,81 +1,81 @@
-# 🏢 Slackコメント連携 (slack_integration.py)
+# 🏢 Slack Comment Integration (slack_integration.py)
 
-このプラグインを使用すると、会社のSlackワークスペースや、チームのチャンネルに投稿されたコメントを、TeloPonのAIが遅延ゼロで読み上げてくれます！
-最新の「Socket Mode」という技術を使っているため、驚くほどリアルタイムに反応します。
+With this plugin, TeloPon's AI reads out comments posted to your company Slack workspace or team channels with zero latency!
+It uses the latest "Socket Mode" technology, enabling remarkably real-time reactions.
 
-設定は大きく分けて **「① プラグインの導入」**、**「② Slack側でのBot作成（2つの鍵の取得）」**、**「③ TeloPon画面での設定」** の3ステップです。少し手順が多いですが、順番通りに進めれば確実に設定できます！
-
----
-
-## 📥 ステップ1：プラグインの導入と準備
-
-まずはTeloPon本体に拡張機能を追加し、通信に必要なライブラリを準備します。
-
-1. 🔗[ TeloPon 公式拡張プラグインパック v1.0 (Discord & Slack)](https://github.com/miyumiyu/TeloPon/releases/tag/plugins-v1.0)
-から、**`slack_integration.py`** をダウンロードします。
-2. TeloPon本体のフォルダ内にある **`plugins`** フォルダに、ダウンロードした `slack_integration.py` ファイルを入れます。
-3. TeloPonを起動し、メイン画面の「🔌 拡張機能」に **「🏢 Slackコメント連携」** が追加されていれば成功です！
+Setup consists of three main steps: **"① Installing the plugin"**, **"② Creating a Slack Bot (getting two tokens)"**, and **"③ Configuring in TeloPon"**. There are quite a few steps, but if you follow them in order you can definitely get it set up!
 
 ---
 
-## 🛠️ ステップ2：SlackのBotを作成して「2つのトークン」を取得する
+## 📥 Step 1: Install the Plugin and Prepare
 
-AIがSlackのコメントを読むために、専用の「Bot（アプリ）」を作成します。ここでは **2種類のトークン（鍵）** を取得します。
+First, add the extension to your TeloPon installation.
 
-### 1. アプリの作成と名前付け
-1. PCのブラウザで [Slack API (Your Apps)](https://api.slack.com/apps) にアクセスし、右上の **「Create New App」** を押します。
-2. **「From scratch」** を選び、好きな名前（例：`TeloPon連携Bot`）と導入したいワークスペースを選んで **「Create App」** を押します。
-3. **【重要】** 左メニューの **「App Home」** を開き、少し下にある **「Your App’s Presence in Slack」** の「Edit」ボタンを押して、`Display Name` (表示名) と `Default Username` (裏側のID、小文字英数字のみ) を設定して保存します。これをやらないとBotを招待できません！
+1. Download **`slack_integration.py`** from
+   🔗 [TeloPon Official Extension Plugin Pack v1.0 (Discord & Slack)](https://github.com/miyumiyu/TeloPon/releases/tag/plugins-v1.0)
+2. Place the downloaded `slack_integration.py` file into the **`plugins`** folder inside your TeloPon main folder.
+3. Launch TeloPon — if **"🏢 Slack Comment Integration"** appears in the "🔌 Extensions" list on the main screen, you're done!
 
-### 2. Socket ModeをONにして「App-Level トークン」をゲット！
-1. 左メニューから **「Socket Mode」** を開きます。
-2. **「Enable Socket Mode」** のスイッチを **ON（緑色）** にします。
-3. トークンの名前を聞かれるので適当に入力（`telopon-socket`など）して「Generate」を押します。
-4. **`xapp-`** から始まる文字列が表示されます。これが **【App-Level トークン】** です。コピーしてメモしておきましょう。
+---
 
-### 3. メッセージを読み取る権限（Scopes）を与える
-1. 左メニューから **「OAuth & Permissions」** を開きます。
-2. 下にスクロールし、**「Scopes」** 内の **「Bot Token Scopes」** で「Add an OAuth Scope」を押し、以下の5つを追加します。
+## 🛠️ Step 2: Create a Slack Bot and Get "Two Tokens"
+
+To allow the AI to read Slack comments, create a dedicated "Bot (app)". Here you'll obtain **2 types of tokens (keys)**.
+
+### 1. Create the App and Give It a Name
+1. In a PC browser, go to [Slack API (Your Apps)](https://api.slack.com/apps) and press **"Create New App"** in the upper-right.
+2. Select **"From scratch"**, enter a name you like (e.g., `TeloPon Bot`), select the workspace to install it in, and press **"Create App"**.
+3. **[Important]** Open **"App Home"** in the left menu, then scroll down to **"Your App's Presence in Slack"** and press the "Edit" button to set a `Display Name` (shown name) and `Default Username` (internal ID, lowercase letters and numbers only), then save. Without this step, you won't be able to invite the bot!
+
+### 2. Enable Socket Mode and Get the "App-Level Token"!
+1. Open **"Socket Mode"** from the left menu.
+2. Turn the **"Enable Socket Mode"** switch **ON (green)**.
+3. When asked for a token name, enter anything (e.g., `telopon-socket`) and press "Generate".
+4. A string starting with **`xapp-`** will appear. This is the **[App-Level Token]**. Copy and note it down.
+
+### 3. Grant Permissions to Read Messages (Scopes)
+1. Open **"OAuth & Permissions"** from the left menu.
+2. Scroll down, and under **"Bot Token Scopes"** in the **"Scopes"** section, press "Add an OAuth Scope" and add the following 5 items:
    * `channels:history` / `groups:history` / `channels:read` / `groups:read` / `users:read`
 
-### 4. リアルタイム受信の設定（Event Subscriptions）
-1. 左メニューから **「Event Subscriptions」** を開きます。
-2. 一番上の **「Enable Events」** を **ON（緑色）** にします。
-3. すぐ下の **「Subscribe to bot events」** を開き、「Add Bot User Event」から以下の2つを追加し、右下の **「Save Changes」** を押します。
+### 4. Configure Real-time Receiving (Event Subscriptions)
+1. Open **"Event Subscriptions"** from the left menu.
+2. Turn **"Enable Events"** at the top **ON (green)**.
+3. Open **"Subscribe to bot events"** just below, add the following 2 events via "Add Bot User Event", and press **"Save Changes"** in the lower-right:
    * `message.channels` / `message.groups`
 
-### 5. ワークスペースにインストールして「Bot トークン」をゲット！
-1. 左メニューから **「Install App」** を開き、**「Install to Workspace」** を押します。（※権限を変えた場合は「Reinstall」と表示されます）
-2. 許可画面が出るので「許可 (Allow)」を押します。
-3. **`xoxb-`** から始まる文字列が表示されます。これが **【Bot トークン】** です。コピーしてメモしておきましょう。
+### 5. Install to the Workspace and Get the "Bot Token"!
+1. Open **"Install App"** from the left menu and press **"Install to Workspace"**. (※ If permissions have changed, it will say "Reinstall".)
+2. An authorization screen will appear — press "Allow".
+3. A string starting with **`xoxb-`** will appear. This is the **[Bot Token]**. Copy and note it down.
 
-### 6. 【超重要】SlackのチャンネルにBotを「招待」する
-Slackを開き、**監視させたいチャンネル（#general など）の入力欄で `@TeloPon連携Bot` のようにBot宛にメンション（@）を送信**します。「チャンネルに追加しますか？」と聞かれるので、必ず追加してください。これを忘れるとコメントを読み取れません！
-
----
-
-## 🖥️ ステップ3：TeloPonのUIで設定・接続する
-
-TeloPonの画面に戻り、「🏢 Slackコメント連携」の設定（⚙️）パネルを開きます。
-
-![Slack連携設定画面](../../../images/discord_integration.png)
-
-1. **トークンの入力**
-   * 「App-Level トークン」の欄に、ステップ2で取得した **`xapp-`** から始まる文字を貼り付けます。
-   * 「Bot トークン」の欄に、ステップ2で取得した **`xoxb-`** から始まる文字を貼り付けます。
-2. **チャンネル一覧の取得**
-   * **「🔄 トークン確認 ＆ チャンネル一覧を取得」** ボタンを押します。
-   * 成功すると、あなたのSlackにあるチャンネルが一覧で取得されます。
-3. **監視するチャンネルを選ぶ**
-   * プルダウンから監視したいチャンネルを選びます。（公開チャンネルは💬、鍵付きは🔒アイコンが付きます）
-4. **いざ、接続！**
-   * 最後に青い **「接続」** ボタンを押して、状態が緑色の「⚡ 状態: 接続中 (Socket Mode稼働中)」になれば準備完了です！
+### 6. [CRITICAL] "Invite" the Bot to a Slack Channel
+In Slack, **mention the bot in the channel you want to monitor** (e.g., type `@TeloPon Bot` in `#general`). When asked "Add to channel?", make sure to add it. Without this step, it cannot read comments!
 
 ---
 
-## 💡 使い方とワンポイント
+## 🖥️ Step 3: Configure and Connect in TeloPon
 
-設定が完了したら、TeloPonのメイン画面から「ライブ配信に接続（AI起動）」を押すだけです！指定したSlackチャンネルの発言に、AIが素早く反応してくれます。
+Return to the TeloPon screen and open the Settings (⚙️) panel for "🏢 Slack Comment Integration".
 
-* **名前の自動変換**: Slack特有のユーザーID（U1234...など）は、TeloPonの裏側で自動的に「発言者の表示名（山田太郎など）」に変換されてAIに届きます。AIはきちんと名前を呼んで返事をしてくれます！
-* **プロンプトのカスタマイズ**: 設定画面の下部にある指示テキストを「社内のメンバーからのチャットです！明るく労って！」などに変更すると、AIのキャラクター性をさらに引き出せます。
+![Slack integration settings panel](../../../images/discord_integration.png)
+
+1. **Enter the Tokens**
+   * Paste the **`xapp-`** string obtained in Step 2 into the "App-Level Token" field.
+   * Paste the **`xoxb-`** string obtained in Step 2 into the "Bot Token" field.
+2. **Fetch the Channel List**
+   * Press the **"🔄 Verify Tokens & Fetch Channel List"** button.
+   * On success, the channels in your Slack workspace will be listed.
+3. **Select the Channel to Monitor**
+   * Choose the channel to monitor from the dropdown. (Public channels show 💬, private channels show 🔒.)
+4. **Connect!**
+   * Finally, press the blue **"Connect"** button — you're ready when the status turns green: "⚡ Status: Connected (Socket Mode active)"!
+
+---
+
+## 💡 Tips and Usage Notes
+
+Once configured, just press "Start Live Connection (Launch AI)" from the TeloPon main screen! The AI will quickly react to messages in the specified Slack channel.
+
+* **Automatic name conversion**: Slack's unique user IDs (U1234..., etc.) are automatically converted to the person's display name (e.g., John Smith) on TeloPon's backend before being sent to the AI. The AI will properly address people by name in responses!
+* **Customizing the prompt**: Changing the instruction text at the bottom of the settings panel to something like "These are chats from internal team members! Brighten everyone's day!" can bring out even more of the AI's personality.

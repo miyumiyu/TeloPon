@@ -1,47 +1,47 @@
-# 📝 カスタム指示追加ツール (custom_prompt.py)
+# 📝 Custom Instruction Addon Tool (custom_prompt.py)
 
-このプラグインは、**基本のプロンプト（AIの性格・台本）を直接書き換えることなく、その日の配信限定の「特別ルール」や「追加の指示」をAIに付与できる** ツールです。
+This plugin lets you **add "special rules" or "extra instructions" for the current stream session to the AI, without directly editing the base prompt (AI personality/script)**.
 
-「今日は特定のゲームをやるからその話題にしてほしい」「今日は特別に語尾を変えたい」といった、一時的なカスタマイズに非常に便利です。
-
----
-
-## ⚙️ 使い方
-
-### 1. 設定画面を開く
-TeloPonメイン画面の右側、「拡張機能（プラグイン）」パネルにある **「カスタム指示追加ツール」**の **「⚙️ 設定」** ボタンをクリックします。
-
-![カスタム指示追加ツールの設定画面](../../../images/custom_prompt.png)
-
-### 2. 追加したい指示を入力する
-中央の白いテキストエリアに、AIに守ってほしい追加の指示を自由に記入します。
-日本語で、AIに直接お願いするような形で書くのがコツです。
-
-**【入力例】**
-> * 「今日はマインクラフトをプレイします。ゲーム内の出来事にたくさん反応してね！」
-> * 「今日は私の誕生日配信です！隙あらばお祝いの言葉を言ってください。」
-> * 「今日は語尾に必ず『ニャ』をつけて喋ってください。」
-> * 「私がゲームでミスしても、絶対に怒らずに優しく慰めてね。」
-
-### 3. 有効化して保存する
-* 画面左上の **「このカスタム指示を有効にする」** のチェックボックスに**チェックを入れます。**（※ここにチェックが入っていないと、テキストを書いてもAIには送信されません）
-* **「保存」** ボタンを押してウィンドウを閉じます。
-* メイン画面のプラグインの表示がグレーの `OFF` から緑色の `ON` に変わっていれば準備完了です。
-
-### 4. ライブ接続を開始する
-メイン画面の **「🔴 ライブ接続開始」** ボタンを押します。
-AIとの接続が確立される際、あなたが選んだ「AIの性格 (Prompt)」の末尾に、先ほど入力した特別ルールがこっそり追加された状態でAIが起動します。
+It's extremely convenient for temporary customizations like "I'm playing a specific game today, so please keep the conversation on that topic" or "Today I want to change my speech pattern for a special occasion".
 
 ---
 
-## ⚠️ ご利用上の注意点（重要）
+## ⚙️ Usage
 
-* **必ず「ライブ接続前」に設定してください**
-  このツールの指示は、AIとの通話を開始するタイミング（「ライブ接続開始」ボタンを押した瞬間）で１度だけAIに送信されます。
-* **配信途中で変更はできません**
- 途中で指示を変えたい場合は、一度「ライブ切断」をしてから、設定を変更し、再度「ライブ接続開始」を行ってください。
-* **基本のプロンプトと矛盾する指示に注意**
-  例えば、基本のプロンプトで「あなたは冷静沈着なAIです」と設定しているのに、このツールで「とにかくハイテンションで大声で叫んで！」と指示すると、AIが混乱してうまく喋れなくなる（だんまりして反応しない）ことがあります。
+### 1. Open the Settings Panel
+Click the **"⚙️ Settings"** button for **"Custom Instruction Addon Tool"** in the "Extensions (Plugins)" panel on the right side of the TeloPon main screen.
+
+![Custom Instruction Addon Tool settings panel](../../../images/custom_prompt.png)
+
+### 2. Enter Your Custom Instructions
+In the white text area in the center, freely write the additional instructions you want the AI to follow.
+The trick is to write it in a direct, conversational way, as if you're asking the AI a favor.
+
+**[Input examples]**
+> * "Today I'm playing Minecraft. Please react a lot to what happens in the game!"
+> * "Today is my birthday stream! Please throw in congratulations whenever you get the chance."
+> * "Today please end every sentence with 'nya'."
+> * "Even if I make a mistake in the game, please never get mad — just gently comfort me."
+
+### 3. Enable and Save
+* **Check** the **"Enable this custom instruction"** checkbox in the upper-left of the screen. (※ If this is not checked, text you've written will not be sent to the AI.)
+* Press **"Save"** to close the window.
+* You're ready when the plugin badge in the main screen changes from grey `OFF` to green `ON`.
+
+### 4. Start the Live Connection
+Press **"🔴 Start Live Connection"** on the main screen.
+When the AI connection is established, the special rules you entered will be quietly appended to the end of your selected "AI Personality (Prompt)".
 
 ---
-[⬅️ プラグイン一覧に戻る](../../README.md#-標準プラグイン同梱拡張機能の詳細)
+
+## ⚠️ Important Notes
+
+* **Always configure before starting the live connection**
+  This tool's instructions are sent to the AI exactly once — at the moment you start the session (when you press "Start Live Connection").
+* **Cannot be changed mid-stream**
+  If you want to change the instructions during a stream, disconnect once, change the settings, then start the live connection again.
+* **Watch out for instructions that conflict with the base prompt**
+  For example, if your base prompt says "You are a calm and composed AI" but you instruct this tool to "Be as high-energy as possible and shout everything!", the AI may get confused and stop responding (going silent and not reacting).
+
+---
+[⬅️ Back to Plugin List](../../README.md)

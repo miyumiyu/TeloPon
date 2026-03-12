@@ -1,55 +1,55 @@
-# ▶️ YouTube連携ツール (YoutubeLivePlugin.py)
+# ▶️ YouTube Integration Tool (YoutubeLivePlugin.py)
 
-このプラグインは、あなたのYouTube Live配信のURLを指定するだけで、**リスナーのコメントをリアルタイムに拾ってAIに反応させる**ことができる拡張機能です。
+This plugin lets you simply specify your YouTube Live stream URL to **pick up viewer comments in real time and have the AI react to them**.
 
-さらに、コメントだけでなく**配信の「タイトル」「説明文」「サムネイル画像」も自動的に取得してAIの脳内に送り込む**ため、AIが「今日の配信はどんな内容なのか」を深く理解した上で、完璧な相棒として番組を盛り上げてくれます！
-
----
-
-## ⚙️ 使い方
-
-### 1. 設定画面を開く
-TeloPonのメイン画面右側、「拡張機能（プラグイン）」パネルにある **「YouTube連携ツール」** の **「⚙️ 設定」** ボタンをクリックします。
-
-![YouTube連携設定画面](../../../images/YoutubeLivePlugin.png)
-
-### 2. URLを入力して「接続」する
-上部の入力欄に、現在行っている（またはこれから行う）**YouTube LiveのURL**を貼り付け、右側の **「接続」** ボタンを押します。  
-*(※通常の動画URLや、YouTube Studioの配信画面URLではなく、視聴者が見る公開用URLを入力してください)*
-
-### 3. 情報が取得されたことを確認する
-接続に成功すると、画面に「✅ 接続成功」と表示され、その配信の**「タイトル」「説明文」「サムネイル画像」**がプレビュー表示されます。  
-この時点で、メイン画面のプラグインのバッジも緑色の `ON` に変わります。確認できたら「閉じる」ボタンで画面を閉じてください。
-
-### 4. ライブ接続を開始する
-TeloPonのメイン画面に戻り、**「🔴 ライブ接続開始」** ボタンを押してAIと通話を開始します。
-
-これで連携は完了です！  
-AIとの通話が始まると同時に、AIにYouTubeの配信情報が共有され、視聴者からのコメントにAIが自動で反応するようになります。
+Even better, it doesn't just get comments — it **automatically fetches the stream's "title", "description", and "thumbnail image" and sends them to the AI's brain**, so the AI fully understands what today's stream is about and co-hosts the show as your perfect partner!
 
 ---
 
-## 🧠 AIに連携される情報
+## ⚙️ Usage
 
-このツールを使うと、以下の情報がAIに自動で送り込まれます。
+### 1. Open the Settings Panel
+Click the **"⚙️ Settings"** button for **"YouTube Integration Tool"** in the "Extensions (Plugins)" panel on the right side of the TeloPon main screen.
 
-1. **番組の基本情報（接続時）**  
-   取得した「配信タイトル」と「説明文」が、AIの基本プロンプトの末尾にこっそり追加されます。これにより、AIは「今日はどんなゲームをやるのか」「どんな企画なのか」を事前に把握した状態で喋り始めます。
-2. **サムネイル画像の視覚情報（通話開始から5秒後）**  
-   TeloPonのライブ接続開始から約5秒後、AIの視覚（カメラ）に **「本日のサムネイル画像」** が強制的に送られ、ディレクターからのカンペとして「これを見て感想を言って！」という指示が入ります。これにより、配信のオープニングで自然にサムネイルについて触れるトークが展開されます。
-3. **視聴者のリアルタイムコメント（随時）**  
-   配信中のチャット欄（コメント）を裏側で監視し、新しいコメントが来るたびにAIに送信します。AIがコメントを読み上げたり、質問に答えたりしてくれます。
+![YouTube Integration settings panel](../../../images/YoutubeLivePlugin.png)
+
+### 2. Enter the URL and "Connect"
+Paste the **YouTube Live URL** of your current (or upcoming) stream into the input field at the top, then press the **"Connect"** button on the right.
+*(※ Please enter the public viewer URL, not a regular video URL or the YouTube Studio dashboard URL.)*
+
+### 3. Confirm the Information Was Fetched
+When the connection succeeds, "✅ Connection successful" will appear on screen, and the stream's **"title", "description", and "thumbnail image"** will be shown in a preview.
+At this point, the plugin badge in the main screen also turns green `ON`. Press "Close" to dismiss the panel.
+
+### 4. Start the Live Connection
+Return to the TeloPon main screen and press **"🔴 Start Live Connection"** to begin the AI session.
+
+That's it — integration complete!
+As soon as the AI session begins, the YouTube stream information is shared with the AI, and it will automatically react to viewer comments.
 
 ---
 
-## ⚠️ ご利用上の注意点
+## 🧠 Information Shared with the AI
 
-* **TeloPon起動（ライブ接続）の順番について**  
-  番組のタイトルや説明文をAIに確実に認識させるため、**TeloPonの「🔴 ライブ接続開始」ボタンを押す前に、このツールでYouTubeのURLに「接続」しておく**ことを強くおすすめします。（通話途中で接続した場合、タイトルや説明文は認識されず、コメントとサムネイルのみが送信されます）
-* **コメントが多すぎる場合**  
-  視聴者が多く、コメントが滝のように流れる配信の場合、AIがすべてのコメントに反応しようとして喋りっぱなしになり、パンクしてしまう可能性があります。
-* **限定公開・非公開の配信について**  
-  このツールはYouTubeの一般公開されているページ情報を取得するため、非公開の配信には接続できません。（限定公開であればURLを知っていれば接続可能です）
+Using this tool, the following information is automatically sent to the AI.
+
+1. **Basic stream info (at connection time)**
+   The fetched "stream title" and "description" are quietly appended to the end of the AI's base system prompt. This allows the AI to start speaking with prior knowledge of "what game are we playing today" or "what kind of event is this".
+2. **Thumbnail image visual info (5 seconds after session start)**
+   About 5 seconds after TeloPon's live connection starts, the AI's vision is forcibly shown **"today's thumbnail image"** along with a director's cue: "Look at this and share your thoughts!" This naturally leads to opening talk about the thumbnail.
+3. **Viewer real-time comments (ongoing)**
+   The stream's chat is monitored in the background, and new comments are sent to the AI as they arrive. The AI reads out comments and answers questions.
 
 ---
-[⬅️ プラグイン一覧に戻る](../../README.md#-標準プラグイン同梱拡張機能の詳細)
+
+## ⚠️ Notes
+
+* **Order of operations (starting TeloPon live connection)**
+  To ensure the AI properly recognizes the stream title and description, it is strongly recommended to **"Connect" to the YouTube URL in this tool before pressing TeloPon's "🔴 Start Live Connection" button**. (If you connect mid-session, the title and description won't be recognized — only comments and the thumbnail will be sent.)
+* **When there are too many comments**
+  For large streams where comments flow like a waterfall, the AI may try to react to every comment and end up talking non-stop, potentially overloading.
+* **Private/unlisted streams**
+  This tool fetches information from publicly accessible YouTube pages, so it cannot connect to private streams. (Unlisted streams can be connected to if you have the URL.)
+
+---
+[⬅️ Back to Plugin List](../../README.md)
