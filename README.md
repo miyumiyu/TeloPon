@@ -13,7 +13,7 @@ TeloPon leverages Google's latest AI "Gemini Live API" to listen to the streamer
 
 This is not just "transcription software". It summons a talented, unique **AI co-host** for your stream!
 
-![TeloPon Demo](images/demo.gif)
+![TeloPon Demo](images/demo_en.gif)
 
 ---
 
