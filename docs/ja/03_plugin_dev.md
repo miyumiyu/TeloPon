@@ -5,7 +5,7 @@ TeloPonのプラグインは、大きく分けて **2種類** あります。
 | 種類 | 説明 | 登録方法 |
 |------|------|----------|
 | **UIパネルプラグイン** | TeloPonの「拡張機能」画面に表示。AIへの情報注入や設定パネルを提供する | `plugins/` フォルダに置くだけで自動登録 |
-| **CMDコマンドプラグイン** | AIが `[CMD:XXX]` を発言したときに呼ばれる処理を担当する | `plugins/` フォルダに置くだけで自動登録（`plugin_loader.py` の編集不要） |
+| **CMDコマンドプラグイン** | AIが `[CMD:XXX]` を発言したときに呼ばれる処理を担当する | `plugins/` フォルダに置くだけで自動登録 |
 
 どちらも同じ `BasePlugin` クラスを継承して作ります。
 両方の機能を **1つのクラスに組み合わせる** こともできます。
@@ -569,25 +569,13 @@ plugin = MyCommandPlugin()
 ### 自動登録の仕組み
 
 CMDプラグインは **`plugins/` フォルダに `.py` ファイルを置くだけで自動登録されます**。
-`IDENTIFIER` を設定していれば、アプリ起動時に自動スキャンされ、`plugin_loader.py` を編集する必要はありません。
+`IDENTIFIER` を設定していれば、アプリ起動時に自動スキャンされます。
 
 ```
 TeloPon/
  └── plugins/
       └── my_command_plugin.py   ← ここに置くだけで [CMD:MYCMD] が有効になる
 ```
-
-> **注意：`plugin_loader.py` が必要なケース**
->
-> コンストラクタに特殊な引数が必要なプラグインだけは、引き続き `plugin_loader.py` への手動登録が必要です。
-> 例：`ImgPlugin` はUI側のコールバック（`notify_new_img`）を受け取るため、自動登録できません。
->
-> ```python
-> # plugin_loader.py（特殊ケースのみ）
-> ImgPlugin(
->     notify_new_img=lambda p: ui.after(0, lambda: ui.show_new_img(p))
-> )
-> ```
 
 ### REQUIRED_CONFIG の使い方
 
@@ -743,4 +731,4 @@ logger.debug("デバッグログ（薄い色。-d オプションで起動時の
 → `__init__` で `self.is_connected = False` または `self.is_running = False` を定義していると、`enabled` よりこちらが優先されます。外部サービス接続不要なプラグインは `is_connected` / `is_running` を定義しないようにしてください。
 
 **`[CMD:IMG]` の設定が反映されない**
-→ `img_plugin.py` を `plugins/` フォルダに置いていない場合、UIにも表示されず、`plugin_loader.py` の登録も失敗します。ファイルが存在するか確認してください。
+→ `img_plugin.py` が `plugins/` フォルダに置かれているか確認してください。

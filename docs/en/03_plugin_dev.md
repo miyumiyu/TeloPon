@@ -5,7 +5,7 @@ TeloPon plugins come in **2 main types**.
 | Type | Description | Registration |
 |------|------|----------|
 | **UI Panel Plugin** | Displayed in TeloPon's "Extensions" screen. Provides AI data injection and settings panels. | Auto-registered by placing the file in the `plugins/` folder |
-| **CMD Command Plugin** | Handles processing called when the AI says `[CMD:XXX]` in its output. | Auto-registered by placing the file in the `plugins/` folder (no changes to `plugin_loader.py` needed) |
+| **CMD Command Plugin** | Handles processing called when the AI says `[CMD:XXX]` in its output. | Auto-registered by placing the file in the `plugins/` folder |
 
 Both types are created by inheriting from the same `BasePlugin` class.
 You can also **combine both functions into a single class**.
@@ -546,25 +546,13 @@ plugin = MyCommandPlugin()
 ### Auto-Discovery
 
 CMD plugins are **automatically registered simply by placing the `.py` file in the `plugins/` folder**.
-As long as `IDENTIFIER` is set, the app will auto-scan at startup — no changes to `plugin_loader.py` are needed.
+As long as `IDENTIFIER` is set, the app will auto-scan at startup — no other changes are needed.
 
 ```
 TeloPon/
  └── plugins/
       └── my_command_plugin.py   ← Placing it here activates [CMD:MYCMD]
 ```
-
-> **When `plugin_loader.py` is still needed**
->
-> Only plugins that require special constructor arguments must still be manually registered in `plugin_loader.py`.
-> For example, `ImgPlugin` accepts a UI callback (`notify_new_img`) and cannot be auto-discovered.
->
-> ```python
-> # plugin_loader.py (special cases only)
-> ImgPlugin(
->     notify_new_img=lambda p: ui.after(0, lambda: ui.show_new_img(p))
-> )
-> ```
 
 ### How to Use REQUIRED_CONFIG
 
@@ -720,4 +708,4 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 → If `self.is_connected = False` or `self.is_running = False` is defined in `__init__`, these take priority over `enabled`. For plugins that don't need an external service connection, avoid defining `is_connected` / `is_running`.
 
 **`[CMD:IMG]` settings not being applied**
-→ If `img_plugin.py` is not in the `plugins/` folder, it won't appear in the UI and the `plugin_loader.py` registration will also fail. Confirm the file exists.
+→ Check that `img_plugin.py` is placed in the `plugins/` folder.
