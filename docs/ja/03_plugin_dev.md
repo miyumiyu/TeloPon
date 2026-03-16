@@ -5,7 +5,7 @@ TeloPonのプラグインは、大きく分けて **2種類** あります。
 | 種類 | 説明 | 登録方法 |
 |------|------|----------|
 | **UIパネルプラグイン** | TeloPonの「拡張機能」画面に表示。AIへの情報注入や設定パネルを提供する | `plugins/` フォルダに置くだけで自動登録 |
-| **CMDコマンドプラグイン** | AIが `[CMD:XXX]` を発言したときに呼ばれる処理を担当する | `plugin_loader.py` に1行追記が必要 |
+| **CMDコマンドプラグイン** | AIが `[CMD:XXX]` を発言したときに呼ばれる処理を担当する | `plugins/` フォルダに置くだけで自動登録（`plugin_loader.py` の編集不要） |
 
 どちらも同じ `BasePlugin` クラスを継承して作ります。
 両方の機能を **1つのクラスに組み合わせる** こともできます。
@@ -566,33 +566,28 @@ class MyCommandPlugin(BasePlugin):
 plugin = MyCommandPlugin()
 ```
 
-### plugin_loader.py への登録
+### 自動登録の仕組み
 
-CMDプラグインは **`plugin_loader.py` に手動で追記する必要があります**。
-（UIパネルプラグインと違い、自動スキャンされません）
+CMDプラグインは **`plugins/` フォルダに `.py` ファイルを置くだけで自動登録されます**。
+`IDENTIFIER` を設定していれば、アプリ起動時に自動スキャンされ、`plugin_loader.py` を編集する必要はありません。
 
-```python
-# plugin_loader.py
-
-import cmd_dispatcher
-import logger
-from plugins.img_plugin import ImgPlugin
-from plugins.my_command_plugin import MyCommandPlugin  # ← 追加
-
-
-def load_plugins(ui):
-    plugins = [
-        ImgPlugin(
-            notify_new_img=lambda p: ui.after(0, lambda: ui.show_new_img(p))
-        ),
-        MyCommandPlugin(),  # ← 追加
-    ]
-
-    for plugin in plugins:
-        cmd_dispatcher.dispatcher.register_plugin(plugin)
-
-    logger.info(f"[PluginLoader] {len(plugins)} 個のプラグインを登録しました")
 ```
+TeloPon/
+ └── plugins/
+      └── my_command_plugin.py   ← ここに置くだけで [CMD:MYCMD] が有効になる
+```
+
+> **注意：`plugin_loader.py` が必要なケース**
+>
+> コンストラクタに特殊な引数が必要なプラグインだけは、引き続き `plugin_loader.py` への手動登録が必要です。
+> 例：`ImgPlugin` はUI側のコールバック（`notify_new_img`）を受け取るため、自動登録できません。
+>
+> ```python
+> # plugin_loader.py（特殊ケースのみ）
+> ImgPlugin(
+>     notify_new_img=lambda p: ui.after(0, lambda: ui.show_new_img(p))
+> )
+> ```
 
 ### REQUIRED_CONFIG の使い方
 
@@ -652,7 +647,7 @@ class HybridPlugin(BasePlugin):
             self.send_text(self.plugin_queue, f"ハイブリッド処理: {value}")
 ```
 
-ハイブリッドプラグインも `plugin_loader.py` への追記が必要です（CMDとして登録するため）。
+ハイブリッドプラグインも `plugins/` フォルダに置くだけで自動登録されます。
 
 ---
 
@@ -716,7 +711,7 @@ logger.debug("デバッグログ（薄い色。-d オプションで起動時の
 
 - [ ] `IDENTIFIER` を設定した（英大文字推奨。`[CMD:XXX]` の XXX の部分）
 - [ ] `handle(self, value: str)` を実装した
-- [ ] `plugin_loader.py` にインポートと登録を追記した
+- [ ] `plugins/` フォルダに `.py` ファイルを置いた
 - [ ] 必須設定がある場合は `REQUIRED_CONFIG` にキー名を列挙した
 
 ### 共通
@@ -733,7 +728,7 @@ logger.debug("デバッグログ（薄い色。-d オプションで起動時の
 → `PLUGIN_ID = ""` のままになっていないか確認。空だとスキャンされません。
 
 **CMDが反応しない**
-→ `plugin_loader.py` に登録を追記しているか確認。UIプラグインと違い自動スキャンされません。
+→ `IDENTIFIER` が設定されているか確認。また `.py` ファイルが `plugins/` フォルダに置かれているか確認してください。
 
 **配信中にフリーズする**
 → `while self.is_running:` ループ内に `time.sleep(1.0)` がないのが原因。

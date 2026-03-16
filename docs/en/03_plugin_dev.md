@@ -5,7 +5,7 @@ TeloPon plugins come in **2 main types**.
 | Type | Description | Registration |
 |------|------|----------|
 | **UI Panel Plugin** | Displayed in TeloPon's "Extensions" screen. Provides AI data injection and settings panels. | Auto-registered by placing the file in the `plugins/` folder |
-| **CMD Command Plugin** | Handles processing called when the AI says `[CMD:XXX]` in its output. | Requires adding one line to `plugin_loader.py` |
+| **CMD Command Plugin** | Handles processing called when the AI says `[CMD:XXX]` in its output. | Auto-registered by placing the file in the `plugins/` folder (no changes to `plugin_loader.py` needed) |
 
 Both types are created by inheriting from the same `BasePlugin` class.
 You can also **combine both functions into a single class**.
@@ -54,7 +54,57 @@ When creating a UI Panel Plugin, set `PLUGIN_TYPE` to one of the following:
 
 ---
 
-## 3. How to Create a UI Panel Plugin
+## 3. Badge Display Mechanism
+
+Each plugin in the Extensions panel displays a **TOOL / ON / OFF** badge.
+The badge color (active = blue/green, or gray) is determined by the following priority order:
+
+```
+Priority 1: is_connected attribute is True  → Active (blue/green)
+Priority 2: is_running   attribute is True  → Active (blue/green)
+Fallback:   Neither attribute exists        → Uses the enabled setting value
+```
+
+### Behavior by Pattern
+
+| Plugin Implementation | When Badge Becomes Active | Typical Use Case |
+|---|---|---|
+| Has `is_connected` attribute | When `is_connected = True` | External service connections like YouTube, Twitch |
+| Has `is_running` attribute (no `is_connected`) | When `is_running = True` | Background processing plugins |
+| Neither attribute defined | When `enabled = True` | Simple custom plugins |
+
+### Important: Whether to Define `is_connected`
+
+**Plugins that connect to external services (YouTube, Twitch, etc.)** should define `is_connected` and
+set it to `True` only when the connection is established. It is incorrect for the badge to light up when not connected.
+
+```python
+# External service connection type: controlled by is_connected
+class YouTubePlugin(BasePlugin):
+    def __init__(self):
+        super().__init__()
+        self.is_connected = False  # Set to True when connection is established
+        self.is_running   = False  # Set to True when live starts
+```
+
+**Simple custom plugins** should avoid defining `is_connected` / `is_running` entirely,
+so that the badge becomes active with `enabled = True` alone.
+
+```python
+# Simple custom plugin: controlled by enabled (do not define is_connected)
+class MySimplePlugin(BasePlugin):
+    PLUGIN_ID   = "my_plugin"
+    PLUGIN_TYPE = "TOOL"
+
+    def get_default_settings(self):
+        return {"enabled": True}  # Badge lights up before the stream starts
+
+    # Do not define is_connected / is_running  ← Key point
+```
+
+---
+
+## 4. How to Create a UI Panel Plugin
 
 ### Where to Place the File
 
@@ -131,7 +181,7 @@ self.save_settings(settings)
 
 ---
 
-## 4. Injecting Information into the AI (The Main Role of UI Panel Plugins)
+## 5. Injecting Information into the AI (The Main Role of UI Panel Plugins)
 
 ### Method ① Appending to the Prompt Before the Stream Starts
 
@@ -185,7 +235,7 @@ def _send_screenshot(self):
 
 ---
 
-## 5. Full Template for a BACKGROUND Plugin
+## 6. Full Template for a BACKGROUND Plugin
 
 A complete template for a plugin that runs continuously in the background and periodically sends information to the AI.
 
@@ -292,6 +342,7 @@ class AutoTimerPlugin(BasePlugin):
             logger.info(f"[{self.PLUGIN_NAME}] Enabled")
 
     def _save_from_ui(self):
+        s = self.get_settings()       # ← Load current settings first
         s["enabled"]      = self.is_connected
         s["interval_sec"] = int(self.ent_interval.get())
         self.save_settings(s)
@@ -349,9 +400,14 @@ class AutoTimerPlugin(BasePlugin):
 
 ---
 
-## 6. Template for a TOOL Plugin
+## 7. Template for a TOOL Plugin
 
 A manual tool that can be operated even during streaming. Simply setting `PLUGIN_TYPE = "TOOL"` makes the panel operable during streams.
+
+### Simple TOOL type (badge controlled by enabled only)
+
+A simple configuration without `is_connected` / `is_running` defined.
+The badge stays active as long as `enabled = True`, so it lights up blue even before the stream starts.
 
 ```python
 import tkinter as tk
@@ -368,9 +424,11 @@ class ManualCuePlugin(BasePlugin):
     def __init__(self):
         super().__init__()
         self.plugin_queue = None
+        # ★ Do not define is_connected / is_running
+        #   → Badge is controlled by the enabled value in get_default_settings
 
     def get_default_settings(self):
-        return {"enabled": True}  # TOOL type is always True by default
+        return {"enabled": True}  # Badge lights up blue before the stream starts
 
     def start(self, prompt_config, plugin_queue):
         self.plugin_queue = plugin_queue
@@ -411,9 +469,47 @@ class ManualCuePlugin(BasePlugin):
         ttk.Button(self.panel, text="📨 Send to AI", command=send).pack(pady=10)
 ```
 
+### TOOL type with is_connected (external service connection type)
+
+The pattern for plugins that connect to external services like YouTube or Twitch.
+The badge turns blue only when `is_connected = True`.
+
+```python
+class ExternalServicePlugin(BasePlugin):
+    PLUGIN_ID   = "my_service_plugin"
+    PLUGIN_NAME = "🔗 External Service Integration"
+    PLUGIN_TYPE = "TOOL"
+
+    def __init__(self):
+        super().__init__()
+        self.plugin_queue = None
+        self.is_connected = False  # ← Set to True when connection is established (used for badge display)
+        self.is_running   = False  # ← Set to True during live stream
+
+    def get_default_settings(self):
+        return {"enabled": True, "url": ""}
+
+    def _connect(self, url):
+        # ... connection logic ...
+        self.is_connected = True   # ← Badge turns blue on successful connection
+
+    def _disconnect(self):
+        self.is_connected = False  # ← Badge turns gray on disconnect
+
+    def start(self, prompt_config, plugin_queue):
+        if not self.is_connected:
+            return  # Do not start if not connected
+        self.is_running   = True
+        self.plugin_queue = plugin_queue
+
+    def stop(self):
+        self.is_running   = False
+        self.plugin_queue = None
+```
+
 ---
 
-## 7. How to Create a CMD Command Plugin
+## 8. How to Create a CMD Command Plugin
 
 A plugin that executes processing when the AI writes `[CMD:XXX] argument` in its output.
 
@@ -447,33 +543,28 @@ class MyCommandPlugin(BasePlugin):
 plugin = MyCommandPlugin()
 ```
 
-### Registering in plugin_loader.py
+### Auto-Discovery
 
-CMD plugins **must be manually added to `plugin_loader.py`**.
-(Unlike UI Panel Plugins, they are not auto-scanned.)
+CMD plugins are **automatically registered simply by placing the `.py` file in the `plugins/` folder**.
+As long as `IDENTIFIER` is set, the app will auto-scan at startup — no changes to `plugin_loader.py` are needed.
 
-```python
-# plugin_loader.py
-
-import cmd_dispatcher
-import logger
-from plugins.img_plugin import ImgPlugin
-from plugins.my_command_plugin import MyCommandPlugin  # ← Add this
-
-
-def load_plugins(ui):
-    plugins = [
-        ImgPlugin(
-            notify_new_img=lambda p: ui.after(0, lambda: ui.show_new_img(p))
-        ),
-        MyCommandPlugin(),  # ← Add this
-    ]
-
-    for plugin in plugins:
-        cmd_dispatcher.dispatcher.register_plugin(plugin)
-
-    logger.info(f"[PluginLoader] Registered {len(plugins)} plugins")
 ```
+TeloPon/
+ └── plugins/
+      └── my_command_plugin.py   ← Placing it here activates [CMD:MYCMD]
+```
+
+> **When `plugin_loader.py` is still needed**
+>
+> Only plugins that require special constructor arguments must still be manually registered in `plugin_loader.py`.
+> For example, `ImgPlugin` accepts a UI callback (`notify_new_img`) and cannot be auto-discovered.
+>
+> ```python
+> # plugin_loader.py (special cases only)
+> ImgPlugin(
+>     notify_new_img=lambda p: ui.after(0, lambda: ui.show_new_img(p))
+> )
+> ```
 
 ### How to Use REQUIRED_CONFIG
 
@@ -493,7 +584,7 @@ class WeatherPlugin(BasePlugin):
 
 ---
 
-## 8. Hybrid Plugin: Combining UI Panel and CMD
+## 9. Hybrid Plugin: Combining UI Panel and CMD
 
 Setting both `PLUGIN_ID` and `IDENTIFIER` gives a plugin both UI panel and CMD command functionality.
 
@@ -533,11 +624,11 @@ class HybridPlugin(BasePlugin):
             self.send_text(self.plugin_queue, f"Hybrid processing: {value}")
 ```
 
-Hybrid plugins also require adding an entry to `plugin_loader.py` (for CMD registration).
+Hybrid plugins are also auto-registered by placing the file in the `plugins/` folder.
 
 ---
 
-## 9. Example of an Existing Plugin: img_plugin.py
+## 10. Example of an Existing Plugin: img_plugin.py
 
 An example of a CMD plugin actually in use (`plugins/img_plugin.py`).
 
@@ -555,7 +646,7 @@ and only has `IDENTIFIER = "IMG"` set.
 
 ---
 
-## 10. Commonly Used Methods and Utilities Summary
+## 11. Commonly Used Methods and Utilities Summary
 
 ### send_text / send_image (Built into BasePlugin)
 
@@ -580,7 +671,7 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 
 ---
 
-## 11. Plugin Development Checklist
+## 12. Plugin Development Checklist
 
 ### When creating a UI Panel Plugin
 
@@ -591,12 +682,13 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 - [ ] If starting a thread in `start()`, the flag is set to False in `stop()`
 - [ ] Added `time.sleep()` inside the `while` loop (forgetting this causes 100% CPU usage)
 - [ ] Wrapped error-prone code in `try-except`
+- [ ] Decided on badge display approach (`is_connected` or `enabled` fallback)
 
 ### When creating a CMD Command Plugin
 
 - [ ] Set `IDENTIFIER` (uppercase letters recommended; this is the XXX in `[CMD:XXX]`)
 - [ ] Implemented `handle(self, value: str)`
-- [ ] Added the import and registration to `plugin_loader.py`
+- [ ] Placed the `.py` file in the `plugins/` folder
 - [ ] If required settings exist, listed the key names in `REQUIRED_CONFIG`
 
 ### Common
@@ -607,13 +699,13 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 
 ---
 
-## 12. Common Mistakes and How to Fix Them
+## 13. Common Mistakes and How to Fix Them
 
 **Plugin not appearing in the UI panel**
 → Check that `PLUGIN_ID` is not still set to `""`. If empty, it won't be scanned.
 
 **CMD not responding**
-→ Check that the registration has been added to `plugin_loader.py`. Unlike UI plugins, it is not auto-scanned.
+→ Check that `IDENTIFIER` is set and that the `.py` file is placed in the `plugins/` folder.
 
 **System freezes during streaming**
 → The cause is a missing `time.sleep(1.0)` inside the `while self.is_running:` loop.
@@ -623,6 +715,9 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 
 **Settings not being saved**
 → `save_settings()` won't work if `PLUGIN_ID` is not set. Check that `super().__init__()` is being called.
+
+**Badge doesn't light up even with enabled=True**
+→ If `self.is_connected = False` or `self.is_running = False` is defined in `__init__`, these take priority over `enabled`. For plugins that don't need an external service connection, avoid defining `is_connected` / `is_running`.
 
 **`[CMD:IMG]` settings not being applied**
 → If `img_plugin.py` is not in the `plugins/` folder, it won't appear in the UI and the `plugin_loader.py` registration will also fail. Confirm the file exists.
