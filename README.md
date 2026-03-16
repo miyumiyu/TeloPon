@@ -40,7 +40,7 @@ Add unlimited custom designs (themes) with just a bit of CSS — news broadcast 
 
 ### 5. Super-Easy OBS Integration & Silence Prevention System
 Just launching TeloPon starts the built-in server — simply add the URL as an OBS "Browser Source" and you're ready to go.
-Additionally, the **"Auto Talk (silence prevention)" feature** is built in, so when the streamer goes silent, the AI reads the atmosphere and proactively introduces a topic to prevent dead air.
+Additionally, **"Auto Talk"** (proactively introduces a new topic when the streamer goes silent) and **"Auto Segment"** (periodically asks the AI to summarize and organize topics) automatic intervention modes are built in.
 
 ---
 
@@ -144,7 +144,11 @@ The **"Threshold Slider"** below the meter is the boundary for "from what volume
 
 ### ⏱️ 3. Time Settings (Seconds)
 * **Normal / Special**: The number of seconds that "normal telops" (upper right) and "explanation telops" (bottom) remain visible on OBS.
-* **Auto Talk Enabled**: Check this box and set the "intervention time (seconds)" — **when you're silent for that many seconds, the AI reads the atmosphere and proactively introduces a topic to prevent dead air**.
+* **Talk Mode**: Select the automatic intervention mode from the combo box.
+  * **None**: No automatic intervention. The AI only reacts to your voice.
+  * **Auto Talk**: When the set "Intervention Time (seconds)" has passed since your last speech, the AI reads the atmosphere and proactively introduces a topic to prevent dead air.
+  * **Auto Segment**: When the set "Intervention Time (seconds)" has passed since the last telop was displayed, the AI is asked to summarize and organize topics covered so far. Ideal for periodic content recaps.
+* **Intervention Time (seconds)**: Use the slider to set how many seconds to wait before automatic intervention triggers. A **countdown to the next trigger** is displayed next to the combo box (fires when it reaches 0).
 
 ### 🔌 4. Extensions (Plugins)
 Useful tools are lined up in the right panel.
@@ -268,8 +272,6 @@ You can enable advanced launch modes by adding a space and the following flags t
 | `-th`<br>`--thought` | `TeloPon.exe -th` | **Thinking mode**. Outputs the AI's internal thought process (Thoughts) — "what it's thinking and why it gave that response" — to the console. |
 | `-tb`<br>`--thinking_budget`| `TeloPon.exe -tb 1024` | **Thinking budget (token specification)** (default: `2048`). Specifies the token budget for thinking mode. `0` disables thinking. |
 | `-gs`<br>`--google_search` | `TeloPon.exe -gs` | **Google Search integration**. Enables the AI to reference up-to-date information using Google Search when responding. |
-| `-at`<br>`--auto_turn` | `TeloPon.exe -at 10` | **Auto-turn mode**. Locks the microphone when speech ends and unlocks it after the AI responds. Specify the timeout in seconds (default: 10). `0` = wait indefinitely. |
-| `-seg`<br>`--segment` | `TeloPon.exe -seg` | **Periodic segment mode**. Uses the UI's Auto Talk timer as a cycle to periodically send summary/topic requests to the AI. |
 | `-as`<br>`--audio_save` | `TeloPon.exe -as` | **Auto-save speech WAV**. Automatically saves speech to the `debug_audio/` folder (debug mode not required). |
 
 ---
