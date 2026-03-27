@@ -9,7 +9,7 @@
 
 **Ultra-low-latency, feature-rich AI Streaming Assistant**
 
-TeloPon leverages Google's latest AI "Gemini Live API" to listen to the streamer's voice and viewer comments, then **display real-time reactions, quips, and summaries as on-screen captions (telops)** — the next-generation streaming assistant tool.
+TeloPon leverages Google's latest AI "Gemini 3.1 Flash Live" to listen to the streamer's voice and viewer comments, then **display real-time reactions, quips, and summaries as on-screen captions (telops)** — the next-generation streaming assistant tool.
 
 This is not just "transcription software". It summons a talented, unique **AI co-host** for your stream!
 
@@ -22,7 +22,7 @@ This is not just "transcription software". It summons a talented, unique **AI co
 ![TeloPon Features](images/telopon1_en.png)
 
 ### 1. Overwhelming "Ultra-Low Latency" and "Context Understanding"
-By directly calling Gemini's native audio API, TeloPon completely eliminates the time-consuming steps of "speech recognition → text conversion → sending to AI". It instantly reads the nuances of the streamer's words, sighs, and even laughter, returning **snappy responses that never break the flow of conversation**.
+By directly leveraging the Gemini Live API, TeloPon completely eliminates the time-consuming steps of "speech recognition → text conversion → sending to AI". It instantly reads the nuances of the streamer's words, sighs, and even laughter, returning **snappy responses that never break the flow of conversation**.
 
 ### 2. "Prompt Settings" to Create Your Own AI
 Freely create "prompts (AI scripts / personality sheets)" as text files!
@@ -41,6 +41,9 @@ Add unlimited custom designs (themes) with just a bit of CSS — news broadcast 
 ### 5. Super-Easy OBS Integration & Silence Prevention System
 Just launching TeloPon starts the built-in server — simply add the URL as an OBS "Browser Source" and you're ready to go.
 Additionally, **"Auto Talk"** (proactively introduces a new topic when the streamer goes silent) and **"Auto Segment"** (periodically asks the AI to summarize and organize topics) automatic intervention modes are built in.
+
+### 6. Real-Time Telop History with "Telop Monitor"
+A built-in monitor window displays the history of AI-generated telops in chronological order within the TeloPon UI. No need to check OBS during a live session — telop history is always at a glance.
 
 ---
 
