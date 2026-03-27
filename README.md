@@ -6,9 +6,9 @@
 
 ![TeloPon実行画面](images/demo.gif)
 
-> **⚠️ ダウンロードは必ず [Releases] から行ってください**
-> 👉 **[TeloPon 最新版をダウンロードする](https://github.com/miyumiyu/TeloPon/releases/latest)**
-> （緑の「Code」ボタンから Download ZIP を選んでも起動できません）
+> **⚠️ ダウンロードは必ず [Releases] から行ってください**  
+> 👉 **[TeloPon 最新版をダウンロードする](https://github.com/miyumiyu/TeloPon/releases/download/v2.00b/TeloPon-200b.zip)**  
+> （緑の「Code」ボタンから Download ZIP を選んでも起動できません）  
 
 ---
 
@@ -20,7 +20,7 @@
 
 ### STEP 1：TeloPon をダウンロードする
 
-👉 **[最新版 TeloPon.zip をダウンロード](https://github.com/miyumiyu/TeloPon/releases/latest)**
+👉 **[最新版 TeloPon.zip をダウンロード](https://github.com/miyumiyu/TeloPon/releases/download/v2.00b/TeloPon-200b.zip)**
 
 ダウンロードしたZIPを右クリック →「**すべて展開**」で解凍してください。
 
@@ -46,9 +46,10 @@
 |---|---|---|
 | 1 | 🔑 **API Key** | コピーしたキーを貼り付け →「認証」ボタンを押す →「✅ 認証成功」を確認 |
 | 2 | 🎥 **配信者名** | あなたの名前を入力（AIがあなたを呼ぶときに使います） |
-| 3 | 🧠 **AIの性格** | プロンプトを選択（最初は `standard` のままでOK） |
+| 3 | 🧠 **AIの性格** | プロンプトを選択（最初は `[sample] 配信・ナレーター` のままでOK） |
 | 4 | 🎤 **マイク** | 自分のマイクを選択（しゃべるとメーターが黄色に動けばOK） |
 
+![UI画面](images/ui_ja-quick.png)
 ---
 
 ### STEP 4：OBSに追加してライブ開始！
