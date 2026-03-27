@@ -1,4 +1,4 @@
-[English](README.md) | [日本語](README_ja.md) | **한국어** | [Русский](README_ru.md)
+[⬆️ Quick Start (Top)](README.md) | [English](README_en.md) | [日本語](README_ja.md) | **한국어** | [Русский](README_ru.md)
 
 # TeloPon 🎙️✨ - 얼리 액세스
 

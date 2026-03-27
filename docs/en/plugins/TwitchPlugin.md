@@ -89,4 +89,4 @@ That's it — integration complete! As soon as the AI session begins, Twitch inf
 
 ---
 
-[⬅️ Back to Plugin List](../../../README.md)
+[⬅️ Back to Plugin List](../../../README_en.md)

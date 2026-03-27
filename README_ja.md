@@ -1,4 +1,4 @@
-[English](README.md) | **日本語** | [한국어](README_ko.md) | [Русский](README_ru.md)
+[⬆️ Quick Start (Top)](README.md) | [English](README_en.md) | **日本語** | [한국어](README_ko.md) | [Русский](README_ru.md)
 
 # TeloPon (てろぽん) 🎙️✨ - 早期アクセス版
 

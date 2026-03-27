@@ -59,4 +59,4 @@ Using this tool makes truly interactive AI-powered streaming possible — far be
   If you send an image with very small text (like a full PC screen), the AI may not be able to read the text accurately. The key is to select an image where the thing you want to show is clearly visible.
 
 ---
-[⬅️ Back to Plugin List](../../../README.md)
+[⬅️ Back to Plugin List](../../../README_en.md)

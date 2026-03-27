@@ -70,4 +70,4 @@ After that, whenever a viewer comments and `comment.xml` is updated, comments wi
   If you enable both the "YouTube Integration Tool" and this "Comment Generator File Reader" **at the same time, the same comments will be sent to the AI twice.** When streaming on YouTube, please enable only one of them.
 
 ---
-[⬅️ Back to Plugin List](../../../README.md)
+[⬅️ Back to Plugin List](../../../README_en.md)

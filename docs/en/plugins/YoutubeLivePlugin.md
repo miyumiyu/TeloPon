@@ -52,4 +52,4 @@ Using this tool, the following information is automatically sent to the AI.
   This tool fetches information from publicly accessible YouTube pages, so it cannot connect to private streams. (Unlisted streams can be connected to if you have the URL.)
 
 ---
-[⬅️ Back to Plugin List](../../../README.md)
+[⬅️ Back to Plugin List](../../../README_en.md)

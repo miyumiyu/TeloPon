@@ -44,4 +44,4 @@ When the AI connection is established, the special rules you entered will be qui
   For example, if your base prompt says "You are a calm and composed AI" but you instruct this tool to "Be as high-energy as possible and shout everything!", the AI may get confused and stop responding (going silent and not reacting).
 
 ---
-[⬅️ Back to Plugin List](../../../README.md)
+[⬅️ Back to Plugin List](../../../README_en.md)
