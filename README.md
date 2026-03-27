@@ -174,6 +174,9 @@ Copies the URL for use in OBS Browser Source to the clipboard.
 2. In OBS Studio, add a source and select **"Browser"**, then paste the copied URL.
 3. Set the size to a 16:9 ratio **(recommended: width 1664 / height 936)** and you're done!
 
+### 📺 8. Telop Monitor
+Toggle with the **"Telop Monitor OFF/ON"** button below the OBS copy button. When turned ON, a chronological history of all AI-generated telops is displayed directly within the TeloPon UI. No need to check OBS during a live session — telop history is always visible in the app. Enabling the monitor after launch will also display all previous telops logged in the current session.
+
 **👉 Once all settings are complete, press the "🔴 Start Live Connection" button to begin real-time conversation with the AI!**
 
 ---
