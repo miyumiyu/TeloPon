@@ -243,7 +243,7 @@ def _send_screenshot(self):
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=85)
 
-    # Удобно использовать специальный метод
+    # Удобно использовать специальный метод (mime_type по умолчанию "image/jpeg", если не указан)
     self.send_image(self.plugin_queue, buf.getvalue())
     # Затем отправить инструкции о том, что это за изображение — это ключевой момент!
     self.send_text(self.plugin_queue, "Пожалуйста, прокомментируй изображение, которое ты только что увидел.")
@@ -646,7 +646,11 @@ class HybridPlugin(BasePlugin):
 # Отправить текст ИИ
 self.send_text(self.plugin_queue, "Сообщение для ИИ")
 
-# Отправить изображение ИИ (передать как bytes)
+# Отправить изображение ИИ
+# send_image(queue, image_bytes, mime_type="image/jpeg")
+#   queue       : передать self.plugin_queue
+#   image_bytes : данные изображения в формате bytes
+#   mime_type   : необязателен. по умолчанию "image/jpeg" (можно передать как позиционный или именованный аргумент)
 self.send_image(self.plugin_queue, img_bytes, mime_type="image/jpeg")
 ```
 

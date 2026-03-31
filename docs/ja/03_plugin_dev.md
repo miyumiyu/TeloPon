@@ -256,7 +256,7 @@ def _send_screenshot(self):
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=85)
 
-    # 専用メソッドを使うと便利
+    # 専用メソッドを使うと便利（mime_type 省略時は "image/jpeg"）
     self.send_image(self.plugin_queue, buf.getvalue())
     # その後、何の画像か指示も送るのがポイント！
     self.send_text(self.plugin_queue, "今見せた画像についてコメントしてください。")
@@ -707,7 +707,11 @@ class HybridPlugin(BasePlugin):
 # テキストをAIに送る
 self.send_text(self.plugin_queue, "AIへのメッセージ")
 
-# 画像をAIに送る（bytes形式で渡す）
+# 画像をAIに送る
+# send_image(queue, image_bytes, mime_type="image/jpeg")
+#   queue       : self.plugin_queue を渡す
+#   image_bytes : bytes形式の画像データ
+#   mime_type   : 省略可。省略時は "image/jpeg"（位置引数・キーワード引数どちらでも可）
 self.send_image(self.plugin_queue, img_bytes, mime_type="image/jpeg")
 ```
 

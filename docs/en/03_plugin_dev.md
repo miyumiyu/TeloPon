@@ -243,7 +243,7 @@ def _send_screenshot(self):
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=85)
 
-    # Using the dedicated method is convenient
+    # Using the dedicated method is convenient (mime_type defaults to "image/jpeg" if omitted)
     self.send_image(self.plugin_queue, buf.getvalue())
     # Then send instructions about what the image is — this is the key!
     self.send_text(self.plugin_queue, "Please comment on the image you just saw.")
@@ -684,7 +684,11 @@ and only has `IDENTIFIER = "IMG"` set.
 # Send text to the AI
 self.send_text(self.plugin_queue, "Message to AI")
 
-# Send an image to the AI (pass as bytes)
+# Send an image to the AI
+# send_image(queue, image_bytes, mime_type="image/jpeg")
+#   queue       : pass self.plugin_queue
+#   image_bytes : image data in bytes format
+#   mime_type   : optional. defaults to "image/jpeg" (positional or keyword argument both accepted)
 self.send_image(self.plugin_queue, img_bytes, mime_type="image/jpeg")
 ```
 

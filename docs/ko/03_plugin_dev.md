@@ -243,7 +243,7 @@ def _send_screenshot(self):
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=85)
 
-    # 전용 메서드 사용이 편리함
+    # 전용 메서드 사용이 편리함（mime_type 생략 시 "image/jpeg"）
     self.send_image(self.plugin_queue, buf.getvalue())
     # 이미지가 무엇인지에 대한 지시를 보내는 것이 핵심!
     self.send_text(self.plugin_queue, "방금 본 이미지에 대해 코멘트해 주세요.")
@@ -646,7 +646,11 @@ class HybridPlugin(BasePlugin):
 # AI에게 텍스트 전송
 self.send_text(self.plugin_queue, "AI에게 보낼 메시지")
 
-# AI에게 이미지 전송 (바이트로 전달)
+# AI에게 이미지 전송
+# send_image(queue, image_bytes, mime_type="image/jpeg")
+#   queue       : self.plugin_queue를 전달
+#   image_bytes : bytes 형식의 이미지 데이터
+#   mime_type   : 생략 가능. 생략 시 "image/jpeg"（위치 인수·키워드 인수 모두 가능）
 self.send_image(self.plugin_queue, img_bytes, mime_type="image/jpeg")
 ```
 
