@@ -65,12 +65,28 @@ Priority 2: is_running   attribute is True  → Active (blue/green)
 Fallback:   Neither attribute exists        → Uses the enabled setting value
 ```
 
-### Behavior by Pattern
+### All State Combinations
+
+| `is_connected` | `is_running` | `enabled` | Badge |
+|---|---|---|---|
+| True (defined) | — | — | Active (blue/green) |
+| False (defined) | — | — | Gray |
+| Undefined | True | — | Active (blue/green) |
+| Undefined | False | — | Gray |
+| Undefined | Undefined | True | Active (blue/green) |
+| Undefined | Undefined | False | Gray |
+
+> **`is_running` responds to live session events.**
+> When TeloPon connects or disconnects from Gemini Live, it calls `start()` / `stop()` on all plugins.
+> Setting `self.is_running = True` inside `start()` and `False` inside `stop()` is the typical usage.
+
+### Behavior by Pattern (quick reference)
 
 | Plugin Implementation | When Badge Becomes Active | Typical Use Case |
 |---|---|---|
-| Has `is_connected` attribute | When `is_connected = True` | External service connections like YouTube, Twitch |
-| Has `is_running` attribute (no `is_connected`) | When `is_running = True` | Background processing plugins |
+| `is_connected` defined, fixed True | Always active | TOOL plugins with no external connection but always-on badge |
+| `is_connected` defined, variable | When `is_connected = True` | External service connections like YouTube, Twitch |
+| `is_running` defined (no `is_connected`) | When `is_running = True` | Background processing plugins |
 | Neither attribute defined | When `enabled = True` | Simple custom plugins |
 
 ### Important: Whether to Define `is_connected`
@@ -469,6 +485,32 @@ class ManualCuePlugin(BasePlugin):
         ttk.Button(self.panel, text="📨 Send to AI", command=send).pack(pady=10)
 ```
 
+### is_connected=True fixed pattern (always-active type)
+
+If your plugin needs no external connection but you want the badge to always be active regardless of the `enabled` setting,
+set `is_connected = True` as a fixed value.
+
+```python
+class AlwaysActiveToolPlugin(BasePlugin):
+    PLUGIN_ID   = "always_active_plugin"
+    PLUGIN_NAME = "🔧 Always Active Plugin"
+    PLUGIN_TYPE = "TOOL"
+
+    def __init__(self):
+        super().__init__()
+        self.is_connected = True  # Fixed True → badge is always active
+        self.plugin_queue = None
+
+    def get_default_settings(self):
+        return {"enabled": True}
+
+    def start(self, prompt_config, plugin_queue):
+        self.plugin_queue = plugin_queue
+
+    def stop(self):
+        self.plugin_queue = None
+```
+
 ### TOOL type with is_connected (external service connection type)
 
 The pattern for plugins that connect to external services like YouTube or Twitch.
@@ -705,7 +747,12 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 → `save_settings()` won't work if `PLUGIN_ID` is not set. Check that `super().__init__()` is being called.
 
 **Badge doesn't light up even with enabled=True**
-→ If `self.is_connected = False` or `self.is_running = False` is defined in `__init__`, these take priority over `enabled`. For plugins that don't need an external service connection, avoid defining `is_connected` / `is_running`.
+→ If `self.is_connected = False` or `self.is_running = False` is defined in `__init__`, these take priority over `enabled` and the badge stays gray.
+For plugins that need no external service, choose one of the following:
+- **Do not define `is_connected` / `is_running`** → `enabled` fallback is used (recommended for simple plugins)
+- **Fix `self.is_connected = True`** → badge is always active (use when you always want it lit)
+
+Initializing `is_connected = False` and later switching it to `True` behaves like an external-service plugin (badge is gray while not connected). This is a valid pattern when used intentionally.
 
 **`[CMD:IMG]` settings not being applied**
 → Check that `img_plugin.py` is placed in the `plugins/` folder.
