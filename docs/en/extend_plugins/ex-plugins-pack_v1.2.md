@@ -1,4 +1,4 @@
-**English** | [日本語](../../ja/extend_plugins/ex-plugins-pack_v1.2.md) | [한국어](../../ko/extend_plugins/ex-plugins-pack_v1.2.md) | [Русский](../../ru/extend_plugins/ex-plugins-pack_v1.2.md)
+**English** | [日本語](https://github.com/miyumiyu/TeloPon/blob/main/docs/ja/extend_plugins/ex-plugins-pack_v1.2.md) | [한국어](https://github.com/miyumiyu/TeloPon/blob/main/docs/ko/extend_plugins/ex-plugins-pack_v1.2.md) | [Русский](https://github.com/miyumiyu/TeloPon/blob/main/docs/ru/extend_plugins/ex-plugins-pack_v1.2.md)
 
 This is the first pack of official extension plugins to make TeloPon even more powerful!
 Just download the file(s) (`.py`) for the features you need and add them to your TeloPon.
