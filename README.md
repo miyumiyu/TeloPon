@@ -7,7 +7,7 @@
 ![TeloPon実行画面](images/demo.gif)
 
 > **⚠️ ダウンロードは必ず [Releases] から行ってください**  
-> 👉 **[TeloPon 最新版をダウンロードする](https://github.com/miyumiyu/TeloPon/releases/download/v2.12b/TeloPon-212b.zip)**  
+> 👉 **[TeloPon 最新版をダウンロードする](https://github.com/miyumiyu/TeloPon/releases/download/v2.13b/TeloPon-213b.zip)**  
 > （緑の「Code」ボタンから Download ZIP を選んでも起動できません）  
 
 ---
@@ -20,7 +20,7 @@
 
 ### STEP 1：TeloPon をダウンロードする
 
-👉 **[最新版 TeloPon.zip をダウンロード](https://github.com/miyumiyu/TeloPon/releases/download/v2.12b/TeloPon-212b.zip)**
+👉 **[最新版 TeloPon.zip をダウンロード](https://github.com/miyumiyu/TeloPon/releases/download/v2.13b/TeloPon-213b.zip)**
 
 ダウンロードしたZIPを右クリック →「**すべて展開**」で解凍してください。
 
@@ -59,6 +59,14 @@
 3. コピーしたURLを貼り付け、サイズを **幅 1664 × 高さ 936** に設定
 4. アプリの **「🔴 ライブ接続開始」** ボタンを押す
 5. マイクに向かって喋る → テロップが出たら成功！ 🎉
+
+---
+
+### 🎮 テロップの操作
+
+OBSの「操作（対話）」ボタンを押すと、テロップを直接 **ドラッグ移動** ・ **ホイール拡大縮小** ・ **ダブルクリックでリセット** できます。位置やスケールはOBS再起動後も記憶されます。
+
+👉 **[OBSテロップ操作ガイド（図解付き）](docs/ja/05_obs_control.md)**
 
 ---
 
