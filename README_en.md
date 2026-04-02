@@ -129,6 +129,7 @@ When you launch the app, the main settings window appears.
 ### ⚙️ 1. AI Settings (Basic Settings)
 * **🔑 API Key**: Paste the key starting with `AIza...` and press the "Authenticate" button. When you see "✅ Authentication successful", you're ready to go.
 * **🧠 Model**: Leave it as `Auto` by default.
+* **💭 Thinking Level**: Sets the depth of AI reasoning. 4 levels from `minimal` (fastest response) to `high` (deep reasoning). The default `minimal` provides the best tempo for streaming.
 * **🧠 AI Personality (Prompt)**: Select the AI script from the `prompts/` folder.
 * **🎥 Streamer Name (※ Required)**: Enter your name. The AI uses this to address you.
 
@@ -174,7 +175,12 @@ Copies the URL for use in OBS Browser Source to the clipboard.
 2. In OBS Studio, add a source and select **"Browser"**, then paste the copied URL.
 3. Set the size to a 16:9 ratio **(recommended: width 1664 / height 936)** and you're done!
 
-### 📺 8. Telop Monitor
+### 🎮 8. Controlling Telops in OBS
+Press the "Interact" button in OBS to directly **drag-move**, **scroll-zoom**, **double-click to reset**, and **long-press to dismiss** telops. Positions and scales are remembered after OBS restarts.
+
+👉 **[OBS Telop Control Guide (with images)](docs/en/05_obs_control.md)**
+
+### 📺 9. Telop Monitor
 Toggle with the **"Telop Monitor OFF/ON"** button below the OBS copy button. When turned ON, a chronological history of all AI-generated telops is displayed directly within the TeloPon UI. No need to check OBS during a live session — telop history is always visible in the app. Enabling the monitor after launch will also display all previous telops logged in the current session.
 
 **👉 Once all settings are complete, press the "🔴 Start Live Connection" button to begin real-time conversation with the AI!**
@@ -276,7 +282,6 @@ You can enable advanced launch modes by adding a space and the following flags t
 | `-t`<br>`--temperature` | `TeloPon.exe -t 1.0` | **AI creativity (Temperature)** (default: `0.7`). Sets the randomness of AI responses. Higher = more unpredictable; lower = more straightforward. |
 | `-tp`<br>`--top_p` | `TeloPon.exe -tp 0.8` | **AI diversity (Top-P)** (default: `0.8`). Sets the candidate selection range for AI responses. Lower values produce more stable responses. |
 | `-th`<br>`--thought` | `TeloPon.exe -th` | **Thinking mode**. Outputs the AI's internal thought process (Thoughts) — "what it's thinking and why it gave that response" — to the console. |
-| `-tb`<br>`--thinking_budget`| `TeloPon.exe -tb 1024` | **Thinking budget (token specification)** (default: `2048`). Specifies the token budget for thinking mode. `0` disables thinking. |
 | `-gs`<br>`--google_search` | `TeloPon.exe -gs` | **Google Search integration**. Enables the AI to reference up-to-date information using Google Search when responding. |
 | `-as`<br>`--audio_save` | `TeloPon.exe -as` | **Auto-save speech WAV**. Automatically saves speech to the `debug_audio/` folder (debug mode not required). |
 
@@ -289,6 +294,7 @@ Guides for those who want to hack TeloPon to their heart's content!
 * 🧠 **[AI Prompt Creation Guide](docs/en/01_prompt_guide.md)**: How to create your own AI and the absolute rules to follow.
 * 🎨 **[Theme / CSS Customization Guide](docs/en/02_theme_css.md)**: How to create custom designs and configure sound effects.
 * 🧩 **[Plugin Development Guide](docs/en/03_plugin_dev.md)**: How to create custom extensions using the libraries bundled in the exe version (`requests`, `pytchat`, `obsws_python`, `Pillow`, etc.).
+* 🎮 **[OBS Telop Control Guide](docs/en/05_obs_control.md)**: How to drag, resize, and dismiss telops in OBS.
 
 ---
 
