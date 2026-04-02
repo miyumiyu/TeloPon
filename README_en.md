@@ -173,15 +173,12 @@ Copies the URL for use in OBS Browser Source to the clipboard.
 
 1. Press **"🔗 Copy OBS URL"** on the right side of the screen (click inside the dotted box).
 2. In OBS Studio, add a source and select **"Browser"**, then paste the copied URL.
-3. Set the size to a 16:9 ratio **(recommended: width 1664 / height 936)** and you're done!
+3. Set the size to a 16:9 ratio **(recommended: width 1920 / height 1080)** and you're done!
 
 ### 🎮 8. Controlling Telops in OBS
 Press the "Interact" button in OBS to directly **drag-move**, **scroll-zoom**, **double-click to reset**, and **long-press to dismiss** telops. Positions and scales are remembered after OBS restarts.
 
 👉 **[OBS Telop Control Guide (with images)](docs/en/05_obs_control.md)**
-
-### 📺 9. TelopViewer
-Open from the **"Telop Viewer" → "Control Panel"** button in the Extensions panel. Displays AI-generated telop history in real time with chronological ordering. Supports B1/B2 tag color coding, and OBS display delay can be configured via a dropdown.
 
 **👉 Once all settings are complete, press the "🔴 Start Live Connection" button to begin real-time conversation with the AI!**
 
@@ -216,6 +213,9 @@ TeloPon has two types of plugins: "Standard Bundled Plugins" that come pre-insta
 * 🎮 **Twitch Live Plugin** (`TwitchPlugin.py`)
   Simply enter a Twitch channel name or URL to have the AI pick up and react to viewer chat comments in real time. Setting a Client ID and Client Secret also sends the stream's "title", "category", and "thumbnail image" to the AI automatically. **Chat reading works even without a Client ID.**
   👉 [Detailed usage guide](docs/en/plugins/TwitchPlugin.md)
+
+* 📺 **Telop Viewer** (`TelopViewer.py`)
+  View AI-generated telop history in real time from the control panel. Supports B1/B2 tag color coding. OBS display delay can be configured via a dropdown. Simply open from the "Control Panel" button in the Extensions panel.
 
 ### 🌟 Official Extension Plugins (Individual Download)
 
