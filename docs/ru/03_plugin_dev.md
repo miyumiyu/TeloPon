@@ -283,6 +283,36 @@ def on_telop_output(self, topic, main, window, layout, badge):
 - `<b2>...</b2>` — Цвет выделения 2 (цвет h2 темы)
 - `<P1>` `<M5>` и т.д. — Плитки маджонга
 
+### ⚠️ Важно: Потокобезопасность
+
+`on_telop_output` вызывается из **фонового потока** (через `ThreadPoolExecutor` для защиты от зависания).
+
+**🚫 Запрещено: операции Tkinter** — вызов методов Tkinter внутри `on_telop_output` вызывает **взаимную блокировку (deadlock)**.
+
+**✅ Правильный подход: буфер deque + опрос** — добавляйте данные в потокобезопасный `deque`, затем обрабатывайте в таймере главного потока.
+
+```python
+from collections import deque
+
+class MyPlugin(BasePlugin):
+    def __init__(self):
+        super().__init__()
+        self._log_buffer = deque(maxlen=500)
+
+    def on_telop_output(self, topic, main, window, layout, badge):
+        self._log_buffer.append((topic, main, window))  # ✅ Только deque
+        return 0
+
+    def _poll(self):
+        while self._log_buffer:
+            topic, main, window = self._log_buffer.popleft()
+            self._text_widget.insert("end", f"{topic} | {main}\n")  # ✅ Главный поток
+        if self._panel and self._panel.winfo_exists():
+            self._panel.after(100, self._poll)
+```
+
+**⏱️ Таймаут и авто-исключение**: пропуск если не возвращается за 1 секунду. Авто-исключение после 3 таймаутов.
+
 ---
 
 ## 7. Полный шаблон плагина BACKGROUND

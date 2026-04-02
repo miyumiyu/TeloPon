@@ -353,6 +353,78 @@ def on_telop_output(self, topic, main, window, layout, badge):
     return 0  # その他は即表示
 ```
 
+### ⚠️ 重要：スレッド安全性
+
+`on_telop_output` は **バックグラウンドスレッド** から呼ばれます（タイムアウト保護のため `ThreadPoolExecutor` で実行）。
+このため、以下の制約があります。
+
+**🚫 禁止: Tkinter の操作**
+
+`on_telop_output` 内で Tkinter のメソッドを直接呼ぶと **デッドロック** します。
+以下はすべて禁止です:
+
+```python
+# ❌ これらは on_telop_output 内で呼んではいけない
+self._panel.after(0, ...)        # デッドロック
+self._panel.winfo_exists()       # デッドロック
+self._text_widget.insert(...)    # デッドロック
+self._label.config(text=...)     # デッドロック
+```
+
+**✅ 正しいパターン: deque バッファ + ポーリング**
+
+データをスレッドセーフな `deque` に積み、メインスレッドのタイマーで消化します。
+
+```python
+from collections import deque
+
+class MyPlugin(BasePlugin):
+    def __init__(self):
+        super().__init__()
+        self._log_buffer = deque(maxlen=500)  # スレッドセーフ
+        self._panel = None
+
+    def on_telop_output(self, topic, main, window, layout, badge):
+        # ✅ dequeへの追加のみ（Tkinter操作なし）
+        self._log_buffer.append((topic, main, window))
+        return 0
+
+    def open_settings_ui(self, parent_window):
+        self._panel = tk.Toplevel(parent_window)
+        # ... UI構築 ...
+        self._poll()  # ポーリング開始
+
+    def _poll(self):
+        # ✅ メインスレッドでdequeを消化してUI更新
+        while self._log_buffer:
+            topic, main, window = self._log_buffer.popleft()
+            # Tkinter操作はここで安全に行える
+            self._text_widget.insert("end", f"{topic} | {main}\n")
+        if self._panel and self._panel.winfo_exists():
+            self._panel.after(100, self._poll)  # 100ms後に再ポーリング
+```
+
+**⏱️ タイムアウトと自動除外**
+
+| 項目 | 値 |
+|---|---|
+| タイムアウト | **1秒** — 1秒以内に `return` しないとスキップ |
+| 自動除外 | **3回** タイムアウトしたプラグインは以後フック呼び出し対象外 |
+
+タイムアウトしたプラグインは警告ログに記録されます:
+
+```
+⚠️ MyPlugin: on_telop_output が1.0秒以内に応答しません（スキップ。あと2回で自動除外）
+🚫 MyPlugin: on_telop_output のタイムアウトが3回に達しました。このプラグインのフックを自動除外します。
+```
+
+**`on_telop_output` 内で安全にできること:**
+- 変数の読み書き（`self._delay_value` 等）
+- `deque.append()` / `list.append()`
+- ファイルI/O（ただし高速に完了すること）
+- ネットワーク通信（ただし1秒以内に完了すること）
+- `return` で即座にディレイ値を返す
+
 ### ALWAYS_ACTIVE 属性
 
 `ALWAYS_ACTIVE = True` を設定すると、プラグインリストで常にアクティブ色（黒文字・太字）で表示されます。

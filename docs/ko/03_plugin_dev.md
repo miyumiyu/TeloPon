@@ -283,6 +283,36 @@ def on_telop_output(self, topic, main, window, layout, badge):
 - `<b2>...</b2>` — 강조색 2 (테마 h2 색상)
 - `<P1>` `<M5>` 등 — 마작 패
 
+### ⚠️ 중요: 스레드 안전성
+
+`on_telop_output`은 **백그라운드 스레드**에서 호출됩니다 (타임아웃 보호를 위해 `ThreadPoolExecutor`로 실행).
+
+**🚫 금지: Tkinter 조작** — `on_telop_output` 내에서 Tkinter 메서드를 호출하면 **데드락**이 발생합니다.
+
+**✅ 올바른 패턴: deque 버퍼 + 폴링** — 데이터를 스레드 세이프한 `deque`에 추가하고, 메인 스레드 타이머에서 소비합니다.
+
+```python
+from collections import deque
+
+class MyPlugin(BasePlugin):
+    def __init__(self):
+        super().__init__()
+        self._log_buffer = deque(maxlen=500)
+
+    def on_telop_output(self, topic, main, window, layout, badge):
+        self._log_buffer.append((topic, main, window))  # ✅ deque만 사용
+        return 0
+
+    def _poll(self):
+        while self._log_buffer:
+            topic, main, window = self._log_buffer.popleft()
+            self._text_widget.insert("end", f"{topic} | {main}\n")  # ✅ 메인 스레드
+        if self._panel and self._panel.winfo_exists():
+            self._panel.after(100, self._poll)
+```
+
+**⏱️ 타임아웃 및 자동 제외**: 1초 이내에 반환하지 않으면 스킵. 3회 타임아웃 시 자동 제외.
+
 ---
 
 ## 7. BACKGROUND 플러그인 전체 템플릿

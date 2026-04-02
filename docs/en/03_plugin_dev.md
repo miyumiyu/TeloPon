@@ -324,6 +324,61 @@ def on_telop_output(self, topic, main, window, layout, badge):
     return 0
 ```
 
+### ⚠️ Important: Thread Safety
+
+`on_telop_output` is called from a **background thread** (executed via `ThreadPoolExecutor` for timeout protection). The following restrictions apply.
+
+**🚫 Forbidden: Tkinter operations**
+
+Calling Tkinter methods directly inside `on_telop_output` causes **deadlocks**:
+
+```python
+# ❌ Do NOT call these inside on_telop_output
+self._panel.after(0, ...)        # Deadlock
+self._panel.winfo_exists()       # Deadlock
+self._text_widget.insert(...)    # Deadlock
+```
+
+**✅ Correct pattern: deque buffer + polling**
+
+Push data to a thread-safe `deque`, then consume it from a main-thread timer.
+
+```python
+from collections import deque
+
+class MyPlugin(BasePlugin):
+    def __init__(self):
+        super().__init__()
+        self._log_buffer = deque(maxlen=500)  # Thread-safe
+
+    def on_telop_output(self, topic, main, window, layout, badge):
+        # ✅ Only deque operations (no Tkinter)
+        self._log_buffer.append((topic, main, window))
+        return 0
+
+    def _poll(self):
+        # ✅ Consume deque and update UI on main thread
+        while self._log_buffer:
+            topic, main, window = self._log_buffer.popleft()
+            self._text_widget.insert("end", f"{topic} | {main}\n")
+        if self._panel and self._panel.winfo_exists():
+            self._panel.after(100, self._poll)
+```
+
+**⏱️ Timeout and Auto-Exclusion**
+
+| Setting | Value |
+|---|---|
+| Timeout | **1 second** — skipped if `return` is not reached within 1s |
+| Auto-exclusion | After **3** timeouts, the plugin's hook is permanently skipped |
+
+**Safe operations inside `on_telop_output`:**
+- Read/write variables (`self._delay_value`, etc.)
+- `deque.append()` / `list.append()`
+- File I/O (if fast)
+- Network calls (if completing within 1 second)
+- `return` the delay value immediately
+
 ### ALWAYS_ACTIVE Attribute
 
 Set `ALWAYS_ACTIVE = True` to display the plugin in active color (black text, bold) in the plugin list at all times. The `on_telop_output` hook is called for all plugins regardless of `enabled` state, making this ideal for monitor-type plugins that work just by opening the panel.
