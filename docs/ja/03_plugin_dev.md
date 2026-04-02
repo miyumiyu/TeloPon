@@ -274,7 +274,101 @@ def start(self, prompt_config, plugin_queue):
 
 ---
 
-## 6. 本格的なBACKGROUND型プラグインの雛形
+## 6. テロップ出力フック（AIの出力をプラグインで受け取る）
+
+`on_telop_output` メソッドをオーバーライドすると、AIがテロップを出力するたびにプラグインがそのデータを受け取れます。
+さらに、戻り値でOBS上のテロップ表示を **ディレイ（遅延）** や **非表示** に制御できます。
+
+### フックの呼び出しタイミング
+
+```
+AI出力 → telemetry_buffer.process()
+  ① on_telop_output() を全プラグインに即座に呼ぶ（常に。ディレイ/非表示に関係なく）
+  ② 全プラグインの戻り値を集計
+  ③ OBSテロップ表示を制御（即表示 / ディレイ / 非表示）
+```
+
+**重要**: プラグインへのデータ流し込み（①）は常に即座に行われます。ディレイや非表示はOBS表示のみに影響します。
+
+### 戻り値によるOBS表示制御
+
+| 戻り値 | 動作 |
+|---|---|
+| `0` | 即表示（デフォルト） |
+| `1` 以上 | N秒後に表示 |
+| `-1` | OBS表示を抑制（プラグインにはデータが届く） |
+| `None` | 制御しない（他プラグインに委ねる） |
+
+**複数プラグインの競合ルール**: `-1`（非表示）が最優先。それ以外は `max(delay)` が採用されます。
+
+### 受け取るデータ
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+```
+
+| 引数 | 内容 | 例 |
+|---|---|---|
+| `topic` | 上段テキスト | `羊様へ` |
+| `main` | 本文 | `そこに気づくとは、<b1>流石</b1>の観察眼！` |
+| `window` | ウィンドウ種類 | `window-reply`, `window-simple`, `window-explain` |
+| `layout` | レイアウト | `layout-flat`, `layout-big-top` |
+| `badge` | バッジ（投稿者名等） | `@羊-x9y`, `NONE` |
+
+**`main` / `topic` に含まれるタグ**（`drawing.apply_semantic_classes` 適用前の生データ）:
+
+| タグ | 意味 | 例 |
+|---|---|---|
+| `<b1>...</b1>` | 強調色1（テーマのh1色） | `<b1>重要</b1>` |
+| `<b2>...</b2>` | 強調色2（テーマのh2色） | `<b2>注目</b2>` |
+| `<P1>` `<M5>` 等 | 麻雀牌 | `<P1><P1><P1>` |
+
+### 実装例：監視プラグイン（表示制御なし）
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    # テロップ内容をログに記録するだけ。表示制御はしない。
+    logger.info(f"[Monitor] {window} | {topic} | {main}")
+    return 0  # 即表示（デフォルト）
+```
+
+### 実装例：ディレイ付き表示制御
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    # データは受け取る（内部処理やログに使える）
+    self._log_telop(topic, main)
+
+    # OBS表示を5秒遅延
+    return 5
+```
+
+### 実装例：特定ウィンドウを非表示
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    # window-reply のテロップだけOBS表示を抑制
+    if window == "window-reply":
+        return -1  # OBSに表示しない（このプラグインにはデータが届いている）
+    return 0  # その他は即表示
+```
+
+### ALWAYS_ACTIVE 属性
+
+`ALWAYS_ACTIVE = True` を設定すると、プラグインリストで常にアクティブ色（黒文字・太字）で表示されます。
+`on_telop_output` フックは `enabled` 状態に関係なく全プラグインに呼ばれるため、
+パネルを開くだけで使える監視系プラグインに適しています。
+
+```python
+class MyViewerPlugin(BasePlugin):
+    PLUGIN_ID   = "my_viewer"
+    PLUGIN_TYPE = "TOOL"
+    ALWAYS_ACTIVE = True  # 常にアクティブ表示
+```
+
+---
+
+## 7. 本格的なBACKGROUND型プラグインの雛形
 
 裏で動き続け、定期的にAIに情報を送るプラグインの完全テンプレートです。
 
@@ -439,7 +533,7 @@ class AutoTimerPlugin(BasePlugin):
 
 ---
 
-## 7. TOOL型プラグインの雛形
+## 8. TOOL型プラグインの雛形
 
 配信中でも操作できる手動ツールです。`PLUGIN_TYPE = "TOOL"` にするだけで配信中もパネルが操作可能になります。
 
@@ -574,7 +668,7 @@ class ExternalServicePlugin(BasePlugin):
 
 ---
 
-## 8. CMDコマンドプラグインの作り方
+## 9. CMDコマンドプラグインの作り方
 
 AIが発言の中に `[CMD:XXX] 引数` という形式を書いたときに処理を実行するプラグインです。
 
@@ -637,7 +731,7 @@ class WeatherPlugin(BasePlugin):
 
 ---
 
-## 9. UIパネルとCMDを兼ねたハイブリッドプラグイン
+## 10. UIパネルとCMDを兼ねたハイブリッドプラグイン
 
 `PLUGIN_ID` と `IDENTIFIER` を両方設定すると、UIパネルとCMDコマンドの両方の機能を持てます。
 
@@ -681,7 +775,7 @@ class HybridPlugin(BasePlugin):
 
 ---
 
-## 10. 実装済みプラグインの例：img_plugin.py
+## 11. 実装済みプラグインの例：img_plugin.py
 
 実際に使われているCMDプラグインの例です（`plugins/img_plugin.py`）。
 
@@ -699,7 +793,7 @@ class HybridPlugin(BasePlugin):
 
 ---
 
-## 11. よく使うメソッド・便利機能まとめ
+## 12. よく使うメソッド・便利機能まとめ
 
 ### send_text / send_image（BasePlugin に標準搭載）
 
@@ -728,7 +822,7 @@ logger.debug("デバッグログ（薄い色。-d オプションで起動時の
 
 ---
 
-## 12. プラグイン開発チェックリスト
+## 13. プラグイン開発チェックリスト
 
 ### UIパネルプラグインを作るとき
 
@@ -756,7 +850,7 @@ logger.debug("デバッグログ（薄い色。-d オプションで起動時の
 
 ---
 
-## 13. よくある失敗と対処法
+## 14. よくある失敗と対処法
 
 **UIパネルに表示されない**
 → `PLUGIN_ID = ""` のままになっていないか確認。空だとスキャンされません。

@@ -251,7 +251,93 @@ def _send_screenshot(self):
 
 ---
 
-## 6. Full Template for a BACKGROUND Plugin
+## 6. Telop Output Hook (Receiving AI Output in Plugins)
+
+Override the `on_telop_output` method to receive data every time the AI outputs a telop. You can also control OBS telop display via the return value — **delay** or **suppress**.
+
+### When the Hook is Called
+
+```
+AI output → telemetry_buffer.process()
+  ① on_telop_output() called on ALL plugins immediately (always, regardless of delay/suppress)
+  ② Return values from all plugins are aggregated
+  ③ OBS telop display is controlled (instant / delay / suppress)
+```
+
+**Important**: Data delivery to plugins (①) always happens immediately. Delay and suppress only affect OBS display.
+
+### Return Values for OBS Display Control
+
+| Return Value | Behavior |
+|---|---|
+| `0` | Instant display (default) |
+| `1+` | Display after N seconds |
+| `-1` | Suppress OBS display (plugin still receives data) |
+| `None` | No control (defer to other plugins) |
+
+**Multiple plugin conflict rule**: `-1` (suppress) has highest priority. Otherwise `max(delay)` is used.
+
+### Data Received
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+```
+
+| Argument | Content | Example |
+|---|---|---|
+| `topic` | Top line text | `To Sheep` |
+| `main` | Body text | `What an <b1>observant</b1> eye!` |
+| `window` | Window type | `window-reply`, `window-simple`, `window-explain` |
+| `layout` | Layout | `layout-flat`, `layout-big-top` |
+| `badge` | Badge (author name etc.) | `@sheep-x9y`, `NONE` |
+
+**Tags in `main` / `topic`** (raw data before `drawing.apply_semantic_classes`):
+
+| Tag | Meaning | Example |
+|---|---|---|
+| `<b1>...</b1>` | Highlight color 1 (theme h1 color) | `<b1>important</b1>` |
+| `<b2>...</b2>` | Highlight color 2 (theme h2 color) | `<b2>notice</b2>` |
+| `<P1>` `<M5>` etc. | Mahjong tiles | `<P1><P1><P1>` |
+
+### Example: Monitor Plugin (No Display Control)
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    logger.info(f"[Monitor] {window} | {topic} | {main}")
+    return 0  # Instant display (default)
+```
+
+### Example: Delayed Display
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    self._log_telop(topic, main)
+    return 5  # Delay OBS display by 5 seconds
+```
+
+### Example: Suppress Specific Window
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    if window == "window-reply":
+        return -1  # Suppress OBS display (data still delivered to this plugin)
+    return 0
+```
+
+### ALWAYS_ACTIVE Attribute
+
+Set `ALWAYS_ACTIVE = True` to display the plugin in active color (black text, bold) in the plugin list at all times. The `on_telop_output` hook is called for all plugins regardless of `enabled` state, making this ideal for monitor-type plugins that work just by opening the panel.
+
+```python
+class MyViewerPlugin(BasePlugin):
+    PLUGIN_ID   = "my_viewer"
+    PLUGIN_TYPE = "TOOL"
+    ALWAYS_ACTIVE = True  # Always shown as active
+```
+
+---
+
+## 7. Full Template for a BACKGROUND Plugin
 
 A complete template for a plugin that runs continuously in the background and periodically sends information to the AI.
 
@@ -416,7 +502,7 @@ class AutoTimerPlugin(BasePlugin):
 
 ---
 
-## 7. Template for a TOOL Plugin
+## 8. Template for a TOOL Plugin
 
 A manual tool that can be operated even during streaming. Simply setting `PLUGIN_TYPE = "TOOL"` makes the panel operable during streams.
 
@@ -551,7 +637,7 @@ class ExternalServicePlugin(BasePlugin):
 
 ---
 
-## 8. How to Create a CMD Command Plugin
+## 9. How to Create a CMD Command Plugin
 
 A plugin that executes processing when the AI writes `[CMD:XXX] argument` in its output.
 
@@ -614,7 +700,7 @@ class WeatherPlugin(BasePlugin):
 
 ---
 
-## 9. Hybrid Plugin: Combining UI Panel and CMD
+## 10. Hybrid Plugin: Combining UI Panel and CMD
 
 Setting both `PLUGIN_ID` and `IDENTIFIER` gives a plugin both UI panel and CMD command functionality.
 
@@ -658,7 +744,7 @@ Hybrid plugins are also auto-registered by placing the file in the `plugins/` fo
 
 ---
 
-## 10. Example of an Existing Plugin: img_plugin.py
+## 11. Example of an Existing Plugin: img_plugin.py
 
 An example of a CMD plugin actually in use (`plugins/img_plugin.py`).
 
@@ -676,7 +762,7 @@ and only has `IDENTIFIER = "IMG"` set.
 
 ---
 
-## 11. Commonly Used Methods and Utilities Summary
+## 12. Commonly Used Methods and Utilities Summary
 
 ### send_text / send_image (Built into BasePlugin)
 
@@ -705,7 +791,7 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 
 ---
 
-## 12. Plugin Development Checklist
+## 13. Plugin Development Checklist
 
 ### When creating a UI Panel Plugin
 
@@ -733,7 +819,7 @@ logger.debug("Debug log (faded color. Only shown when launched with -d option)")
 
 ---
 
-## 13. Common Mistakes and How to Fix Them
+## 14. Common Mistakes and How to Fix Them
 
 **Plugin not appearing in the UI panel**
 → Check that `PLUGIN_ID` is not still set to `""`. If empty, it won't be scanned.

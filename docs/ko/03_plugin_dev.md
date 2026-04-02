@@ -251,7 +251,41 @@ def _send_screenshot(self):
 
 ---
 
-## 6. BACKGROUND 플러그인 전체 템플릿
+## 6. 텔롭 출력 훅 (AI 출력을 플러그인에서 수신)
+
+`on_telop_output` 메서드를 오버라이드하면 AI가 텔롭을 출력할 때마다 플러그인에서 데이터를 수신할 수 있습니다. 또한 반환값으로 OBS 텔롭 표시를 **딜레이(지연)** 또는 **비표시**로 제어할 수 있습니다.
+
+### 반환값에 의한 OBS 표시 제어
+
+| 반환값 | 동작 |
+|---|---|
+| `0` | 즉시 표시 (기본값) |
+| `1` 이상 | N초 후에 표시 |
+| `-1` | OBS 표시 억제 (플러그인에는 데이터 전달됨) |
+| `None` | 제어하지 않음 (다른 플러그인에 위임) |
+
+### 수신 데이터
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+```
+
+| 인수 | 내용 | 예시 |
+|---|---|---|
+| `topic` | 상단 텍스트 | `양님께` |
+| `main` | 본문 (태그 포함) | `<b1>대단한</b1> 관찰력이네요!` |
+| `window` | 윈도우 종류 | `window-reply`, `window-simple` |
+| `layout` | 레이아웃 | `layout-flat`, `layout-big-top` |
+| `badge` | 배지 | `@sheep-x9y`, `NONE` |
+
+**`main` / `topic`에 포함되는 태그** (`drawing.apply_semantic_classes` 적용 전 원본 데이터):
+- `<b1>...</b1>` — 강조색 1 (테마 h1 색상)
+- `<b2>...</b2>` — 강조색 2 (테마 h2 색상)
+- `<P1>` `<M5>` 등 — 마작 패
+
+---
+
+## 7. BACKGROUND 플러그인 전체 템플릿
 
 백그라운드에서 지속적으로 실행되며 주기적으로 AI에게 정보를 전송하는 플러그인의 완전한 템플릿입니다.
 
@@ -416,7 +450,7 @@ class AutoTimerPlugin(BasePlugin):
 
 ---
 
-## 7. TOOL 플러그인 템플릿
+## 8. TOOL 플러그인 템플릿
 
 스트리밍 중에도 조작할 수 있는 수동 도구입니다. `PLUGIN_TYPE = "TOOL"`로 설정하기만 하면 스트리밍 중에 패널을 조작할 수 있습니다.
 
@@ -513,7 +547,7 @@ class AlwaysActiveToolPlugin(BasePlugin):
 
 ---
 
-## 8. CMD 명령 플러그인 만들기
+## 9. CMD 명령 플러그인 만들기
 
 AI가 출력에서 `[CMD:XXX] 인수`라고 쓸 때 처리를 실행하는 플러그인입니다.
 
@@ -620,7 +654,7 @@ class HybridPlugin(BasePlugin):
 
 ---
 
-## 10. 기존 플러그인 예시: img_plugin.py
+## 11. 기존 플러그인 예시: img_plugin.py
 
 실제로 사용 중인 CMD 플러그인 예시입니다 (`plugins/img_plugin.py`).
 
@@ -638,7 +672,7 @@ class HybridPlugin(BasePlugin):
 
 ---
 
-## 11. 자주 사용되는 메서드 및 유틸리티 요약
+## 12. 자주 사용되는 메서드 및 유틸리티 요약
 
 ### send_text / send_image (BasePlugin 내장)
 
@@ -667,7 +701,7 @@ logger.debug("디버그 로그 (흐린 색상. -d 옵션으로 실행할 때만 
 
 ---
 
-## 12. 플러그인 개발 체크리스트
+## 13. 플러그인 개발 체크리스트
 
 ### UI 패널 플러그인 만들 때
 
