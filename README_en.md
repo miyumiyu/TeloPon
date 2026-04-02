@@ -42,8 +42,8 @@ Add unlimited custom designs (themes) with just a bit of CSS — news broadcast 
 Just launching TeloPon starts the built-in server — simply add the URL as an OBS "Browser Source" and you're ready to go.
 Additionally, **"Auto Talk"** (proactively introduces a new topic when the streamer goes silent) and **"Auto Segment"** (periodically asks the AI to summarize and organize topics) automatic intervention modes are built in.
 
-### 6. Real-Time Telop History with "Telop Monitor"
-A built-in monitor window displays the history of AI-generated telops in chronological order within the TeloPon UI. No need to check OBS during a live session — telop history is always at a glance.
+### 6. Real-Time Telop History with "TelopViewer"
+A plugin that displays the history of AI-generated telops in chronological order in a dedicated control panel. No need to check OBS during a live session — telop history is always at a glance. Supports B1/B2 tag color coding.
 
 ---
 
@@ -180,8 +180,8 @@ Press the "Interact" button in OBS to directly **drag-move**, **scroll-zoom**, *
 
 👉 **[OBS Telop Control Guide (with images)](docs/en/05_obs_control.md)**
 
-### 📺 9. Telop Monitor
-Toggle with the **"Telop Monitor OFF/ON"** button below the OBS copy button. When turned ON, a chronological history of all AI-generated telops is displayed directly within the TeloPon UI. No need to check OBS during a live session — telop history is always visible in the app. Enabling the monitor after launch will also display all previous telops logged in the current session.
+### 📺 9. TelopViewer
+Open from the **"Telop Viewer" → "Control Panel"** button in the Extensions panel. Displays AI-generated telop history in real time with chronological ordering. Supports B1/B2 tag color coding, and OBS display delay can be configured via a dropdown.
 
 **👉 Once all settings are complete, press the "🔴 Start Live Connection" button to begin real-time conversation with the AI!**
 
