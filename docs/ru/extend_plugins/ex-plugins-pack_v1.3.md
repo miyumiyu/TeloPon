@@ -8,7 +8,7 @@
 
 ### 🆕 🔊 VOICEVOX TTS (`voicevox_plugin.py`)
 
-![Настройки VOICEVOX TTS](../../images/voicevox_plugin.png)
+![Настройки VOICEVOX TTS](https://github.com/miyumiyu/TeloPon/blob/main/images/voicevox_plugin.png?raw=true)
 
 Озвучивает текст телопов, сгенерированных ИИ, в реальном времени с помощью движка синтеза речи **VOICEVOX**.
 * **Разнообразие голосов**: поддержка всех персонажей VOICEVOX + стилей (характеров). Простой выбор через выпадающий список.
