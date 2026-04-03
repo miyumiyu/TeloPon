@@ -277,34 +277,43 @@ def start(self, prompt_config, plugin_queue):
 ## 6. テロップ出力フック（AIの出力をプラグインで受け取る）
 
 `on_telop_output` メソッドをオーバーライドすると、AIがテロップを出力するたびにプラグインがそのデータを受け取れます。
-さらに、戻り値でOBS上のテロップ表示を **ディレイ（遅延）** や **非表示** に制御できます。
+テロップ出力は **fire-and-forget（投げっぱなし）** 方式で配信され、Core はプラグインの処理完了を待ちません。
 
-### フックの呼び出しタイミング
+### アーキテクチャ（疎結合設計）
 
 ```
-AI出力 → telemetry_buffer.process()
-  ① on_telop_output() を全プラグインに即座に呼ぶ（常に。ディレイ/非表示に関係なく）
-  ② 全プラグインの戻り値を集計
+Core（テロップ出力時）:
+  ① on_telop_output() を全プラグインに非同期配信（fire-and-forget）
+  ② set_telop_delay() で事前設定されたディレイ値を読み取り
   ③ OBSテロップ表示を制御（即表示 / ディレイ / 非表示）
 ```
 
-**重要**: プラグインへのデータ流し込み（①）は常に即座に行われます。ディレイや非表示はOBS表示のみに影響します。
+**重要**: Core はプラグインの `on_telop_output()` の完了を一切待ちません。プラグイン内で何が起きても（エラー、遅延、フリーズ等）Core に影響しません。
 
-### 戻り値によるOBS表示制御
+### プラグインが使う2つの機能
 
-| 戻り値 | 動作 |
-|---|---|
-| `0` | 即表示（デフォルト） |
-| `1` 以上 | N秒後に表示 |
-| `-1` | OBS表示を抑制（プラグインにはデータが届く） |
-| `None` | 制御しない（他プラグインに委ねる） |
+| メソッド | 用途 | 呼ぶタイミング |
+|---|---|---|
+| `on_telop_output(topic, main, window, layout, badge)` | テロップデータを受け取る | Core が自動で呼ぶ（戻り値不要） |
+| `set_telop_delay(n)` | OBS表示ディレイを設定する | プラグインが任意のタイミングで呼ぶ |
 
-**複数プラグインの競合ルール**: `-1`（非表示）が最優先。それ以外は `max(delay)` が採用されます。
+### ディレイ制御（set_telop_delay）
+
+```python
+self.set_telop_delay(0)   # 即表示（デフォルト）
+self.set_telop_delay(5)   # 5秒後に表示
+self.set_telop_delay(-1)  # OBS表示を抑制
+```
+
+Core は `enqueue` 前に全プラグインの `get_telop_delay()` を読み取り、集約します。
+**複数プラグインの競合ルール**: `-1`（非表示）が最優先。それ以外は `max(delay)` を採用。
 
 ### 受け取るデータ
 
 ```python
 def on_telop_output(self, topic, main, window, layout, badge):
+    # データを処理する（戻り値は不要）
+    pass
 ```
 
 | 引数 | 内容 | 例 |
@@ -327,48 +336,57 @@ def on_telop_output(self, topic, main, window, layout, badge):
 
 ```python
 def on_telop_output(self, topic, main, window, layout, badge):
-    # テロップ内容をログに記録するだけ。表示制御はしない。
+    # テロップ内容をログに記録するだけ
     logger.info(f"[Monitor] {window} | {topic} | {main}")
-    return 0  # 即表示（デフォルト）
 ```
 
-### 実装例：ディレイ付き表示制御
+### 実装例：ディレイ設定
 
 ```python
+def __init__(self):
+    super().__init__()
+    self.set_telop_delay(5)  # 初期値: 5秒ディレイ
+
 def on_telop_output(self, topic, main, window, layout, badge):
-    # データは受け取る（内部処理やログに使える）
+    # データを受け取る（ディレイは set_telop_delay で事前設定済み）
     self._log_telop(topic, main)
 
-    # OBS表示を5秒遅延
-    return 5
+def _on_delay_changed(self, new_value):
+    # UIからディレイ値が変更された時
+    self.set_telop_delay(new_value)
 ```
 
-### 実装例：特定ウィンドウを非表示
+### 実装例：特定条件で非表示
 
 ```python
+def __init__(self):
+    super().__init__()
+    self._suppress_reply = False
+
 def on_telop_output(self, topic, main, window, layout, badge):
-    # window-reply のテロップだけOBS表示を抑制
-    if window == "window-reply":
-        return -1  # OBSに表示しない（このプラグインにはデータが届いている）
-    return 0  # その他は即表示
+    # データは常に受け取る
+    self._process(topic, main)
+
+def toggle_suppress(self):
+    # UIのチェックボックスから呼ばれる
+    self._suppress_reply = not self._suppress_reply
+    self.set_telop_delay(-1 if self._suppress_reply else 0)
 ```
 
 ### ⚠️ 重要：スレッド安全性
 
-`on_telop_output` は **バックグラウンドスレッド** から呼ばれます（タイムアウト保護のため `ThreadPoolExecutor` で実行）。
+`on_telop_output` は **バックグラウンドスレッド** から呼ばれます（daemon スレッドで非同期実行）。
 このため、以下の制約があります。
 
-**🚫 禁止: Tkinter の操作**
+**🚫 禁止: Tkinter の直接操作**
 
 `on_telop_output` 内で Tkinter のメソッドを直接呼ぶと **デッドロック** します。
-以下はすべて禁止です:
 
 ```python
 # ❌ これらは on_telop_output 内で呼んではいけない
 self._panel.after(0, ...)        # デッドロック
 self._panel.winfo_exists()       # デッドロック
 self._text_widget.insert(...)    # デッドロック
-self._label.config(text=...)     # デッドロック
 ```
 
 **✅ 正しいパターン: deque バッファ + ポーリング**
@@ -382,12 +400,10 @@ class MyPlugin(BasePlugin):
     def __init__(self):
         super().__init__()
         self._log_buffer = deque(maxlen=500)  # スレッドセーフ
-        self._panel = None
 
     def on_telop_output(self, topic, main, window, layout, badge):
         # ✅ dequeへの追加のみ（Tkinter操作なし）
         self._log_buffer.append((topic, main, window))
-        return 0
 
     def open_settings_ui(self, parent_window):
         self._panel = tk.Toplevel(parent_window)
@@ -398,32 +414,17 @@ class MyPlugin(BasePlugin):
         # ✅ メインスレッドでdequeを消化してUI更新
         while self._log_buffer:
             topic, main, window = self._log_buffer.popleft()
-            # Tkinter操作はここで安全に行える
             self._text_widget.insert("end", f"{topic} | {main}\n")
         if self._panel and self._panel.winfo_exists():
-            self._panel.after(100, self._poll)  # 100ms後に再ポーリング
-```
-
-**⏱️ タイムアウトと自動除外**
-
-| 項目 | 値 |
-|---|---|
-| タイムアウト | **1秒** — 1秒以内に `return` しないとスキップ |
-| 自動除外 | **3回** タイムアウトしたプラグインは以後フック呼び出し対象外 |
-
-タイムアウトしたプラグインは警告ログに記録されます:
-
-```
-⚠️ MyPlugin: on_telop_output が1.0秒以内に応答しません（スキップ。あと2回で自動除外）
-🚫 MyPlugin: on_telop_output のタイムアウトが3回に達しました。このプラグインのフックを自動除外します。
+            self._panel.after(100, self._poll)
 ```
 
 **`on_telop_output` 内で安全にできること:**
 - 変数の読み書き（`self._delay_value` 等）
-- `deque.append()` / `list.append()`
-- ファイルI/O（ただし高速に完了すること）
-- ネットワーク通信（ただし1秒以内に完了すること）
-- `return` で即座にディレイ値を返す
+- `deque.append()` / `list.append()` / `queue.put()`
+- ファイルI/O
+- ネットワーク通信
+- 時間のかかる処理（Core に影響しない）
 
 ### ALWAYS_ACTIVE 属性
 

@@ -253,43 +253,122 @@ def _send_screenshot(self):
 
 ## 6. 텔롭 출력 훅 (AI 출력을 플러그인에서 수신)
 
-`on_telop_output` 메서드를 오버라이드하면 AI가 텔롭을 출력할 때마다 플러그인에서 데이터를 수신할 수 있습니다. 또한 반환값으로 OBS 텔롭 표시를 **딜레이(지연)** 또는 **비표시**로 제어할 수 있습니다.
+`on_telop_output` 메서드를 오버라이드하면 AI가 텔롭을 출력할 때마다 플러그인에서 데이터를 수신할 수 있습니다.
+텔롭 출력은 **fire-and-forget(발사 후 잊기)** 방식으로 전달되며, Core는 플러그인의 처리 완료를 기다리지 않습니다.
 
-### 반환값에 의한 OBS 표시 제어
+### 아키텍처 (느슨한 결합 설계)
 
-| 반환값 | 동작 |
-|---|---|
-| `0` | 즉시 표시 (기본값) |
-| `1` 이상 | N초 후에 표시 |
-| `-1` | OBS 표시 억제 (플러그인에는 데이터 전달됨) |
-| `None` | 제어하지 않음 (다른 플러그인에 위임) |
+```
+Core (텔롭 출력 시):
+  ① on_telop_output()을 모든 플러그인에 비동기 전달 (fire-and-forget)
+  ② set_telop_delay()로 사전 설정된 딜레이 값을 읽음
+  ③ OBS 텔롭 표시를 제어 (즉시 표시 / 딜레이 / 비표시)
+```
+
+**중요**: Core는 `on_telop_output()`의 완료를 일절 기다리지 않습니다. 플러그인 내에서 무슨 일이 일어나든 (에러, 지연, 프리즈 등) Core에 영향을 주지 않습니다.
+
+### 플러그인이 사용하는 2가지 기능
+
+| 메서드 | 용도 | 호출 타이밍 |
+|---|---|---|
+| `on_telop_output(topic, main, window, layout, badge)` | 텔롭 데이터 수신 | Core가 자동으로 호출 (반환값 불필요) |
+| `set_telop_delay(n)` | OBS 표시 딜레이 설정 | 플러그인이 임의의 타이밍에 호출 |
+
+### 딜레이 제어 (set_telop_delay)
+
+```python
+self.set_telop_delay(0)   # 즉시 표시 (기본값)
+self.set_telop_delay(5)   # 5초 후에 표시
+self.set_telop_delay(-1)  # OBS 표시 억제
+```
+
+Core는 `enqueue` 전에 모든 플러그인의 `get_telop_delay()`를 읽어 집계합니다.
+**복수 플러그인 충돌 규칙**: `-1`(비표시)이 최우선. 그 외에는 `max(delay)`를 채택.
 
 ### 수신 데이터
 
 ```python
 def on_telop_output(self, topic, main, window, layout, badge):
+    # 데이터를 처리 (반환값 불필요)
+    pass
 ```
 
 | 인수 | 내용 | 예시 |
 |---|---|---|
 | `topic` | 상단 텍스트 | `양님께` |
-| `main` | 본문 (태그 포함) | `<b1>대단한</b1> 관찰력이네요!` |
-| `window` | 윈도우 종류 | `window-reply`, `window-simple` |
+| `main` | 본문 | `<b1>대단한</b1> 관찰력이네요!` |
+| `window` | 윈도우 종류 | `window-reply`, `window-simple`, `window-explain` |
 | `layout` | 레이아웃 | `layout-flat`, `layout-big-top` |
-| `badge` | 배지 | `@sheep-x9y`, `NONE` |
+| `badge` | 배지 (작성자명 등) | `@sheep-x9y`, `NONE` |
 
 **`main` / `topic`에 포함되는 태그** (`drawing.apply_semantic_classes` 적용 전 원본 데이터):
-- `<b1>...</b1>` — 강조색 1 (테마 h1 색상)
-- `<b2>...</b2>` — 강조색 2 (테마 h2 색상)
-- `<P1>` `<M5>` 등 — 마작 패
+
+| 태그 | 의미 | 예시 |
+|---|---|---|
+| `<b1>...</b1>` | 강조색 1 (테마 h1 색상) | `<b1>중요</b1>` |
+| `<b2>...</b2>` | 강조색 2 (테마 h2 색상) | `<b2>주목</b2>` |
+| `<P1>` `<M5>` 등 | 마작 패 | `<P1><P1><P1>` |
+
+### 구현 예: 모니터 플러그인 (표시 제어 없음)
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    # 텔롭 내용을 로그에 기록만 함
+    logger.info(f"[Monitor] {window} | {topic} | {main}")
+```
+
+### 구현 예: 딜레이 설정
+
+```python
+def __init__(self):
+    super().__init__()
+    self.set_telop_delay(5)  # 초기값: 5초 딜레이
+
+def on_telop_output(self, topic, main, window, layout, badge):
+    # 데이터를 수신 (딜레이는 set_telop_delay로 사전 설정 완료)
+    self._log_telop(topic, main)
+
+def _on_delay_changed(self, new_value):
+    # UI에서 딜레이 값이 변경되었을 때
+    self.set_telop_delay(new_value)
+```
+
+### 구현 예: 특정 조건에서 비표시
+
+```python
+def __init__(self):
+    super().__init__()
+    self._suppress_reply = False
+
+def on_telop_output(self, topic, main, window, layout, badge):
+    # 데이터는 항상 수신
+    self._process(topic, main)
+
+def toggle_suppress(self):
+    # UI 체크박스에서 호출됨
+    self._suppress_reply = not self._suppress_reply
+    self.set_telop_delay(-1 if self._suppress_reply else 0)
+```
 
 ### ⚠️ 중요: 스레드 안전성
 
-`on_telop_output`은 **백그라운드 스레드**에서 호출됩니다 (타임아웃 보호를 위해 `ThreadPoolExecutor`로 실행).
+`on_telop_output`은 **백그라운드 스레드**에서 호출됩니다 (daemon 스레드로 비동기 실행).
+다음과 같은 제약이 있습니다.
 
-**🚫 금지: Tkinter 조작** — `on_telop_output` 내에서 Tkinter 메서드를 호출하면 **데드락**이 발생합니다.
+**🚫 금지: Tkinter 직접 조작**
 
-**✅ 올바른 패턴: deque 버퍼 + 폴링** — 데이터를 스레드 세이프한 `deque`에 추가하고, 메인 스레드 타이머에서 소비합니다.
+`on_telop_output` 내에서 Tkinter 메서드를 직접 호출하면 **데드락**이 발생합니다:
+
+```python
+# ❌ on_telop_output 내에서 호출하면 안 됨
+self._panel.after(0, ...)        # 데드락
+self._panel.winfo_exists()       # 데드락
+self._text_widget.insert(...)    # 데드락
+```
+
+**✅ 올바른 패턴: deque 버퍼 + 폴링**
+
+데이터를 스레드 세이프한 `deque`에 추가하고, 메인 스레드 타이머에서 소비합니다.
 
 ```python
 from collections import deque
@@ -297,21 +376,45 @@ from collections import deque
 class MyPlugin(BasePlugin):
     def __init__(self):
         super().__init__()
-        self._log_buffer = deque(maxlen=500)
+        self._log_buffer = deque(maxlen=500)  # 스레드 세이프
 
     def on_telop_output(self, topic, main, window, layout, badge):
-        self._log_buffer.append((topic, main, window))  # ✅ deque만 사용
-        return 0
+        # ✅ deque 추가만 (Tkinter 조작 없음)
+        self._log_buffer.append((topic, main, window))
+
+    def open_settings_ui(self, parent_window):
+        self._panel = tk.Toplevel(parent_window)
+        # ... UI 구축 ...
+        self._poll()  # 폴링 시작
 
     def _poll(self):
+        # ✅ 메인 스레드에서 deque를 소비하여 UI 갱신
         while self._log_buffer:
             topic, main, window = self._log_buffer.popleft()
-            self._text_widget.insert("end", f"{topic} | {main}\n")  # ✅ 메인 스레드
+            self._text_widget.insert("end", f"{topic} | {main}\n")
         if self._panel and self._panel.winfo_exists():
             self._panel.after(100, self._poll)
 ```
 
-**⏱️ 타임아웃 및 자동 제외**: 1초 이내에 반환하지 않으면 스킵. 3회 타임아웃 시 자동 제외.
+**`on_telop_output` 내에서 안전하게 할 수 있는 작업:**
+- 변수 읽기/쓰기 (`self._delay_value` 등)
+- `deque.append()` / `list.append()` / `queue.put()`
+- 파일 I/O
+- 네트워크 통신
+- 시간이 오래 걸리는 처리 (Core에 영향 없음)
+
+### ALWAYS_ACTIVE 속성
+
+`ALWAYS_ACTIVE = True`를 설정하면 플러그인 목록에서 항상 활성 색상(검정 글자, 굵게)으로 표시됩니다.
+`on_telop_output` 훅은 `enabled` 상태와 관계없이 모든 플러그인에 호출되므로,
+패널을 열기만 하면 사용할 수 있는 모니터 계열 플러그인에 적합합니다.
+
+```python
+class MyViewerPlugin(BasePlugin):
+    PLUGIN_ID   = "my_viewer"
+    PLUGIN_TYPE = "TOOL"
+    ALWAYS_ACTIVE = True  # 항상 활성 표시
+```
 
 ---
 

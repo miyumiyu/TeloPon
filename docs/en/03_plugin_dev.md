@@ -253,34 +253,44 @@ def _send_screenshot(self):
 
 ## 6. Telop Output Hook (Receiving AI Output in Plugins)
 
-Override the `on_telop_output` method to receive data every time the AI outputs a telop. You can also control OBS telop display via the return value — **delay** or **suppress**.
+Override the `on_telop_output` method to receive data every time the AI outputs a telop.
+Telop output is delivered via a **fire-and-forget** mechanism -- Core does not wait for plugin processing to complete.
 
-### When the Hook is Called
+### Architecture (Decoupled Design)
 
 ```
-AI output → telemetry_buffer.process()
-  ① on_telop_output() called on ALL plugins immediately (always, regardless of delay/suppress)
-  ② Return values from all plugins are aggregated
-  ③ OBS telop display is controlled (instant / delay / suppress)
+Core (on telop output):
+  ① on_telop_output() dispatched to all plugins asynchronously (fire-and-forget)
+  ② Reads the delay value previously set via set_telop_delay()
+  ③ Controls OBS telop display (instant / delay / suppress)
 ```
 
-**Important**: Data delivery to plugins (①) always happens immediately. Delay and suppress only affect OBS display.
+**Important**: Core never waits for `on_telop_output()` to complete. Whatever happens inside a plugin (errors, slowness, freezes, etc.) has no impact on Core.
 
-### Return Values for OBS Display Control
+### Two Functions Available to Plugins
 
-| Return Value | Behavior |
-|---|---|
-| `0` | Instant display (default) |
-| `1+` | Display after N seconds |
-| `-1` | Suppress OBS display (plugin still receives data) |
-| `None` | No control (defer to other plugins) |
+| Method | Purpose | When to Call |
+|---|---|---|
+| `on_telop_output(topic, main, window, layout, badge)` | Receive telop data | Called automatically by Core (no return value needed) |
+| `set_telop_delay(n)` | Set OBS display delay | Called by the plugin at any time |
 
+### Delay Control (set_telop_delay)
+
+```python
+self.set_telop_delay(0)   # Instant display (default)
+self.set_telop_delay(5)   # Display after 5 seconds
+self.set_telop_delay(-1)  # Suppress OBS display
+```
+
+Core reads `get_telop_delay()` from all plugins before enqueuing and aggregates the values.
 **Multiple plugin conflict rule**: `-1` (suppress) has highest priority. Otherwise `max(delay)` is used.
 
 ### Data Received
 
 ```python
 def on_telop_output(self, topic, main, window, layout, badge):
+    # Process the data (no return value needed)
+    pass
 ```
 
 | Argument | Content | Example |
@@ -303,30 +313,47 @@ def on_telop_output(self, topic, main, window, layout, badge):
 
 ```python
 def on_telop_output(self, topic, main, window, layout, badge):
+    # Simply log the telop content
     logger.info(f"[Monitor] {window} | {topic} | {main}")
-    return 0  # Instant display (default)
 ```
 
-### Example: Delayed Display
+### Example: Setting a Delay
 
 ```python
+def __init__(self):
+    super().__init__()
+    self.set_telop_delay(5)  # Initial value: 5-second delay
+
 def on_telop_output(self, topic, main, window, layout, badge):
+    # Receive data (delay was already configured via set_telop_delay)
     self._log_telop(topic, main)
-    return 5  # Delay OBS display by 5 seconds
+
+def _on_delay_changed(self, new_value):
+    # Called when the delay value is changed from the UI
+    self.set_telop_delay(new_value)
 ```
 
-### Example: Suppress Specific Window
+### Example: Conditional Suppression
 
 ```python
+def __init__(self):
+    super().__init__()
+    self._suppress_reply = False
+
 def on_telop_output(self, topic, main, window, layout, badge):
-    if window == "window-reply":
-        return -1  # Suppress OBS display (data still delivered to this plugin)
-    return 0
+    # Always receive the data
+    self._process(topic, main)
+
+def toggle_suppress(self):
+    # Called from a UI checkbox
+    self._suppress_reply = not self._suppress_reply
+    self.set_telop_delay(-1 if self._suppress_reply else 0)
 ```
 
 ### ⚠️ Important: Thread Safety
 
-`on_telop_output` is called from a **background thread** (executed via `ThreadPoolExecutor` for timeout protection). The following restrictions apply.
+`on_telop_output` is called from a **background thread** (executed asynchronously in a daemon thread).
+The following restrictions apply.
 
 **🚫 Forbidden: Tkinter operations**
 
@@ -354,7 +381,11 @@ class MyPlugin(BasePlugin):
     def on_telop_output(self, topic, main, window, layout, badge):
         # ✅ Only deque operations (no Tkinter)
         self._log_buffer.append((topic, main, window))
-        return 0
+
+    def open_settings_ui(self, parent_window):
+        self._panel = tk.Toplevel(parent_window)
+        # ... build UI ...
+        self._poll()  # Start polling
 
     def _poll(self):
         # ✅ Consume deque and update UI on main thread
@@ -365,19 +396,12 @@ class MyPlugin(BasePlugin):
             self._panel.after(100, self._poll)
 ```
 
-**⏱️ Timeout and Auto-Exclusion**
-
-| Setting | Value |
-|---|---|
-| Timeout | **1 second** — skipped if `return` is not reached within 1s |
-| Auto-exclusion | After **3** timeouts, the plugin's hook is permanently skipped |
-
 **Safe operations inside `on_telop_output`:**
 - Read/write variables (`self._delay_value`, etc.)
-- `deque.append()` / `list.append()`
-- File I/O (if fast)
-- Network calls (if completing within 1 second)
-- `return` the delay value immediately
+- `deque.append()` / `list.append()` / `queue.put()`
+- File I/O
+- Network calls
+- Heavy/long-running operations (they do not affect Core)
 
 ### ALWAYS_ACTIVE Attribute
 

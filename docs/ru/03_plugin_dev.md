@@ -253,43 +253,122 @@ def _send_screenshot(self):
 
 ## 6. Хук вывода телопов (получение вывода ИИ в плагинах)
 
-Переопределите метод `on_telop_output`, чтобы получать данные каждый раз, когда ИИ выводит телоп. Возвращаемое значение позволяет управлять отображением в OBS — **задержка** или **подавление**.
+Переопределите метод `on_telop_output`, чтобы получать данные каждый раз, когда ИИ выводит телоп.
+Вывод телопов доставляется по принципу **fire-and-forget (отправил и забыл)** -- Core не ждёт завершения обработки в плагине.
 
-### Возвращаемые значения для управления отображением в OBS
+### Архитектура (слабосвязанный дизайн)
 
-| Значение | Поведение |
-|---|---|
-| `0` | Мгновенное отображение (по умолчанию) |
-| `1+` | Отображение через N секунд |
-| `-1` | Подавление отображения в OBS (плагин всё равно получает данные) |
-| `None` | Без управления (передать другим плагинам) |
+```
+Core (при выводе телопа):
+  ① on_telop_output() асинхронно отправляется всем плагинам (fire-and-forget)
+  ② Читает значение задержки, заранее установленное через set_telop_delay()
+  ③ Управляет отображением телопа в OBS (мгновенно / с задержкой / подавление)
+```
+
+**Важно**: Core никогда не ждёт завершения `on_telop_output()`. Что бы ни происходило внутри плагина (ошибки, задержки, зависания и т.д.), это не влияет на Core.
+
+### Две функции, доступные плагинам
+
+| Метод | Назначение | Когда вызывать |
+|---|---|---|
+| `on_telop_output(topic, main, window, layout, badge)` | Получение данных телопа | Вызывается автоматически Core (возвращаемое значение не требуется) |
+| `set_telop_delay(n)` | Установка задержки отображения в OBS | Вызывается плагином в любой момент |
+
+### Управление задержкой (set_telop_delay)
+
+```python
+self.set_telop_delay(0)   # Мгновенное отображение (по умолчанию)
+self.set_telop_delay(5)   # Отображение через 5 секунд
+self.set_telop_delay(-1)  # Подавление отображения в OBS
+```
+
+Core считывает `get_telop_delay()` у всех плагинов перед постановкой в очередь и агрегирует значения.
+**Правило конфликта нескольких плагинов**: `-1` (подавление) имеет наивысший приоритет. В остальных случаях используется `max(delay)`.
 
 ### Получаемые данные
 
 ```python
 def on_telop_output(self, topic, main, window, layout, badge):
+    # Обработка данных (возвращаемое значение не требуется)
+    pass
 ```
 
 | Аргумент | Содержание | Пример |
 |---|---|---|
 | `topic` | Текст верхней строки | `Для Овечки` |
-| `main` | Основной текст (с тегами) | `Какой <b1>наблюдательный</b1> глаз!` |
-| `window` | Тип окна | `window-reply`, `window-simple` |
+| `main` | Основной текст | `Какой <b1>наблюдательный</b1> глаз!` |
+| `window` | Тип окна | `window-reply`, `window-simple`, `window-explain` |
 | `layout` | Макет | `layout-flat`, `layout-big-top` |
 | `badge` | Значок (имя автора и т.д.) | `@sheep-x9y`, `NONE` |
 
 **Теги в `main` / `topic`** (необработанные данные до `drawing.apply_semantic_classes`):
-- `<b1>...</b1>` — Цвет выделения 1 (цвет h1 темы)
-- `<b2>...</b2>` — Цвет выделения 2 (цвет h2 темы)
-- `<P1>` `<M5>` и т.д. — Плитки маджонга
+
+| Тег | Значение | Пример |
+|---|---|---|
+| `<b1>...</b1>` | Цвет выделения 1 (цвет h1 темы) | `<b1>важно</b1>` |
+| `<b2>...</b2>` | Цвет выделения 2 (цвет h2 темы) | `<b2>внимание</b2>` |
+| `<P1>` `<M5>` и т.д. | Плитки маджонга | `<P1><P1><P1>` |
+
+### Пример: Плагин-монитор (без управления отображением)
+
+```python
+def on_telop_output(self, topic, main, window, layout, badge):
+    # Просто записать содержимое телопа в лог
+    logger.info(f"[Monitor] {window} | {topic} | {main}")
+```
+
+### Пример: Настройка задержки
+
+```python
+def __init__(self):
+    super().__init__()
+    self.set_telop_delay(5)  # Начальное значение: задержка 5 секунд
+
+def on_telop_output(self, topic, main, window, layout, badge):
+    # Получение данных (задержка уже настроена через set_telop_delay)
+    self._log_telop(topic, main)
+
+def _on_delay_changed(self, new_value):
+    # Вызывается при изменении значения задержки из UI
+    self.set_telop_delay(new_value)
+```
+
+### Пример: Условное подавление
+
+```python
+def __init__(self):
+    super().__init__()
+    self._suppress_reply = False
+
+def on_telop_output(self, topic, main, window, layout, badge):
+    # Данные всегда принимаются
+    self._process(topic, main)
+
+def toggle_suppress(self):
+    # Вызывается из чекбокса в UI
+    self._suppress_reply = not self._suppress_reply
+    self.set_telop_delay(-1 if self._suppress_reply else 0)
+```
 
 ### ⚠️ Важно: Потокобезопасность
 
-`on_telop_output` вызывается из **фонового потока** (через `ThreadPoolExecutor` для защиты от зависания).
+`on_telop_output` вызывается из **фонового потока** (асинхронное выполнение в daemon-потоке).
+Действуют следующие ограничения.
 
-**🚫 Запрещено: операции Tkinter** — вызов методов Tkinter внутри `on_telop_output` вызывает **взаимную блокировку (deadlock)**.
+**🚫 Запрещено: прямые операции с Tkinter**
 
-**✅ Правильный подход: буфер deque + опрос** — добавляйте данные в потокобезопасный `deque`, затем обрабатывайте в таймере главного потока.
+Вызов методов Tkinter напрямую внутри `on_telop_output` вызывает **взаимную блокировку (deadlock)**:
+
+```python
+# ❌ НЕ вызывайте это внутри on_telop_output
+self._panel.after(0, ...)        # Deadlock
+self._panel.winfo_exists()       # Deadlock
+self._text_widget.insert(...)    # Deadlock
+```
+
+**✅ Правильный подход: буфер deque + опрос**
+
+Добавляйте данные в потокобезопасный `deque`, затем обрабатывайте в таймере главного потока.
 
 ```python
 from collections import deque
@@ -297,21 +376,44 @@ from collections import deque
 class MyPlugin(BasePlugin):
     def __init__(self):
         super().__init__()
-        self._log_buffer = deque(maxlen=500)
+        self._log_buffer = deque(maxlen=500)  # Потокобезопасный
 
     def on_telop_output(self, topic, main, window, layout, badge):
-        self._log_buffer.append((topic, main, window))  # ✅ Только deque
-        return 0
+        # ✅ Только операции с deque (без Tkinter)
+        self._log_buffer.append((topic, main, window))
+
+    def open_settings_ui(self, parent_window):
+        self._panel = tk.Toplevel(parent_window)
+        # ... построение UI ...
+        self._poll()  # Запуск опроса
 
     def _poll(self):
+        # ✅ Потребление deque и обновление UI в главном потоке
         while self._log_buffer:
             topic, main, window = self._log_buffer.popleft()
-            self._text_widget.insert("end", f"{topic} | {main}\n")  # ✅ Главный поток
+            self._text_widget.insert("end", f"{topic} | {main}\n")
         if self._panel and self._panel.winfo_exists():
             self._panel.after(100, self._poll)
 ```
 
-**⏱️ Таймаут и авто-исключение**: пропуск если не возвращается за 1 секунду. Авто-исключение после 3 таймаутов.
+**Безопасные операции внутри `on_telop_output`:**
+- Чтение/запись переменных (`self._delay_value` и т.д.)
+- `deque.append()` / `list.append()` / `queue.put()`
+- Файловый ввод/вывод
+- Сетевые вызовы
+- Тяжёлые/долгие операции (не влияют на Core)
+
+### Атрибут ALWAYS_ACTIVE
+
+Установите `ALWAYS_ACTIVE = True`, чтобы плагин всегда отображался активным цветом (чёрный текст, жирный шрифт) в списке плагинов.
+Хук `on_telop_output` вызывается для всех плагинов вне зависимости от состояния `enabled`, что делает его идеальным для плагинов-мониторов, которые работают просто при открытии панели.
+
+```python
+class MyViewerPlugin(BasePlugin):
+    PLUGIN_ID   = "my_viewer"
+    PLUGIN_TYPE = "TOOL"
+    ALWAYS_ACTIVE = True  # Всегда отображается как активный
+```
 
 ---
 
