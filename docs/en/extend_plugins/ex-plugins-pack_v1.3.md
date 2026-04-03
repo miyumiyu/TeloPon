@@ -8,7 +8,7 @@ Download only the feature files (`.py`) you need and add them to your TeloPon.
 
 ### 🆕 🔊 VOICEVOX TTS (`voicevox_plugin.py`)
 
-![VOICEVOX TTS Settings](https://github.com/miyumiyu/TeloPon/blob/main/images/voicevox_plugin.png?raw=true)
+<img width="400" alt="VOICEVOX TTS Settings" src="https://github.com/miyumiyu/TeloPon/blob/main/images/voicevox_plugin.png?raw=true" />
 
 Reads aloud AI-generated telop text in real time using the **VOICEVOX** speech synthesis engine.
 * **Wide variety of character voices**: Supports all VOICEVOX characters + styles (personalities). Easy dropdown selection.

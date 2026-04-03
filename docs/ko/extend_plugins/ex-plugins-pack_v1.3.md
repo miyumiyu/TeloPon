@@ -8,7 +8,7 @@ TeloPon을 더욱 편리하게 만드는 「공식 확장 플러그인（연동 
 
 ### 🆕 🔊 VOICEVOX 읽기 (`voicevox_plugin.py`)
 
-![VOICEVOX 읽기 설정 화면](https://github.com/miyumiyu/TeloPon/blob/main/images/voicevox_plugin.png?raw=true)
+<img width="400" alt="VOICEVOX 읽기 설정 화면" src="https://github.com/miyumiyu/TeloPon/blob/main/images/voicevox_plugin.png?raw=true" />
 
 AI가 출력한 텔롭의 텍스트를 **VOICEVOX** 음성 합성 엔진으로 실시간 읽어줍니다.
 * **다양한 캐릭터 보이스**: VOICEVOX에 등록된 전체 캐릭터 + 스타일（성격）에 대응. 드롭다운으로 간편 선택.
