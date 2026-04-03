@@ -1,5 +1,7 @@
 # 🔊 VOICEVOX TTS (voicevox_plugin.py)
 
+> 📥 **[Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.3/voicevox_plugin.py)**
+
 This plugin reads aloud the text of AI-generated telops using the **VOICEVOX** speech synthesis engine.
 With a wide variety of character voices and fine-tuned audio parameters, it brings your stream to life.
 

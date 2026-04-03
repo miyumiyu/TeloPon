@@ -1,5 +1,7 @@
 # 🔊 VOICEVOX TTS (voicevox_plugin.py)
 
+> 📥 **[Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.3/voicevox_plugin.py)**
+
 Этот плагин озвучивает текст телопов, сгенерированных ИИ, с помощью движка синтеза речи **VOICEVOX**.
 Разнообразие персонажных голосов и тонкая настройка параметров помогут оживить ваш стрим.
 

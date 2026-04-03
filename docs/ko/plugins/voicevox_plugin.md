@@ -1,5 +1,7 @@
 # 🔊 VOICEVOX 읽기 (voicevox_plugin.py)
 
+> 📥 **[플러그인 다운로드](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.3/voicevox_plugin.py)**
+
 이 플러그인은 AI가 출력한 텔롭의 텍스트를 **VOICEVOX** 음성 합성 엔진으로 읽어줍니다.
 다양한 캐릭터 보이스와 세밀한 음성 조정으로 방송을 더욱 풍성하게 연출할 수 있습니다.
 
