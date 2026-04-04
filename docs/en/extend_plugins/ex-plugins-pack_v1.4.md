@@ -8,6 +8,8 @@ Download only the feature files (`.py`) you need and add them to your TeloPon.
 
 ### 🆕 🎮 VCI OSC Telop (`VciOscPlugin.py`)
 
+<img width="400" alt="VCI OSC Telop Settings" src="https://github.com/miyumiyu/TeloPon/blob/main/images/VciOscPlugin.png?raw=true" />
+
 Sends AI-generated telop text to **VirtualCast VCI** in real time via **OSC (OpenSound Control)** protocol.
 * **VirtualCast integration**: Display telops inside the virtual space
 * **Configurable target**: IP, port, and OSC address are customizable

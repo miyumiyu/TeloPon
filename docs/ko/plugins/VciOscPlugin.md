@@ -38,6 +38,8 @@ end, {ExportOscType.String})
 
 확장 기능 패널에서 **「VCI OSC 텔롭」** → **「조작 패널」** 클릭.
 
+<img width="400" alt="VCI OSC 텔롭 설정 화면" src="../../images/VciOscPlugin.png" />
+
 ### 2. OSC 전송 ON
 
 **「OSC 전송 ON」** 체크 시 텔롭마다 자동 전송.

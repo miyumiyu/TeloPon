@@ -8,6 +8,8 @@
 
 ### 🆕 🎮 VCI OSC телоп (`VciOscPlugin.py`)
 
+<img width="400" alt="Настройки VCI OSC" src="https://github.com/miyumiyu/TeloPon/blob/main/images/VciOscPlugin.png?raw=true" />
+
 Отправляет текст телопов ИИ в **VirtualCast VCI** в реальном времени по протоколу **OSC (OpenSound Control)**.
 * **Интеграция с VirtualCast**: отображение телопов в виртуальном пространстве
 * **Настраиваемый адрес**: IP, порт и OSC-адрес настраиваются

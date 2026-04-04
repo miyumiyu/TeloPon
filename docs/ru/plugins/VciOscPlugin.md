@@ -38,6 +38,8 @@ end, {ExportOscType.String})
 
 В панели расширений нажмите **«Панель управления»** рядом с **«VCI OSC телоп»**.
 
+<img width="400" alt="Настройки VCI OSC" src="../../images/VciOscPlugin.png" />
+
 ### 2. Включить отправку OSC
 
 Установите флажок **«Отправка OSC ВКЛ»**.

@@ -8,6 +8,8 @@ TeloPon을 더욱 편리하게 만드는 「공식 확장 플러그인（연동 
 
 ### 🆕 🎮 VCI OSC 텔롭 (`VciOscPlugin.py`)
 
+<img width="400" alt="VCI OSC 텔롭 설정 화면" src="https://github.com/miyumiyu/TeloPon/blob/main/images/VciOscPlugin.png?raw=true" />
+
 AI가 출력한 텔롭을 **OSC（OpenSound Control）** 프로토콜을 통해 **VirtualCast VCI**에 실시간 전송합니다.
 * **VirtualCast 연동**: 가상 공간 내에 텔롭 표시
 * **대상 설정**: IP·포트·OSC 주소를 커스터마이즈 가능

@@ -51,6 +51,8 @@ end, {ExportOscType.String})
 
 Click **"Control Panel"** next to **"VCI OSC Telop"** in the Extensions panel.
 
+<img width="400" alt="VCI OSC Telop Settings" src="../../images/VciOscPlugin.png" />
+
 ### 2. Enable OSC Send
 
 Check **"OSC Send ON"** to automatically send telop data to VCI.
