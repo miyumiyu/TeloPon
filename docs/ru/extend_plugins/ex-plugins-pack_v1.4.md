@@ -16,7 +16,7 @@
 * **TOPIC и значок**: отправка темы и значка (тега эмоции) на отдельные OSC-адреса
 * **Тестовая отправка**: проверка соединения одним нажатием
 
-📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/VciOscPlugin.py)
+📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/VciOscPlugin.py)  
 👉 [Подробное руководство](../plugins/VciOscPlugin.md)
 
 > 💡 **Требования**: включите приём OSC в [VirtualCast](https://virtualcast.jp/) (PC-версия).
@@ -33,7 +33,7 @@
 * **Задержка телопа**: синхронизация озвучки с появлением в OBS.
 * **Автопроверка**: автоматически отключается, если VOICEVOX недоступен.
 
-📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/voicevox_plugin.py)
+📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/voicevox_plugin.py)  
 👉 [Подробное руководство](../plugins/voicevox_plugin.md)
 
 > 💡 **Требования**: установите [VOICEVOX](https://voicevox.hiroshiba.jp/) и запустите вместе с TeloPon.
@@ -46,7 +46,7 @@
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/c8a8585c-52ca-43eb-9cdb-fede4373262a" />
 
-📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/discord_integration.py)
+📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/discord_integration.py)  
 👉 [Подробное руководство](../plugins/discord_integration.md)
 
 ### 🏢 Slack — интеграция комментариев (`slack_integration.py`)
@@ -57,7 +57,7 @@
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/1f228c32-3552-453e-aa29-c824da5b6795" />
 
-📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/slack_integration.py)
+📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/slack_integration.py)  
 👉 [Подробное руководство](../plugins/slack_integration.md)
 
 ---

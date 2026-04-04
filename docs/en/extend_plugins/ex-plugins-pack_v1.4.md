@@ -16,7 +16,7 @@ Sends AI-generated telop text to **VirtualCast VCI** in real time via **OSC (Ope
 * **TOPIC & Badge**: Sends topic and badge (emotion tag) on separate OSC addresses
 * **Test send**: One-click connection verification
 
-📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/VciOscPlugin.py)
+📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/VciOscPlugin.py)  
 👉 [Detailed usage guide](../plugins/VciOscPlugin.md)
 
 > 💡 **Requirements**: Enable OSC receive in [VirtualCast](https://virtualcast.jp/) (PC version).
@@ -33,7 +33,7 @@ Reads aloud AI-generated telop text in real time using the **VOICEVOX** speech s
 * **Telop display delay**: Sync readout with OBS telop appearance.
 * **Auto connection check**: Automatically turns OFF if VOICEVOX is unavailable.
 
-📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/voicevox_plugin.py)
+📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/voicevox_plugin.py)  
 👉 [Detailed usage guide](../plugins/voicevox_plugin.md)
 
 > 💡 **Requirements**: Install [VOICEVOX](https://voicevox.hiroshiba.jp/) and run alongside TeloPon.
@@ -46,7 +46,7 @@ Fetches comments from a specified Discord server channel in real time and delive
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/c8a8585c-52ca-43eb-9cdb-fede4373262a" />
 
-📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/discord_integration.py)
+📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/discord_integration.py)  
 👉 [Detailed usage guide](../plugins/discord_integration.md)
 
 ### 🏢 Slack Comment Integration (`slack_integration.py`)
@@ -57,7 +57,7 @@ Fetches comments from a specified Slack workspace channel in real time and deliv
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/1f228c32-3552-453e-aa29-c824da5b6795" />
 
-📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/slack_integration.py)
+📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.4/slack_integration.py)  
 👉 [Detailed usage guide](../plugins/slack_integration.md)
 
 ---
