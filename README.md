@@ -7,7 +7,7 @@
 ![TeloPon実行画面](images/demo.gif)
 
 > **⚠️ ダウンロードは必ず [Releases] から行ってください**  
-> 👉 **[TeloPon 最新版をダウンロードする](https://github.com/miyumiyu/TeloPon/releases/download/v2.15b/TeloPon-215b.zip)**  
+> 👉 **[TeloPon 最新版をダウンロードする](https://github.com/miyumiyu/TeloPon/releases/download/v2.16b/TeloPon-216b.zip)**  
 > （緑の「Code」ボタンから Download ZIP を選んでも起動できません）  
 
 ---
@@ -20,7 +20,7 @@
 
 ### STEP 1：TeloPon をダウンロードする
 
-👉 **[最新版 TeloPon.zip をダウンロード](https://github.com/miyumiyu/TeloPon/releases/download/v2.15b/TeloPon-215b.zip)**
+👉 **[最新版 TeloPon.zip をダウンロード](https://github.com/miyumiyu/TeloPon/releases/download/v2.16b/TeloPon-216b.zip)**
 
 ダウンロードしたZIPを右クリック →「**すべて展開**」で解凍してください。
 
