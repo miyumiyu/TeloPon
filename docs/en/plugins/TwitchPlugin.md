@@ -1,92 +1,133 @@
 # 🎮 Twitch Live Plugin (TwitchPlugin.py)
 
-This plugin lets you simply specify a Twitch channel name or URL to **pick up viewer chat comments in real time and have the AI react to them**.
+A Twitch integration plugin.  
+The AI automatically performs various Twitch operations based on the streamer's voice commands.
 
-Additionally, if you set a **Twitch Client ID and Client Secret** (optional), the stream's "title", "category", and "thumbnail image" are also automatically fetched and sent to the AI. **The plugin works for chat reading even without a Client ID.**
-
----
-
-## ⚙️ Usage
-
-### 1. Open the Settings Panel
-
-Click the **"⚙️ Settings"** button for **"Twitch Live Plugin"** in the "Extensions (Plugins)" panel on the right side of the TeloPon main screen.
-
-### 2. Enter the Channel Name
-
-Enter the Twitch channel name (e.g., `mychannel`) or URL (e.g., `https://twitch.tv/mychannel`) in the input field at the top.
-
-### 3. Set Client ID / Client Secret (Optional)
-
-If you also want to share the stream title, category, and thumbnail with the AI, enter your **"🔑 Client ID"** and **"🔒 Client Secret"**.
-
-> ⚠️ **Chat reading works without these credentials.** You can skip this step if you only need chat integration.
-
-**How to get your Client ID / Client Secret:**
-
-1. **Enable Two-Factor Authentication (2FA)** on your Twitch account (required).
-   Without 2FA, Twitch will not allow you to proceed to the application registration screen.
-   👉 Setting location: [https://www.twitch.tv/settings/security](https://www.twitch.tv/settings/security) → "Set Up Two-Factor Authentication"
-
-2. Log in to [https://dev.twitch.tv/console](https://dev.twitch.tv/console) with your Twitch account.
-3. Click **"Register Your Application"** and fill in the following:
-
-   | Field | Example | Notes |
-   |---|---|---|
-   | Name | `TeloPon` | Any name you like |
-   | OAuth Redirect URL | `http://localhost` | **A dummy URL is fine** (see reason below) |
-   | Category | `Other` | Any category |
-   | Client Type | **Confidential** | Required for server-to-server auth |
-
-   > **💡 Why enter `http://localhost`?**
-   > TeloPon accesses the Twitch API using the "Client Credentials Grant" flow — a **server-to-server** method that does not involve any user login screen or redirect. The redirect URL is never actually used. However, Twitch's registration form requires the field to be filled in, so entering `http://localhost` as a dummy value is the standard and officially accepted approach.
-
-4. After registration, click **"New Secret"** on the app details page to generate a Client Secret.
-5. Copy the "Client ID" and "Client Secret" and paste them into TeloPon's settings panel.
-
-### 4. Press the "Connect" Button
-
-Once your input is ready, press the **"Connect"** button.
-
-* **Without Client ID**: "✅ Chat connected" will appear, and chat reading becomes active.
-* **With Client ID**: Stream info and thumbnail will be fetched and displayed, showing "✅ Connected".
-
-Confirm the plugin badge turns green `ON`, then close the panel.
-
-### 5. Start the Live Connection
-
-Return to the TeloPon main screen and press **"🔴 Start Live Connection"** to begin the AI session.
-
-That's it — integration complete! As soon as the AI session begins, Twitch information is shared with the AI, and it will automatically react to viewer comments.
+<img src="../../../images/TwitchPlugin.png" width="600">
 
 ---
 
-## 🧠 Information Shared with the AI
+## 🌟 Key Features
 
-| Information | Requirement | Timing |
+| Feature | Description | Account Restriction |
 |---|---|---|
-| Stream title & category | Client ID required | At live session start |
-| Thumbnail image | Client ID required | ~5 seconds after live session start |
-| Viewer chat comments | Always (anonymous IRC) | Real-time (batched every 5 seconds) |
-
-### Comment Injection Behavior
-
-* Chat comments are sent to the AI in batches every **5 seconds**, or when **10 comments** accumulate.
-* Each comment is delivered to the AI in the format: `[COMMENT] username: comment text`
-
----
-
-## ⚠️ Notes
-
-* **Order of operations**
-  To ensure the AI properly recognizes the stream title and category, it is strongly recommended to **"Connect" in this tool before pressing TeloPon's "🔴 Start Live Connection" button**. (If you connect mid-session, the title and category won't be recognized.)
-
-* **Offline channels**
-  When using Client ID mode, if the target channel is offline (not currently streaming), stream info cannot be fetched. Chat connection will still work.
-
-* **When there are too many comments**
-  For large streams where comments flow rapidly, the AI may try to react to every comment and end up talking non-stop.
+| Chat comment reading | Injects viewer comments to AI in real time | None |
+| Chat comment writing | AI posts to Twitch chat | None |
+| Poll creation | Create and tally viewer polls | **Affiliate/Partner only** |
+| Prediction | Viewers bet channel points | **Affiliate/Partner only** |
+| Title change | Change stream title by voice | None |
+| Clip creation | Clip the last ~30 seconds | None |
+| Viewer count | Get concurrent viewer count | None |
+| Bot exclusion | Exclude specific users from AI injection | - |
 
 ---
 
-[⬅️ Back to Plugin List](../../../README_en.md)
+## 📋 Features by Account Type
+
+| Feature | Regular | Affiliate | Partner |
+|---|---|---|---|
+| Read comments | ✅ | ✅ | ✅ |
+| Write comments | ✅ | ✅ | ✅ |
+| Title change | ✅ | ✅ | ✅ |
+| Clip creation | ✅ | ✅ | ✅ |
+| Viewer count | ✅ | ✅ | ✅ |
+| Polls | ❌ | ✅ | ✅ |
+| Predictions | ❌ | ✅ | ✅ |
+
+> Account type is automatically detected during authentication and displayed as `[Standard]`, `[Affiliate]`, or `[Partner]`.  
+> Unavailable features are automatically unchecked and grayed out.
+
+---
+
+## ⚙️ Setup Guide
+
+### Step 1: Choose Connection Mode
+
+#### IRC Mode (any stream, chat read only)
+
+**No authentication required.** Reads comments from any Twitch channel.
+
+> Skip Steps 2-3 and go directly to Step 4.
+
+#### Auth Mode (your stream, all features)
+
+**OAuth2 authentication required.** Connects to your own channel with full features.  
+Follow Steps 2-3 below.
+
+---
+
+### Step 2: Register App on Twitch Developer Console
+
+1. Log in to [Twitch Developer Console](https://dev.twitch.tv/console/apps)
+2. Click "Register Your Application"
+3. Fill in:
+
+| Field | Example | Description |
+|---|---|---|
+| Name | `TeloPon` | Any name |
+| OAuth Redirect URL | `https://localhost` | Not used but required |
+| Category | `Application Integration` | Any |
+
+4. After creation, copy the **Client ID**
+
+5. **Client Secret (recommended):**  
+   Click "New Secret" to generate and copy it.
+
+   > ⚠️ **Client Secret is not required**, but without it the access token expires after ~4 hours and you'll need to re-authenticate via browser each time.
+
+### Step 3: Authenticate in TeloPon
+
+1. Open TeloPon → Extensions → "Twitch Live Plugin" gear icon
+2. Enter **Client ID** and **Client Secret** (optional)
+3. Click **"Sign in with Twitch"**
+4. A browser opens with the authentication URL (copy button available)
+5. Log in and authorize on Twitch
+6. On success, your username and account type are displayed
+
+> To cancel during authentication, click "Cancel auth".
+
+---
+
+### Step 4: Connect and Start Live
+
+1. **Auth mode:** Click "Connect". Stream info (title/category/thumbnail) will be displayed.
+2. **IRC mode:** Enter channel name and click "Connect".
+3. Press **"🔴 Start Live"** on TeloPon's main screen.
+
+> **Important:** Press "Connect" **before** starting the live broadcast.
+
+---
+
+## 🎙️ Voice Command Examples
+
+| Streamer says | AI action |
+|---|---|
+| "Write 'hello' in chat" | Posts "hello" to Twitch chat |
+| "Create a poll about favorite colors" | Creates a poll with color options for 60 seconds |
+| "Tally the results" | Closes the poll and announces results |
+| "Let viewers bet on whether I can beat this boss" | Creates a prediction with options |
+| "The answer is number 1!" | Resolves the prediction |
+| "Change the title to 'Chill stream'" | Changes the stream title |
+| "Clip that!" | Creates a clip of the last ~30 seconds |
+| "How many viewers?" | Gets and announces the viewer count |
+
+---
+
+## 🛡️ Viewer Permission Settings
+
+Each feature has a "Viewer" checkbox to control whether viewer comments can trigger commands.
+
+---
+
+## 👤 User Management (Bot Exclusion)
+
+The settings panel includes a user management section.  
+**Double-click** recent users to add to the exclusion list.  
+**Double-click** excluded users to remove from the list.
+
+- The authenticated user is added to the exclusion list by default (can be removed)
+- Useful for excluding bots like `nightbot`, `streamelements`
+
+---
+
+[⬅️ Back to plugin list](../../../README_en.md#-official-extension-plugins-individual-download)
