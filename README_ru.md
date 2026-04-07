@@ -220,18 +220,19 @@ TeloPon имеет два типа плагинов: «Стандартные в
 
 ### 🌟 Официальные плагины-расширения (скачиваются отдельно)
 
-Чтобы основное приложение оставалось лёгким и простым, следующие интеграции доступны в виде отдельных загрузок для тех, кому они нужны.
-🔗 [TeloPon Official Extension Plugin Pack v1.0 (Discord & Slack)](https://github.com/miyumiyu/TeloPon/releases/tag/plugins-v1.0)
+Чтобы основное приложение оставалось лёгким, плагины-расширения управляются в отдельном репозитории.
 
-* 💬 **Интеграция с Discord в реальном времени** (`discord_integration.py`)
-  Получает комментарии из указанного канала сервера Discord в реальном времени и заставляет ИИ читать их вслух. Функция полностью автоматической генерации URL-приглашения позволяет завершить сложную настройку бота всего одной кнопкой.
-  📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/discord_integration.py)
-  👉 [Подробное руководство по использованию](docs/ru/plugins/discord_integration.md)
+🔗 **[TeloPon Extensions (список плагинов)](https://github.com/miyumiyu/TeloPon-Extensions)**
 
-* 🏢 **Интеграция комментариев Slack** (`slack_integration.py`)
-  Получает комментарии из указанного канала рабочего пространства Slack без задержек через «Socket Mode». Буквенно-цифровые идентификаторы пользователей Slack автоматически преобразуются в имена перед передачей ИИ.
-  📥 [Скачать плагин](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/slack_integration.py)
-  👉 [Подробное руководство по использованию](docs/ru/plugins/slack_integration.md)
+| Плагин | Описание |
+|---|---|
+| ▶️ **YouTube OAuth** | Чтение/запись комментариев, опросы, изменение заголовка |
+| 🔊 **Windows TTS** | Озвучка встроенным голосом Windows |
+| 🔊 **Gemini TTS** | Озвучка с эмоциями через Google Gemini |
+| 🎮 **VCI OSC** | Отправка телопов в VirtualCast VCI по OSC |
+| 💬 **Discord** | Комментарии из канала Discord в реальном времени |
+| 🏢 **Slack** | Комментарии из канала Slack в реальном времени |
+| 🗣️ **VOICEVOX** | Озвучка через VOICEVOX |
 
 *(💡 Установка: просто поместите скачанный файл `.py` в папку `plugins` TeloPon — и всё!)*
 

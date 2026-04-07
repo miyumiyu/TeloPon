@@ -219,18 +219,19 @@ TeloPon has two types of plugins: "Standard Bundled Plugins" that come pre-insta
 
 ### 🌟 Official Extension Plugins (Individual Download)
 
-To keep the main app light and simple, the following integrations are available as separate downloads for those who need them.
-🔗 [TeloPon Official Extension Plugin Pack v1.0 (Discord & Slack)](https://github.com/miyumiyu/TeloPon/releases/tag/plugins-v1.0)
+To keep the main app light and simple, extension plugins are managed in a separate repository. Download only the ones you need.
 
-* 💬 **Discord Real-time Integration** (`discord_integration.py`)
-  Fetches comments from a specified Discord server channel in real time and has the AI read them aloud. Features fully automatic invite URL generation, so complex Bot setup is completed with just one button.
-  📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/discord_integration.py)
-  👉 [Detailed usage guide](docs/en/plugins/discord_integration.md)
+🔗 **[TeloPon Extensions (Full Plugin List)](https://github.com/miyumiyu/TeloPon-Extensions)**
 
-* 🏢 **Slack Comment Integration** (`slack_integration.py`)
-  Fetches comments from a specified Slack workspace channel with zero delay via "Socket Mode". Alphanumeric Slack user IDs are automatically converted to names before being delivered to the AI.
-  📥 [Download Plugin](https://github.com/miyumiyu/TeloPon/releases/download/plugins-v1.0/slack_integration.py)
-  👉 [Detailed usage guide](docs/en/plugins/slack_integration.md)
+| Plugin | Description |
+|---|---|
+| ▶️ **YouTube OAuth** | Comment read/write, polls, title change, viewer count |
+| 🔊 **Windows TTS** | Text-to-speech using Windows built-in voice |
+| 🔊 **Gemini TTS** | Emotion-aware TTS using Google Gemini |
+| 🎮 **VCI OSC** | Send telops to VirtualCast VCI via OSC |
+| 💬 **Discord** | Real-time Discord channel comments |
+| 🏢 **Slack** | Real-time Slack channel comments |
+| 🗣️ **VOICEVOX** | Text-to-speech using VOICEVOX |
 
 *(💡 Installation: Just place the downloaded `.py` file into TeloPon's `plugins` folder — that's all it takes!)*
 
