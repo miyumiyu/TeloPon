@@ -330,8 +330,9 @@ TeloPon을 마음껏 개조하고 싶은 분들을 위한 가이드!
 
 ## 🤝 스페셜 땡스 & 크레딧
 - **개발 파트너:** Google Gemini (코드 생성 & 사고 파트너)
+- **개발 파트너:** Anthropic Claude Code (코드 생성 & 아키텍처 설계)
 - **콘셉트 & 바이브:** [![miyumiyuna5](https://img.shields.io/badge/miyumiyuna5-%23000000.svg?style=for-the-badge&logo=X&logoColor=white)](https://x.com/miyumiyuna5)
-- **문서화:** 이 README도 Gemini가 생성했습니다.
+- **문서화:** Gemini & Claude가 생성했습니다.
 
 ---
 © 2026 TeloPon Project All Rights Reserved.

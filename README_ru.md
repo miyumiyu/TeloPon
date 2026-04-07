@@ -330,8 +330,9 @@ TeloPon имеет два типа плагинов: «Стандартные в
 
 ## 🤝 Особая благодарность и авторство
 - **Партнёр по разработке:** Google Gemini (Генерация кода и партнёр по мышлению)
+- **Партнёр по разработке:** Anthropic Claude Code (Генерация кода и проектирование архитектуры)
 - **Концепция и атмосфера:** [![miyumiyuna5](https://img.shields.io/badge/miyumiyuna5-%23000000.svg?style=for-the-badge&logo=X&logoColor=white)](https://x.com/miyumiyuna5)
-- **Документация:** Этот README также был сгенерирован Gemini.
+- **Документация:** Сгенерировано Gemini и Claude.
 
 ---
 © 2026 TeloPon Project All Rights Reserved.
