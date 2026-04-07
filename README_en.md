@@ -231,6 +231,7 @@ To keep the main app light and simple, extension plugins are managed in a separa
 | 💬 **Discord** | Real-time Discord channel comments |
 | 🏢 **Slack** | Real-time Slack channel comments |
 | 🗣️ **VOICEVOX** | Text-to-speech using VOICEVOX |
+| 📊 **PowerPoint Control** | Control slideshow by voice, auto-inject slide notes to AI |
 
 *(💡 Installation: Just place the downloaded `.py` file into TeloPon's `plugins` folder — that's all it takes!)*
 
