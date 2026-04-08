@@ -190,29 +190,33 @@ TeloPon has two types of plugins: "Standard Bundled Plugins" that come pre-insta
 
 ### 📦 Standard Bundled Plugins (Pre-installed)
 
-* 💬 **Comment Generator File Reader** (`CommentGenerator_read.py`)
-  Periodically reads text files output by external comment generators, and relays new comments to the AI.
-  👉 [Detailed usage guide](docs/en/plugins/CommentGenerator_read.md)
-
-* 📝 **Custom Instruction Addon Tool** (`custom_prompt.py`)
-  At stream start, appends additional instructions to the base prompt (AI personality) — e.g., "Today I'll be playing ○○ game".
-  👉 [Detailed usage guide](docs/en/plugins/custom_prompt.md)
-
-* 💉 **Manual Data Injection Tool** (`ManualInjector.py`)
-  During the stream, directly sends arbitrary text (cue cards) or images into the AI's brain from the dedicated control panel with one button.
-  👉 [Detailed usage guide](docs/en/plugins/ManualInjector.md)
-
-* 🎮 **OBS Screen AI Commentary** (`obs_capture.py`)
-  Uses OBS-WebSocket to periodically capture the OBS preview screen and show it to the AI, enabling it to comment on and react to game screens or stream content.
-  👉 [Detailed usage guide](docs/en/plugins/obs_capture.md)
-
-* ▶️ **YouTube Integration Tool** (`YoutubeLivePlugin.py`)
+* 📺 **YouTube Live** (`YoutubeLivePlugin.py`)
   Simply specify a YouTube Live stream URL to have the AI pick up and react to viewer comments. The stream's "title", "description", and "thumbnail image" are also automatically sent to the AI, so it can deeply understand the stream content and co-host the show with you.
   👉 [Detailed usage guide](docs/en/plugins/YoutubeLivePlugin.md)
 
-* 🎮 **Twitch Live Plugin** (`TwitchPlugin.py`)  
+* 📺 **Twitch Live** (`TwitchPlugin.py`)  
   Simply enter a Twitch channel name or URL to have the AI pick up and react to viewer chat comments in real time. With OAuth2 authentication, the AI can also write comments, create polls, predictions (betting), clips, change stream titles, and get viewer counts. **Chat reading works without authentication (IRC mode).**  
   👉 [Detailed usage guide](docs/en/plugins/TwitchPlugin.md)
+
+* 📺 **Niconico Live** (`NiconicoLivePlugin.py`)  
+  Real-time integration with Niconico Live (ニコニコ生放送). Fetches comments, gifts, Niconi-ads, polls, and viewer statistics, injecting them into the AI. With login, you can also create polls, post operator comments, and get viewer counts. **Comment reading works without login.**  
+  👉 [Detailed usage guide](docs/en/plugins/NiconicoLivePlugin.md)
+
+* 🎮 **OBS Screen Capture** (`obs_capture.py`)
+  Uses OBS-WebSocket to periodically capture the OBS preview screen and show it to the AI, enabling it to comment on and react to game screens or stream content.
+  👉 [Detailed usage guide](docs/en/plugins/obs_capture.md)
+
+* 💉 **Cue Card / Image Injector** (`ManualInjector.py`)
+  During the stream, directly sends arbitrary text (cue cards) or images into the AI's brain from the dedicated control panel with one button.
+  👉 [Detailed usage guide](docs/en/plugins/ManualInjector.md)
+
+* 📝 **Custom Instructions** (`custom_prompt.py`)
+  At stream start, appends additional instructions to the base prompt (AI personality) — e.g., "Today I'll be playing ○○ game".
+  👉 [Detailed usage guide](docs/en/plugins/custom_prompt.md)
+
+* 💬 **CommentGen Reader** (`CommentGenerator_read.py`)
+  Periodically reads text files output by external comment generators, and relays new comments to the AI.
+  👉 [Detailed usage guide](docs/en/plugins/CommentGenerator_read.md)
 
 * 📺 **Telop Viewer** (`TelopViewer.py`)
   View AI-generated telop history in real time from the control panel. Supports B1/B2 tag color coding. OBS display delay can be configured via a dropdown. Simply open from the "Control Panel" button in the Extensions panel.
@@ -225,15 +229,16 @@ To keep the main app light and simple, extension plugins are managed in a separa
 
 | Plugin | Description |
 |---|---|
-| ▶️ **YouTube OAuth** | Comment read/write, polls, title change, viewer count |
-| 🔊 **Windows TTS** | Text-to-speech using Windows built-in voice |
-| 🎮 **VCI OSC** | Send telops to VirtualCast VCI via OSC |
+| 📺 **YouTube Live+** | YouTube OAuth. Comment read/write, polls, title change, viewer count |
+| 🐦 **X (Twitter)** | Hashtag fetch, tweet with text/thumbnail/screen capture (paid API) |
+| 🔊 **Telop TTS (Windows)** | Auto text-to-speech with Windows SAPI5 |
+| 🔊 **Telop TTS (VOICEVOX)** | Text-to-speech with VOICEVOX |
+| 📊 **PowerPoint Control** | Control slideshow by voice, auto-inject slide notes |
 | 💬 **Discord** | Real-time Discord channel comments |
-| 🏢 **Slack** | Real-time Slack channel comments |
-| 🗣️ **VOICEVOX** | Text-to-speech using VOICEVOX |
-| 📊 **PowerPoint Control** | Control slideshow by voice, auto-inject slide notes to AI |
+| 💬 **Slack** | Real-time Slack channel comments |
+| 🎮 **VCI Telop Sender** | Send telops to VirtualCast VCI via OSC |
 
-*(💡 Installation: Just place the downloaded `.py` file into TeloPon's `plugins` folder — that's all it takes!)*
+*(💡 Download from Plugin Manager or place `.py` files in the `plugins` folder)*
 
 ---
 
