@@ -127,14 +127,11 @@ class MySimplePlugin(BasePlugin):
 
 ```
 TeloPon/
- ├── plugins/              ← 同梱プラグイン＋ユーザー追加プラグイン
- ├── ex-plugins/plugins/   ← 拡張プラグイン（開発者用サブモジュール）
- └── dev-plugins/          ← 非公開プラグイン（.gitignored）
+ └── plugins/
+      └── my_plugin.py   ← ここに置くだけで自動的にUIに表示される
 ```
 
-`PLUGIN_ID` を設定していれば、アプリ起動時に上記3フォルダを自動スキャンして登録されます。  
-同じ `PLUGIN_ID` が複数ディレクトリにある場合は `plugins/` が最優先されます。  
-exe版ユーザーの場合は `plugins/` フォルダに置くか、プラグイン管理からダウンロードします。
+`PLUGIN_ID` を設定していれば、アプリ起動時に `plugins/` フォルダを自動スキャンして登録されます。
 
 ### 最小構成の例
 

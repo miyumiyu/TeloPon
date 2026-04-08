@@ -127,14 +127,11 @@ class MySimplePlugin(BasePlugin):
 
 ```
 TeloPon/
- ├── plugins/              ← Bundled + user-added plugins
- ├── ex-plugins/plugins/   ← Extension plugins (dev submodule)
- └── dev-plugins/          ← Private plugins (.gitignored)
+ └── plugins/
+      └── my_plugin.py   ← Just placing it here automatically displays it in the UI
 ```
 
-If `PLUGIN_ID` is set, all 3 directories are automatically scanned at startup.  
-If the same `PLUGIN_ID` exists in multiple directories, `plugins/` takes priority.  
-For exe users, place files in `plugins/` or download via the Plugin Manager.
+If `PLUGIN_ID` is set, the `plugins/` folder is automatically scanned and registered at app startup.
 
 ### Minimal Example
 
