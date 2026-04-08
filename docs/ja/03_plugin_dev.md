@@ -28,9 +28,10 @@ from plugin_manager import BasePlugin
 ```python
 class BasePlugin:
     # ===== UIパネルプラグイン用 =====
-    PLUGIN_ID   = ""           # ← 空のままだとUIパネルに登録されない
-    PLUGIN_NAME = "Base Plugin"
-    PLUGIN_TYPE = "BACKGROUND" # "BACKGROUND" / "TOOL"
+    PLUGIN_ID      = ""           # ← 空のままだとUIパネルに登録されない
+    PLUGIN_NAME    = "Base Plugin"
+    PLUGIN_VERSION = ""           # バージョン文字列（例: "1.00"）プラグイン管理画面に表示
+    PLUGIN_TYPE    = "BACKGROUND" # "BACKGROUND" / "TOOL"
 
     # ===== CMDコマンドプラグイン用 =====
     IDENTIFIER      = ""       # ← [CMD:XXX] の XXX。空のままだとCMDに登録されない
@@ -126,11 +127,14 @@ class MySimplePlugin(BasePlugin):
 
 ```
 TeloPon/
- └── plugins/
-      └── my_plugin.py   ← ここに置くだけで自動的にUIに表示される
+ ├── plugins/              ← 同梱プラグイン＋ユーザー追加プラグイン
+ ├── ex-plugins/plugins/   ← 拡張プラグイン（開発者用サブモジュール）
+ └── dev-plugins/          ← 非公開プラグイン（.gitignored）
 ```
 
-`PLUGIN_ID` を設定していれば、アプリ起動時に `plugins/` フォルダを自動スキャンして登録されます。
+`PLUGIN_ID` を設定していれば、アプリ起動時に上記3フォルダを自動スキャンして登録されます。  
+同じ `PLUGIN_ID` が複数ディレクトリにある場合は `plugins/` が最優先されます。  
+exe版ユーザーの場合は `plugins/` フォルダに置くか、プラグイン管理からダウンロードします。
 
 ### 最小構成の例
 
@@ -141,9 +145,10 @@ from plugin_manager import BasePlugin
 import logger
 
 class MyPlugin(BasePlugin):
-    PLUGIN_ID   = "my_plugin"      # ← ユニークなID（ファイル名と合わせると分かりやすい）
-    PLUGIN_NAME = "🔧 サンプルプラグイン"
-    PLUGIN_TYPE = "BACKGROUND"
+    PLUGIN_ID      = "my_plugin"      # ← ユニークなID（ファイル名と合わせると分かりやすい）
+    PLUGIN_NAME    = "🔧 サンプルプラグイン"
+    PLUGIN_VERSION = "1.00"           # ← プラグイン管理画面に表示される
+    PLUGIN_TYPE    = "BACKGROUND"
 
     def get_default_settings(self):
         """設定の初期値を返す"""
@@ -194,6 +199,40 @@ settings = self.get_settings()
 settings["my_key"] = "新しい値"
 self.save_settings(settings)
 ```
+
+### active フラグ（プラグイン管理）
+
+設定JSONには `"enabled"` に加えて `"active"` フラグがあります。
+
+| フラグ | 役割 | デフォルト |
+|---|---|---|
+| `"enabled"` | ライブ開始時に `start()` を呼ぶか | `False` |
+| `"active"` | UIサイドバーに表示するか | `True` |
+
+`"active": False` のプラグインはサイドバーに表示されず、ライブ開始時もスキップされます。  
+プラグイン管理画面からユーザーが切り替えます。プラグイン側での実装は不要です。
+
+### 配信情報共有機構
+
+配信プラットフォーム（YouTube/Twitch/ニコニコ等）が接続時にセットした情報を、他のプラグインから参照できます。
+
+```python
+# 配信情報をセット（配信プラットフォームプラグインが接続成功時に呼ぶ）
+self.set_stream_info(
+    url="https://www.youtube.com/watch?v=xxx",
+    thumbnail=thumb_bytes,       # サムネイル画像 (bytes) ※省略可
+    thumbnail_mime="image/jpeg",
+    title="配信タイトル",
+    platform="YouTube",
+)
+
+# 他のプラグインから配信情報を取得
+url = self.get_stream_url()              # 配信URL
+thumb, mime = self.get_stream_thumbnail() # サムネイル (bytes, mime)
+title = self.get_stream_title()          # 配信タイトル
+```
+
+これはクラス変数で全プラグインインスタンス間で共有されます。最後にセットしたプラットフォームの情報が使われます。
 
 ### get_display_name のオーバーライド（多言語対応）
 

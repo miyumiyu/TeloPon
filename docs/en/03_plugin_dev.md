@@ -28,9 +28,10 @@ You only need to configure and implement the ones you want to use.
 ```python
 class BasePlugin:
     # ===== For UI Panel Plugins =====
-    PLUGIN_ID   = ""           # ← If left empty, not registered as a UI panel
-    PLUGIN_NAME = "Base Plugin"
-    PLUGIN_TYPE = "BACKGROUND" # "BACKGROUND" / "TOOL"
+    PLUGIN_ID      = ""           # ← If left empty, not registered as a UI panel
+    PLUGIN_NAME    = "Base Plugin"
+    PLUGIN_VERSION = ""           # Version string (e.g. "1.00") — shown in Plugin Manager
+    PLUGIN_TYPE    = "BACKGROUND" # "BACKGROUND" / "TOOL"
 
     # ===== For CMD Command Plugins =====
     IDENTIFIER      = ""       # ← The XXX in [CMD:XXX]. If empty, not registered as CMD
@@ -126,11 +127,14 @@ class MySimplePlugin(BasePlugin):
 
 ```
 TeloPon/
- └── plugins/
-      └── my_plugin.py   ← Just placing it here automatically displays it in the UI
+ ├── plugins/              ← Bundled + user-added plugins
+ ├── ex-plugins/plugins/   ← Extension plugins (dev submodule)
+ └── dev-plugins/          ← Private plugins (.gitignored)
 ```
 
-If `PLUGIN_ID` is set, the `plugins/` folder is automatically scanned and registered at app startup.
+If `PLUGIN_ID` is set, all 3 directories are automatically scanned at startup.  
+If the same `PLUGIN_ID` exists in multiple directories, `plugins/` takes priority.  
+For exe users, place files in `plugins/` or download via the Plugin Manager.
 
 ### Minimal Example
 
@@ -141,8 +145,9 @@ from plugin_manager import BasePlugin
 import logger
 
 class MyPlugin(BasePlugin):
-    PLUGIN_ID   = "my_plugin"      # ← Unique ID (matching the filename is a good practice)
-    PLUGIN_NAME = "🔧 Sample Plugin"
+    PLUGIN_ID      = "my_plugin"      # ← Unique ID (matching the filename is a good practice)
+    PLUGIN_NAME    = "🔧 Sample Plugin"
+    PLUGIN_VERSION = "1.00"           # ← Shown in Plugin Manager
     PLUGIN_TYPE = "BACKGROUND"
 
     def get_default_settings(self):
