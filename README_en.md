@@ -29,7 +29,7 @@ With OBS integration, show game screens or camera footage to the AI for real-tim
 Automatically fetch X (Twitter) hashtags and inject them into the AI. The AI can auto-post tweets with thumbnails or screen captures attached.
 
 ### 🔊 Telop Text-to-Speech
-Auto-read telops aloud using Windows built-in voice (SAPI5) or VOICEVOX. Add the AI's "voice" to your stream.
+Auto-read telops aloud using Windows built-in voice (SAPI5), VOICEVOX, or Gemini 3.1 Flash TTS. Add the AI's "voice" to your stream.
 
 ### 📊 Presentation Support
 Control PowerPoint slideshows by voice. Navigate slides forward/back, jump to specific slides, and blackout. Slide notes are automatically injected into the AI to support your presentation.
@@ -177,6 +177,7 @@ Download with one click from the "Available" tab in Plugin Manager.
 | 🐦 **X (Twitter)** | Hashtag fetch, tweet with thumbnail/screen capture (paid API) |
 | 🔊 **Telop TTS (Windows)** | Auto text-to-speech with Windows built-in voice |
 | 🔊 **Telop TTS (VOICEVOX)** | Text-to-speech with VOICEVOX |
+| 🔊 **Telop TTS (Gemini TTS)** | High-quality TTS with Gemini 3.1 Flash TTS (trial use, rate-limited) |
 | 📊 **PowerPoint Control** | Control slideshow by voice. Auto-inject slide notes into AI |
 | 💬 **Discord** | Real-time Discord channel comments |
 | 💬 **Slack** | Real-time Slack channel comments |

@@ -29,7 +29,7 @@ OBS 연동으로 게임 화면이나 카메라 영상을 AI에게 보여주어, 
 X (Twitter)의 해시태그를 자동 수집하여 AI에 주입. 썸네일이나 게임 화면 첨부 트윗을 AI가 자동 게시합니다.
 
 ### 🔊 자막 읽기
-Windows 기본 음성(SAPI5)이나 VOICEVOX로 자막을 자동 읽기. 방송에 AI의 "목소리"를 추가합니다.
+Windows 기본 음성(SAPI5)·VOICEVOX·Gemini 3.1 Flash TTS로 자막을 자동 읽기. 방송에 AI의 "목소리"를 추가합니다.
 
 ### 📊 프레젠테이션 지원
 PowerPoint 슬라이드쇼를 음성으로 조작. 슬라이드 넘기기/되돌리기·점프·블랙아웃. 슬라이드 노트를 AI에 자동 주입하여 프레젠테이션을 지원합니다.
@@ -177,6 +177,7 @@ TeloPon/
 | 🐦 **X (Twitter)** | 해시태그 수집·썸네일/화면 첨부 트윗 게시 (유료 API) |
 | 🔊 **자막 읽기 (Windows)** | Windows 기본 음성으로 자막 자동 읽기 |
 | 🔊 **자막 읽기 (VOICEVOX)** | VOICEVOX 음성 합성으로 자막 읽기 |
+| 🔊 **자막 읽기 (Gemini TTS)** | Gemini 3.1 Flash TTS로 고품질 읽기 (체험용, 레이트 리미트 있음) |
 | 📊 **PowerPoint 조작** | 슬라이드쇼를 음성 조작. 노트를 AI에 자동 주입 |
 | 💬 **Discord** | Discord 채널 댓글을 실시간 수집 |
 | 💬 **Slack** | Slack 채널 댓글을 실시간 수집 |
