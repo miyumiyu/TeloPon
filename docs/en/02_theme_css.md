@@ -20,9 +20,9 @@ TeloPon/
 
 ---
 
-## 🏗️ 2. [Important] HTML Structure and the Two Telop Containers
+## 🏗️ 2. [Important] HTML Structure and the Three Telop Containers
 
-TeloPon's display (`base.html`) has two telop containers built in: the **"Normal container"** and the **"Special container"**.
+TeloPon's display (`base.html`) has three telop containers built in: the **"Normal container"**, the **"Special container"**, and the **"Status container"**.
 Which container is used is determined automatically by the "Window ID" (described below) that the AI specifies.
 
 ### ① Normal Telop Container (normal group)
@@ -69,6 +69,30 @@ Used when you want to display a telop "independently (overlapping)" with the nor
 
 </div>
 ```
+
+### ③ Status Container (status group) — Persistent Display
+A persistent window for things like TRPG HP/SAN, first-timer counters, and stream uptime — it **stays on screen until explicitly closed**. There is one fixed element per page; resending overwrites the contents in place.
+
+```html
+<!-- The status container (one fixed element on the page) -->
+<div id="status-container">
+
+    <!-- The badge in the upper-left of the status container (hidden by default) -->
+    <div id="st-badge"></div>
+
+    <!-- The text content -->
+    <div id="st-text-wrapper">
+        <div class="topic-line" id="st-topic">Title (upper row)</div>
+        <div class="main-line"  id="st-main">Body (lower row)</div>
+    </div>
+
+</div>
+```
+
+**Status container characteristics:**
+- Setting `--display-duration: 0` makes it persistent (no auto-hide)
+- The streamer can interact with it directly **on the OBS browser source**: drag to move / wheel to scale / double-click to temporarily hide
+- To remove: the AI emits `[CMD]SYS:close status`, or the streamer says "close the status"
 
 ---
 
@@ -163,6 +187,54 @@ Here is a full list of "which selector targets which element" when writing theme
 
 ---
 
+### Status Container (status group) Selectors
+
+| Selector | Type | Role |
+|---|---|---|
+| `#status-container` | ID | The wrapper for the status container. Window ID classes are added here |
+| `#status-container.visible` | ID + Class | The state when the status container is being displayed |
+| `#status-container.dragging` | ID + Class | While the streamer is dragging the window (e.g., for cursor changes) |
+| `#st-badge` | ID | The upper-left badge (default `display: none !important;`) |
+| `#st-text-wrapper` | ID | Text wrapper of the status container |
+| `#st-topic` | ID | Topic line (title) of the status container |
+| `#st-main` | ID | Main text line (body) of the status container |
+
+#### Example status container CSS
+
+```css
+.window-status {
+    position: fixed; right: 30px; top: 30px;
+    min-width: 200px; max-width: 360px;
+    padding: 16px 24px;
+    background: rgba(20, 30, 45, 0.85); color: #fff;
+    border-radius: 12px;
+    border-left: 6px solid #00d2ff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 0; transform: translateX(20px);
+    z-index: 150;
+
+    --window-group: special;     /* Kept for compatibility (the actual group is fixed to "status") */
+    --display-duration: 0;        /* ★ Set to 0 for persistent display (no auto-hide) */
+}
+.window-status.visible { opacity: 1; transform: translateX(0); }
+.window-status .topic-line {
+    font-size: 18px; font-weight: 900;
+    color: #00d2ff;
+    border-bottom: 2px solid rgba(0, 210, 255, 0.3);
+    padding-bottom: 4px; margin-bottom: 8px;
+}
+.window-status .main-line {
+    font-size: 22px; line-height: 1.5;
+    white-space: pre-wrap;        /* Honor newlines (\n) in main text */
+    font-weight: 700;
+}
+```
+
+> **Important**: The group of `window-status` is hard-coded to `"status"` on the Python side (regardless of the CSS `--window-group` value). It has its own dedicated container, displayed independently from the normal and special containers, designed for permanent displays such as HP/MP/counters.
+
+---
+
 ### Image Container Selectors
 
 | Selector | Type | Role |
@@ -191,6 +263,22 @@ These are applied to `#explain-container`. To tell the system "this is a special
 
 * **`.window-explain`**: For long explanations or supplementary info displayed prominently at the bottom of the screen.
 * **`.window-nameplate`**: For displaying a TV-style "nickname + name" in large text.
+
+### 📌 Status Container IDs (status group)
+These are applied to `#status-container`. Set **`--display-duration: 0`** to make them persistent (they remain on screen until explicitly closed).
+
+* **`.window-status`**: For information you want **always on screen**, such as HP/SAN/counters/stream uptime.
+
+| Use case | Example |
+|---|---|
+| TRPG status | Investigator's name, occupation, HP, SAN, etc., always shown |
+| First-timer counter | "First-timers: N people" always shown |
+| Stream uptime | "2 hours 15 minutes elapsed", etc. |
+
+**Operations:**
+- Update display: resending with the same `window-status` **overwrites in place** (the same container's content is refreshed)
+- Remove: AI emits `[CMD]SYS:close status`, or the streamer says "close the status"
+- Operations on OBS: drag to move / mouse wheel to scale / double-click to temporarily hide
 
 ---
 

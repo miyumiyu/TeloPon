@@ -310,7 +310,20 @@ def start(self, prompt_config, plugin_queue):
 
 ---
 
-## 6. テロップ出力フック（AIの出力をプラグインで受け取る）
+## 6. プラグインフック（テロップ出力・コメント受信）
+
+プラグイン同士が疎結合で連携できる**フック**を2種類提供しています。
+
+| フック | 呼ばれるタイミング | 用途 |
+|---|---|---|
+| `on_telop_output(topic, main, window, layout, badge)` | AI がテロップを出力した時 | テロップのログ・録画・遅延表示 |
+| `on_comment_received(text, author, source)` | 配信プラットフォームがコメントを受信した時 | 初見カウンター・NGワード検出・コメント分析 |
+
+どちらも **fire-and-forget**（投げっぱなし）で全プラグインに非同期配信されます。Core はプラグインの処理完了を待ちません。
+
+---
+
+### 6-A. テロップ出力フック (on_telop_output)
 
 `on_telop_output` メソッドをオーバーライドすると、AIがテロップを出力するたびにプラグインがそのデータを受け取れます。
 テロップ出力は **fire-and-forget（投げっぱなし）** 方式で配信され、Core はプラグインの処理完了を待ちません。
@@ -474,6 +487,89 @@ class MyViewerPlugin(BasePlugin):
     PLUGIN_TYPE = "TOOL"
     ALWAYS_ACTIVE = True  # 常にアクティブ表示
 ```
+
+---
+
+### 6-B. コメント受信フック (on_comment_received)
+
+視聴者コメントを取得する配信プラットフォームプラグイン（YouTube・Twitch・ニコニコ生放送等）がコメントを受信した瞬間に、すべてのアクティブプラグインに通知が届きます。
+
+#### 仕組み
+
+```
+配信プラットフォームプラグイン（例: YouTube）: コメント受信
+       ↓
+ self.broadcast_comment(text, author, source)
+       ↓
+PluginManager: 全アクティブプラグインに非同期通知
+       ↓
+他のプラグインの on_comment_received() が呼ばれる
+```
+
+#### 通知元プラグインの実装（コメントを送る側）
+
+コメントを受信した配信プラットフォームプラグインは、`BasePlugin.broadcast_comment()` を呼んで他のプラグインに通知します。
+
+```python
+def _on_comment(self, text, author):
+    # 既存処理: AIに送る等
+    self.send_text(self.plugin_queue, f"[COMMENT]{author}: {text}")
+    # 他のプラグインに通知（fire-and-forget）
+    self.broadcast_comment(text, author, source="youtube")
+```
+
+| 引数 | 内容 | 例 |
+|---|---|---|
+| `text` | コメント本文 | `初見です！` |
+| `author` | 投稿者名 | `視聴者A` |
+| `source` | プラットフォーム識別子 | `"youtube"` / `"twitch"` / `"niconico"` |
+
+#### 受信側プラグインの実装（コメントを受け取る側）
+
+```python
+class FirstTimerPlugin(BasePlugin):
+    PLUGIN_ID   = "first_timer"
+    PLUGIN_TYPE = "TOOL"
+
+    def __init__(self):
+        super().__init__()
+        self._known_users = set()
+        self._count = 0
+
+    def on_comment_received(self, text, author, source):
+        """全プラットフォームのコメントを受け取る（戻り値不要）"""
+        if author in self._known_users:
+            return
+        self._known_users.add(author)
+        if any(kw in text for kw in ["初見", "おはつ", "はじめまして"]):
+            self._count += 1
+            logger.info(f"[FirstTimer] 初見さん +1 → {self._count} 人")
+```
+
+#### ⚠️ スレッド安全性
+
+`on_comment_received` も **バックグラウンドスレッド**から呼ばれます。Tkinter の直接操作は禁止です（`on_telop_output` と同じ制約）。
+UI 更新が必要な場合は **deque バッファ + ポーリング**パターンを使ってください（前項「⚠️ 重要：スレッド安全性」参照）。
+
+#### 既存の通知元プラグイン
+
+すでに `broadcast_comment()` を呼んでいる配信プラットフォームプラグイン:
+
+| プラグイン | source 値 |
+|---|---|
+| YoutubeLivePlugin（本体） | `"youtube"` |
+| YoutubeLiveOAuth（拡張） | `"youtube"` |
+| TwitchPlugin（本体） | `"twitch"` |
+| NiconicoLivePlugin（拡張） | `"niconico"` |
+
+新しい配信プラットフォームプラグインを作る際も、`broadcast_comment()` を呼ぶことで他のプラグインから利用可能になります。
+
+#### 用途例
+
+- **初見さんカウンター**: 「初見」「おはつ」を検知して累計人数をカウント（`window-status` で常時表示）
+- **NGワード検出**: 不適切な発言を検出してログに残す
+- **コメント分析**: 特定キーワードの出現頻度を集計
+- **コメント収集**: 複数プラットフォームのコメントを一箇所に集約
 
 ---
 

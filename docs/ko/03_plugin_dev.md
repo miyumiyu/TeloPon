@@ -251,7 +251,20 @@ def _send_screenshot(self):
 
 ---
 
-## 6. 텔롭 출력 훅 (AI 출력을 플러그인에서 수신)
+## 6. 플러그인 훅 (텔롭 출력 / 코멘트 수신)
+
+플러그인 간 느슨한 결합으로 협업할 수 있는 **훅**을 두 가지 제공합니다.
+
+| 훅 | 호출 시점 | 용도 |
+|---|---|---|
+| `on_telop_output(topic, main, window, layout, badge)` | AI가 텔롭을 출력할 때 | 텔롭 로깅·녹화·지연 표시 |
+| `on_comment_received(text, author, source)` | 방송 플랫폼이 코멘트를 수신할 때 | 첫 시청자 카운터·금칙어 검출·코멘트 분석 |
+
+둘 다 모든 플러그인에 **fire-and-forget**(비동기 발사)로 디스패치됩니다. Core는 플러그인 처리 완료를 기다리지 않습니다.
+
+---
+
+### 6-A. 텔롭 출력 훅 (on_telop_output)
 
 `on_telop_output` 메서드를 오버라이드하면 AI가 텔롭을 출력할 때마다 플러그인에서 데이터를 수신할 수 있습니다.
 텔롭 출력은 **fire-and-forget(발사 후 잊기)** 방식으로 전달되며, Core는 플러그인의 처리 완료를 기다리지 않습니다.
@@ -415,6 +428,89 @@ class MyViewerPlugin(BasePlugin):
     PLUGIN_TYPE = "TOOL"
     ALWAYS_ACTIVE = True  # 항상 활성 표시
 ```
+
+---
+
+### 6-B. 코멘트 수신 훅 (on_comment_received)
+
+시청자 코멘트를 수신하는 방송 플랫폼 플러그인(YouTube·Twitch·니코니코 생방송 등)이 코멘트를 받은 순간, 모든 활성 플러그인에 알림이 전달됩니다.
+
+#### 구조
+
+```
+방송 플랫폼 플러그인(예: YouTube): 코멘트 수신
+       ↓
+ self.broadcast_comment(text, author, source)
+       ↓
+PluginManager: 모든 활성 플러그인에 비동기 알림
+       ↓
+다른 플러그인의 on_comment_received()가 호출됨
+```
+
+#### 발신측 플러그인 구현 (코멘트를 보내는 쪽)
+
+코멘트를 수신한 방송 플랫폼 플러그인은 `BasePlugin.broadcast_comment()`를 호출해 다른 플러그인에 알립니다.
+
+```python
+def _on_comment(self, text, author):
+    # 기존 처리: AI에게 보내는 등
+    self.send_text(self.plugin_queue, f"[COMMENT]{author}: {text}")
+    # 다른 플러그인에 알림 (fire-and-forget)
+    self.broadcast_comment(text, author, source="youtube")
+```
+
+| 인수 | 내용 | 예 |
+|---|---|---|
+| `text` | 코멘트 본문 | `처음 왔어요!` |
+| `author` | 작성자 이름 | `시청자A` |
+| `source` | 플랫폼 식별자 | `"youtube"` / `"twitch"` / `"niconico"` |
+
+#### 수신측 플러그인 구현 (코멘트를 받는 쪽)
+
+```python
+class FirstTimerPlugin(BasePlugin):
+    PLUGIN_ID   = "first_timer"
+    PLUGIN_TYPE = "TOOL"
+
+    def __init__(self):
+        super().__init__()
+        self._known_users = set()
+        self._count = 0
+
+    def on_comment_received(self, text, author, source):
+        """모든 플랫폼의 코멘트를 수신 (반환값 불필요)"""
+        if author in self._known_users:
+            return
+        self._known_users.add(author)
+        if any(kw in text for kw in ["처음", "첨", "안녕"]):
+            self._count += 1
+            logger.info(f"[FirstTimer] 첫 시청자 +1 → {self._count} 명")
+```
+
+#### ⚠️ 스레드 안전성
+
+`on_comment_received`도 **백그라운드 스레드**에서 호출됩니다. Tkinter 직접 조작은 금지입니다(`on_telop_output`과 동일한 제약).
+UI 업데이트가 필요한 경우 **deque 버퍼 + 폴링** 패턴을 사용하세요(앞 항목 "⚠️ 중요: 스레드 안전성" 참조).
+
+#### 기존 발신측 플러그인
+
+이미 `broadcast_comment()`를 호출하는 방송 플랫폼 플러그인:
+
+| 플러그인 | source 값 |
+|---|---|
+| YoutubeLivePlugin(본체) | `"youtube"` |
+| YoutubeLiveOAuth(확장) | `"youtube"` |
+| TwitchPlugin(본체) | `"twitch"` |
+| NiconicoLivePlugin(확장) | `"niconico"` |
+
+새 방송 플랫폼 플러그인을 만들 때도 `broadcast_comment()`를 호출하면 다른 플러그인에서 사용 가능해집니다.
+
+#### 활용 예
+
+- **첫 시청자 카운터**: "처음", "첨" 등을 감지해 누적 인원을 카운트(`window-status`로 상시 표시)
+- **금칙어 감지**: 부적절한 발언을 감지해 로그에 기록
+- **코멘트 분석**: 특정 키워드의 출현 빈도를 집계
+- **코멘트 수집**: 여러 플랫폼의 코멘트를 한 곳에 집약
 
 ---
 

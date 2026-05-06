@@ -253,7 +253,20 @@ def _send_screenshot(self):
 
 ---
 
-## 6. Telop Output Hook (Receiving AI Output in Plugins)
+## 6. Plugin Hooks (Telop Output / Comment Received)
+
+Two **hooks** are provided so plugins can interoperate without coupling.
+
+| Hook | When called | Use cases |
+|---|---|---|
+| `on_telop_output(topic, main, window, layout, badge)` | When the AI outputs a telop | Telop logging, recording, delayed display |
+| `on_comment_received(text, author, source)` | When a streaming platform receives a comment | First-timer counter, NG-word detection, comment analysis |
+
+Both are dispatched **fire-and-forget** asynchronously to all plugins. Core never waits for plugin processing to complete.
+
+---
+
+### 6-A. Telop Output Hook (on_telop_output)
 
 Override the `on_telop_output` method to receive data every time the AI outputs a telop.
 Telop output is delivered via a **fire-and-forget** mechanism -- Core does not wait for plugin processing to complete.
@@ -415,6 +428,89 @@ class MyViewerPlugin(BasePlugin):
     PLUGIN_TYPE = "TOOL"
     ALWAYS_ACTIVE = True  # Always shown as active
 ```
+
+---
+
+### 6-B. Comment Received Hook (on_comment_received)
+
+When a streaming platform plugin (YouTube, Twitch, Niconico, etc.) receives a viewer comment, every active plugin is notified.
+
+#### Architecture
+
+```
+Streaming platform plugin (e.g., YouTube): comment received
+       ↓
+ self.broadcast_comment(text, author, source)
+       ↓
+PluginManager: dispatched asynchronously to all active plugins
+       ↓
+Other plugins' on_comment_received() is called
+```
+
+#### Sender side (the plugin that emits comments)
+
+A streaming platform plugin that receives a comment calls `BasePlugin.broadcast_comment()` to notify other plugins.
+
+```python
+def _on_comment(self, text, author):
+    # Existing handling: send to AI, etc.
+    self.send_text(self.plugin_queue, f"[COMMENT]{author}: {text}")
+    # Notify other plugins (fire-and-forget)
+    self.broadcast_comment(text, author, source="youtube")
+```
+
+| Argument | Description | Example |
+|---|---|---|
+| `text` | Comment body | `First time here!` |
+| `author` | Author name | `ViewerA` |
+| `source` | Platform identifier | `"youtube"` / `"twitch"` / `"niconico"` |
+
+#### Receiver side (the plugin that consumes comments)
+
+```python
+class FirstTimerPlugin(BasePlugin):
+    PLUGIN_ID   = "first_timer"
+    PLUGIN_TYPE = "TOOL"
+
+    def __init__(self):
+        super().__init__()
+        self._known_users = set()
+        self._count = 0
+
+    def on_comment_received(self, text, author, source):
+        """Receives comments from all platforms (no return value)"""
+        if author in self._known_users:
+            return
+        self._known_users.add(author)
+        if any(kw in text for kw in ["first", "hello", "hi"]):
+            self._count += 1
+            logger.info(f"[FirstTimer] +1 → {self._count} viewers")
+```
+
+#### ⚠️ Thread Safety
+
+`on_comment_received` is also called from a **background thread**. Direct Tkinter operations are forbidden (same constraint as `on_telop_output`).
+For UI updates, use the **deque buffer + polling** pattern (see "⚠️ Important: Thread Safety" above).
+
+#### Existing sender plugins
+
+Streaming platform plugins that already call `broadcast_comment()`:
+
+| Plugin | source value |
+|---|---|
+| YoutubeLivePlugin (built-in) | `"youtube"` |
+| YoutubeLiveOAuth (extension) | `"youtube"` |
+| TwitchPlugin (built-in) | `"twitch"` |
+| NiconicoLivePlugin (extension) | `"niconico"` |
+
+When creating a new streaming platform plugin, calling `broadcast_comment()` makes it usable from other plugins.
+
+#### Example use cases
+
+- **First-timer counter**: detect "first time" / "hello" keywords and tally unique viewers (display permanently with `window-status`)
+- **NG-word detection**: log inappropriate comments
+- **Comment analytics**: aggregate keyword frequency
+- **Comment aggregation**: collect comments from multiple platforms in one place
 
 ---
 
